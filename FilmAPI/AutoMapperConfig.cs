@@ -1,4 +1,5 @@
-﻿using FilmAPI.Core.Entities;
+﻿using AutoMapper;
+using FilmAPI.Core.Entities;
 using FilmAPI.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -7,11 +8,12 @@ using System.Threading.Tasks;
 
 namespace FilmAPI
 {
-    public static class AutoMapperConfig
+    public  class AutoMapperConfig : Profile
     {
-        public static void RegisterMappings()
+        public AutoMapperConfig()
         {
-            
+            CreateMap<Film, FilmViewModel>();
         }
+        
     }
 }

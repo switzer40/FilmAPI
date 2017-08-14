@@ -16,8 +16,7 @@ namespace FilmAPI
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseStartup<Startup>()
-                .UseApplicationInsights()
+                .UseStartup<Startup>()                
                 .Build();
 
             host.Run();

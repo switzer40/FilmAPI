@@ -12,7 +12,7 @@ namespace FilmAPI.Services
 {
     public class FilmService : EntityService<Film, FilmViewModel>, IFilmService
     {
-        public FilmService(IRepository<Film> repository, IMapper mapper) : base(repository, mapper)
+        public FilmService(IFilmRepository repository, IMapper mapper) : base(repository, mapper)
         {
         }
     }

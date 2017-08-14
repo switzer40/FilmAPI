@@ -8,6 +8,10 @@ namespace FilmAPI.Core.Entities
 {
     public class Film : BaseEntity
     {
+        private Film()
+        {
+
+        }
         public Film(string title, short year, short length = 0)
         {
             Title = title;

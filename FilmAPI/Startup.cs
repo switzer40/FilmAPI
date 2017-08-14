@@ -12,6 +12,9 @@ using FilmAPI.Services;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Infrastructure.Repositories;
 using FilmAPI.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using FilmAPI.Core.Entities;
+using AutoMapper;
 
 namespace FilmAPI
 {
@@ -28,30 +31,89 @@ namespace FilmAPI
         }
 
         public IConfigurationRoot Configuration { get; }
+        public void ConfigureTestingServices(IServiceCollection services)
+        {                       
+            services.AddDbContext<FilmContext>(options =>
+            {
+                options.UseInMemoryDatabase();
+            });
+            ConfigureServices(services);
+        }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        private FilmContext BuildAndPopulateContext(DbContextOptionsBuilder<FilmContext> builder, bool refresh)
+        {
+            FilmContext context = new FilmContext(builder.Options);
+            if (refresh)
+            {
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+                context.Films.AddRange(BuildSomeFilms());
+                context.SaveChanges();
+            }            
+            return context;
+        }
+
+        private Film[] BuildSomeFilms()
+        {
+            Film[] result =
+            {
+                new Film("Frühstück bei Tiffany", 1961, 110),
+                new Film("Pretty Woman", 1990, 109)                
+            };
+            return result;
+        }
+
+        public void ConfigureDevelopmentServices(IServiceCollection services){
+            services.AddDbContext<FilmContext>(options =>
+            {
+                options.UseInMemoryDatabase();
+            });
+
+
+            //services.UseSqlServer();
+            ConfigureServices(services);
+
+
+        }
+        // This m ethod gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-       
+        
             services.AddScoped<IFilmRepository, FilmRepository>();
-            services.AddScoped<IPersonRepository, IPersonRepository>();
-            services.AddScoped<IMediumRepository, IMediumRepository>();
-            services.AddScoped<IFilmPersonRepository, IFilmPersonRepository>();
+            //services.AddScoped<IPersonRepository, PersonRepository>();
+            //services.AddScoped<IMediumRepository, MediumRepository>();
+            //services.AddScoped<IFilmPersonRepository, FilmPersonRepository>();
             services.AddScoped<IFilmService, FilmService>();
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IFilmPersonService, FilmPersonService>();
             services.AddScoped<IMediumService, MediumService>();
             services.AddMvc();
+            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
+            var mapper = config.CreateMapper();
+            services.AddScoped<MapperConfiguration>(_ => config);
+            services.AddScoped<IMapper>(_ => mapper);
+
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, FilmContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseMvc();
+            PopulateData(context);
+        }
+
+        private void PopulateData(FilmContext context)
+        {
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            context.Films.AddRange(BuildSomeFilms());
+            context.SaveChanges();
+
         }
     }
 }

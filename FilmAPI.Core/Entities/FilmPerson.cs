@@ -8,6 +8,10 @@ namespace FilmAPI.Core.Entities
 {
     public class FilmPerson : BaseEntity
     {
+        private FilmPerson()
+        {
+            // neede by EF
+        }
         public FilmPerson(int filmId, int personId, string role)
         {
             FilmId = filmId;
