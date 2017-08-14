@@ -12,11 +12,11 @@ namespace FilmAPI.Tests.IntegrationTests
 {
     public class TestBase
     {
-        protected readonly FilmContext _context;
-        public TestBase(FilmContext context)
-        {
-            _context = context;
-        }
+        //protected readonly FilmContext _context;
+        //public TestBase(FilmContext context)
+        //{
+        //    _context = context;
+        //}
         protected HttpClient GetClient()
         {
             var builder = new WebHostBuilder()
@@ -27,7 +27,7 @@ namespace FilmAPI.Tests.IntegrationTests
             var client = server.CreateClient();
 
             // Populate the Database
-            FilmInitializer.Seed(_context);
+            //FilmInitializer.Seed(_context);
 
 
             // client always expects json results

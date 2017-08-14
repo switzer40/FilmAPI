@@ -16,7 +16,7 @@ namespace FilmAPI.Tests.IntegrationTests
     {
         private readonly HttpClient _client;
 
-        public Get(FilmContext context) : base(context)
+        public Get()
         {
             _client = base.GetClient();
         }
