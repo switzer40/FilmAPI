@@ -8,6 +8,9 @@ namespace FilmAPI.Core.Entities
 {
     public class Medium : BaseEntity
     {
+        public Medium()
+        {
+        }
         public Medium(int filmId, string mediumType, string location = "")
         {
             FilmId = filmId;

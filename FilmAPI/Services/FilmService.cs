@@ -19,7 +19,7 @@ namespace FilmAPI.Services
         public override FilmViewModel GetBySurrogateKey(string key)
         {
             _keyService.DeconstructFilmSurrogateKey(key);
-            return new FilmViewModel(_keyService.FilmTitle, _keyService.FilmYear);
+            return new FilmViewModel(_keyService, _keyService.FilmTitle, _keyService.FilmYear);
         }
 
         public override async Task<FilmViewModel> GetBySurrogateKeyAsync(string key)

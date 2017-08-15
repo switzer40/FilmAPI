@@ -98,6 +98,7 @@ namespace FilmAPI
             services.AddScoped<IPersonService, PersonService>();
             services.AddScoped<IFilmPersonService, FilmPersonService>();
             services.AddScoped<IMediumService, MediumService>();
+            services.AddScoped<IKeyService, KeyService>();
             services.AddMvc();
             var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
             var mapper = config.CreateMapper();

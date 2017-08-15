@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,8 +10,10 @@ namespace FilmAPI.ViewModels
 {
     public class FilmViewModel : BaseViewModel
     {
-        public FilmViewModel(string title, short year, short length = 0)
+        private readonly IKeyService _keyService;
+        public FilmViewModel(IKeyService keyService, string title, short year, short length = 0)
         {
+            _keyService = keyService;
             Title = title;
             Year = year;
             Length = length;
@@ -20,5 +23,7 @@ namespace FilmAPI.ViewModels
         [Required]
         public short Year { get; set; }
         public short Length { get; set; }
-    }
+        public override string SurrogateKey => _keyService.ConstructFilmSurrogateKey(this);
+    };
 }
+

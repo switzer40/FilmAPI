@@ -8,6 +8,9 @@ namespace FilmAPI.Core.Entities
 {
     public class Person : BaseEntity
     {
+        public Person()
+        {
+        }
         public Person(string lastName, string birthdate, string firstMidName = "")
         {
             LastName = lastName;

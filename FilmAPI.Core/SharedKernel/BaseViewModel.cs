@@ -6,6 +6,6 @@ namespace FilmAPI.Core.SharedKernel
 {
     public class BaseViewModel
     {
-        public string SurrogateKey { get; private set;}
+        public virtual string SurrogateKey { get; private set;}
     }
 }

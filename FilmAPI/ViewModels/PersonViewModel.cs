@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,8 +10,13 @@ namespace FilmAPI.ViewModels
 {
     public class PersonViewModel : BaseViewModel
     {
-        public PersonViewModel(string lastName, string birthdate, string firstMidName = "")
+        public PersonViewModel()
         {
+        }
+        private readonly IKeyService _keyService;
+        public PersonViewModel(IKeyService keyService, string lastName, string birthdate, string firstMidName = "")
+        {
+            _keyService = keyService;
             LastName = lastName;
             BirthdateString = birthdate;
             FirstMidName = firstMidName;
@@ -34,5 +40,6 @@ namespace FilmAPI.ViewModels
                 return $"{FirstMidName} {LastName}";
             }
         }
-    }
+        public override string SurrogateKey => _keyService.ConstructPersonSurrogateKey(this);
+    };
 }
