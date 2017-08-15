@@ -4,59 +4,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FilmAPI.ViewModels;
+using AutoMapper;
+using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.Entities;
 
 namespace FilmAPI.Services
 {
-    public class PersonService : IPersonService
+    public class PersonService : EntityService<Person, PersonViewModel>, IPersonService
     {
-        public PersonViewModel Add(PersonViewModel m)
+        public PersonService(IPersonRepository repository, IMapper mapper, IKeyService keyService) : base(repository, mapper, keyService)
         {
-            throw new NotImplementedException();
         }
 
-        public Task<PersonViewModel> AddAsync(PersonViewModel m)
+        public override PersonViewModel GetBySurrogateKey(string key)
         {
-            throw new NotImplementedException();
+            _keyService.DeconstructPesonSurrogateKey(key);
+            PersonViewModel model = new PersonViewModel(_keyService.PersonLastName, _keyService.PersonBirthdate);
+            return model;
         }
 
-        public void Delete(PersonViewModel m)
+        public async override Task<PersonViewModel> GetBySurrogateKeyAsync(string key)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(PersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<PersonViewModel> GetAall()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<PersonViewModel>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public PersonViewModel GetBySurrogateKey(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<PersonViewModel> GetBySurrogateKeyAsync(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(PersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(PersonViewModel m)
-        {
-            throw new NotImplementedException();
+            return await Task.Run(() => GetBySurrogateKey(key));
         }
     }
 }

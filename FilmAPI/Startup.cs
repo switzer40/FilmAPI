@@ -62,6 +62,16 @@ namespace FilmAPI
             };
             return result;
         }
+        private Person[] BuildSomePeople()
+        {
+            Person[] result =
+            {
+                new Person("Hepburn", "1929-05-04", "Audrey"),
+                new Person("Roberts", "1967-10-28", "Julia")
+
+            };
+            return result;
+        }
 
         public void ConfigureDevelopmentServices(IServiceCollection services){
             services.AddDbContext<FilmContext>(options =>
@@ -81,7 +91,7 @@ namespace FilmAPI
             // Add framework services.
         
             services.AddScoped<IFilmRepository, FilmRepository>();
-            //services.AddScoped<IPersonRepository, PersonRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
             //services.AddScoped<IMediumRepository, MediumRepository>();
             //services.AddScoped<IFilmPersonRepository, FilmPersonRepository>();
             services.AddScoped<IFilmService, FilmService>();
@@ -112,6 +122,7 @@ namespace FilmAPI
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();
             context.Films.AddRange(BuildSomeFilms());
+            context.People.AddRange(BuildSomePeople());
             context.SaveChanges();
 
         }

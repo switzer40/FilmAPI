@@ -9,16 +9,18 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
-    public class EntityService<EntityType, ModelType> : IEntityService<EntityType, ModelType>
+    public abstract class EntityService<EntityType, ModelType> : IEntityService<EntityType, ModelType>
         where EntityType : BaseEntity
         where ModelType : BaseViewModel
     {
-        private readonly IRepository<EntityType> _repository;
-        private readonly IMapper _mapper;
-        public EntityService(IRepository<EntityType> repository, IMapper mapper)
+        protected readonly IRepository<EntityType> _repository;
+        protected readonly IMapper _mapper;
+        protected readonly IKeyService _keyService;
+        public EntityService(IRepository<EntityType> repository, IMapper mapper, IKeyService keyService)
         {
             _repository = repository;
             _mapper = mapper;
+            _keyService = keyService;
         }
 
         public ModelType Add(ModelType m)
@@ -57,15 +59,11 @@ namespace FilmAPI.Services
             return _mapper.Map<List<ModelType>>(rawEntities);
         }
 
-        public ModelType GetBySurrogateKey(string key)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract ModelType GetBySurrogateKey(string key);
 
-        public Task<ModelType> GetBySurrogateKeyAsync(string key)
-        {
-            throw new NotImplementedException();
-        }
+
+        public abstract Task<ModelType> GetBySurrogateKeyAsync(string key);
+      
 
         public void Update(ModelType m)
         {

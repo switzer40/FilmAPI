@@ -1,62 +1,30 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.Core.Entities;
+using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FilmAPI.ViewModels;
+using AutoMapper;
+using FilmAPI.Core.Interfaces;
 
 namespace FilmAPI.Services
 {
-    public class MediumService : IMediumService
-    {
-        public MediumViewModel Add(MediumViewModel m)
+    public class MediumService : EntityService<Medium, MediumViewModel>, IMediumService
+    {        
+        public MediumService(IRepository<Medium> repository, IMapper mapper, IKeyService keyService) : base(repository, mapper, keyService)
         {
-            throw new NotImplementedException();
         }
 
-        public Task<MediumViewModel> AddAsync(MediumViewModel m)
+        public override MediumViewModel GetBySurrogateKey(string key)
         {
-            throw new NotImplementedException();
+            _keyService.DeconstructMedumSurrogateKey(key);
+            return new MediumViewModel(_keyService.MediumFilmId, _keyService.MediumMediumType);
         }
 
-        public void Delete(MediumViewModel m)
+        public override async Task<MediumViewModel> GetBySurrogateKeyAsync(string key)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(MediumViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<MediumViewModel> GetAall()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<MediumViewModel>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public MediumViewModel GetBySurrogateKey(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<MediumViewModel> GetBySurrogateKeyAsync(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(MediumViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(MediumViewModel m)
-        {
-            throw new NotImplementedException();
+            return await Task.Run(() => GetBySurrogateKey(key));
         }
     }
 }

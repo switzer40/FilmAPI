@@ -13,6 +13,7 @@ namespace FilmAPI
         public AutoMapperConfig()
         {
             CreateMap<Film, FilmViewModel>();
+            CreateMap<Person, PersonViewModel>();
         }
         
     }

@@ -1,60 +1,28 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.Core.Entities;
+using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FilmAPI.ViewModels;
+using AutoMapper;
+using FilmAPI.Core.Interfaces;
 
 namespace FilmAPI.Services
 {
-    public class FilmPersonService : IFilmPersonService
+    public class FilmPersonService : EntityService<FilmPerson, FilmPersonViewModel>, IFilmPersonService
     {
-        public FilmPersonViewModel Add(FilmPersonViewModel m)
+        public FilmPersonService(IRepository<FilmPerson> repository, IMapper mapper, IKeyService keyService) : base(repository, mapper, keyService)
         {
-            throw new NotImplementedException();
         }
 
-        public Task<FilmPersonViewModel> AddAsync(FilmPersonViewModel m)
+        public override FilmPersonViewModel GetBySurrogateKey(string key)
         {
-            throw new NotImplementedException();
+            _keyService.DeconstructFilmPersonSurrogateKey(key);
+            return new FilmPersonViewModel(_keyService.FilmPersonFilmId, _keyService.FilmPersonPersonId, _keyService.FilmPersonRole);
         }
 
-        public void Delete(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteAsync(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<FilmPersonViewModel> GetAall()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<FilmPersonViewModel>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public FilmPersonViewModel GetBySurrogateKey(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(FilmPersonViewModel m)
+        public override Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)
         {
             throw new NotImplementedException();
         }
