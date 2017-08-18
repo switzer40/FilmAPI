@@ -15,10 +15,11 @@ namespace FilmAPI.Infrastructure.Repositories
     {
         protected readonly FilmContext _context;
         protected readonly DbSet<T> _set;
+       
         public Repository(FilmContext context)
         {
             _context = context;
-            _set = _context.Set<T>();
+            _set = _context.Set<T>();            
         }
         public T Add(T t)
         {
@@ -65,17 +66,7 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             return await _set.FindAsync(id);
         }
-
-        public T GetBySurrogateKey(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<T> GetBySurrogateKeyAsync(string key)
-        {
-            throw new NotImplementedException();
-        }
-
+    
         public IEnumerable<T> List()
         {
             return _set;

@@ -19,7 +19,7 @@ namespace FilmAPI.Services
         public override MediumViewModel GetBySurrogateKey(string key)
         {
             _keyService.DeconstructMedumSurrogateKey(key);
-            return new MediumViewModel(_keyService.MediumFilmId, _keyService.MediumMediumType);
+            return new MediumViewModel(_keyService,  _keyService.MediumFilmId, _keyService.MediumMediumType);
         }
 
         public override async Task<MediumViewModel> GetBySurrogateKeyAsync(string key)

@@ -1,9 +1,4 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FilmAPI.VviewModls;
 
 namespace FilmAPI.Interfaces
 {
@@ -29,10 +24,6 @@ namespace FilmAPI.Interfaces
         void DeconstructFilmSurrogateKey(string key);
         void DeconstructPesonSurrogateKey(string key);
         void DeconstructFilmPersonSurrogateKey(string key);
-        void DeconstructMedumSurrogateKey(string key);
-
-
-
-
+        void DeconstructMedumSurrogateKey(string key);        
     }
 }

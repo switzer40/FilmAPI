@@ -14,9 +14,7 @@ namespace FilmAPI.Core.Interfaces
         void Delete(T t);
         Task DeleteAsync(T t);
         T GetById(int id);
-        Task<T> GetByIdAsync(int id);
-        T GetBySurrogateKey(string key);
-        Task<T> GetBySurrogateKeyAsync(string key);
+        Task<T> GetByIdAsync(int id);        
         IEnumerable<T> List();
         IEnumerable<T> List(Expression<Func<T, bool>> predicate);
         IEnumerable<T> List(ISpecification<T> specification);

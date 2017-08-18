@@ -6,6 +6,7 @@ using System.Text;
 using FilmAPI.Infrastructure.Data;
 using System.Threading.Tasks;
 using System.Linq;
+using FilmAPI.Core.Specifications;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
@@ -17,12 +18,14 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public Film GetByTitleAndYear(string title, short year)
         {
-            return List(f => (f.Title == title && f.Year == year)).Single();
+            var spec = new FilmByTitleAndYear(title, year);
+            return List(spec).Single();
         }
 
         public async Task<Film> GetByTitleAndYearAsync(string title, short year)
         {
-            var candidates = await ListAsync(f => (f.Title == title && f.Year == year));
+            var spec = new FilmByTitleAndYear(title, year);
+            var candidates = await ListAsync(spec);
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
         }

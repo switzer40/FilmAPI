@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.VviewModls;
 
 namespace FilmAPI.Services
 {
@@ -19,7 +20,7 @@ namespace FilmAPI.Services
         public override FilmViewModel GetBySurrogateKey(string key)
         {
             _keyService.DeconstructFilmSurrogateKey(key);
-            return new FilmViewModel(_keyService, _keyService.FilmTitle, _keyService.FilmYear);
+            return new FilmViewModel(new Film(_keyService.FilmTitle, _keyService.FilmYear));
         }
 
         public override async Task<FilmViewModel> GetBySurrogateKeyAsync(string key)

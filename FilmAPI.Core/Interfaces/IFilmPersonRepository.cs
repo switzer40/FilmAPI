@@ -8,7 +8,7 @@ namespace FilmAPI.Core.Interfaces
 {
     public interface IFilmPersonRepository : IRepository<FilmPerson>
     {
-        FilmPerson GetByFilmIdPersonIdAndRole(int fimId, int personId, string role);
+        FilmPerson GetByFilmIdPersonIdAndRoleAsync(int fimId, int personId, string role);
         Task<FilmPerson> GetNyFilmIdPersonIdAndRoleAsync(int filmId, int personId, string role);
     }
 }

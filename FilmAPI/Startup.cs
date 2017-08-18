@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +12,11 @@ using FilmAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using FilmAPI.Core.Entities;
 using AutoMapper;
+using FilmAPI.Core.SharedKernel;
+using StructureMap;
+using FilmAPI.ViewModels;
+using FilmAPI.Controllers;
+using FilmAPI.VviewModls;
 
 namespace FilmAPI
 {
@@ -73,7 +75,7 @@ namespace FilmAPI
             return result;
         }
 
-        public void ConfigureDevelopmentServices(IServiceCollection services){
+        public IServiceProvider ConfigureDevelopmentServices(IServiceCollection services){
             services.AddDbContext<FilmContext>(options =>
             {
                 options.UseInMemoryDatabase();
@@ -81,31 +83,51 @@ namespace FilmAPI
 
 
             //services.UseSqlServer();
-            ConfigureServices(services);
+            return ConfigureServices(services);
 
 
         }
         // This m ethod gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-        
-            services.AddScoped<IFilmRepository, FilmRepository>();
-            services.AddScoped<IPersonRepository, PersonRepository>();
-            //services.AddScoped<IMediumRepository, MediumRepository>();
-            //services.AddScoped<IFilmPersonRepository, FilmPersonRepository>();
-            services.AddScoped<IFilmService, FilmService>();
-            services.AddScoped<IPersonService, PersonService>();
-            services.AddScoped<IFilmPersonService, FilmPersonService>();
-            services.AddScoped<IMediumService, MediumService>();
-            services.AddScoped<IKeyService, KeyService>();
-            services.AddMvc();
+            services.AddMvc()
+                .AddControllersAsServices();
+            
             var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
             var mapper = config.CreateMapper();
             services.AddScoped<MapperConfiguration>(_ => config);
             services.AddScoped<IMapper>(_ => mapper);
+            return ConfigureIoC(services);
 
-            
+        }
+
+        private IServiceProvider ConfigureIoC(IServiceCollection services)
+        {
+            var container = new Container();
+            container.Configure(config =>
+            {
+                config.Scan(_ =>
+                {
+                    _.AssemblyContainingType(typeof(Startup));
+                    _.AssemblyContainingType(typeof(IRepository<>));
+                     _.AssemblyContainingType(typeof(Repository<>));
+                    _.WithDefaultConventions();
+
+                });
+                //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
+                // Map Each EntityService manually
+                config.For<IEntityService<FilmPerson, FilmPersonViewModel>>().Use<FilmPersonService>();
+                config.For<IEntityService<Film, FilmViewModel>>().Use<FilmService>();
+                config.For<IEntityService<Medium, MediumViewModel>>().Use<MediumService>();
+                config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();
+
+                config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
+
+                // this should have been done by WithDefaultConventions:
+                config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
+                config.Populate(services);
+            });
+            return container.GetInstance<IServiceProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -120,10 +142,28 @@ namespace FilmAPI
 
         private void PopulateData(FilmContext context)
         {
-            context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            context.Films.AddRange(BuildSomeFilms());
-            context.People.AddRange(BuildSomePeople());
+            var tiffany = new Film("Frühstück bei Tiffany", 1961, 110);
+            context.Films.Add(tiffany);
+            context.SaveChanges();
+            var woman = new Film("Pretty Woman", 1990, 109);
+            context.Films.Add(woman);
+            context.SaveChanges();
+            var hepburn = new Person("Hepburn", "1929-05-04", "Audrey");
+            context.People.Add(hepburn);
+            context.SaveChanges();
+            var roberts = new Person("Roberts", "1967-10-28", "Julia");
+            context.People.Add(roberts);context.SaveChanges();
+            var tiffanyHepburn = new FilmPerson(tiffany.Id, hepburn.Id, FilmConstants.Role_Actor);
+            context.FilmPeople.Add(tiffanyHepburn);
+            context.SaveChanges();
+            var womanRoberts = new FilmPerson(woman/Id, roberts.Id, FilmConstants.Role_Actor);
+            context.FilmPeople.Add(womanRoberts);
+            context.SaveChanges();
+            var tiffanyDVD  = new Medium(tiffany.Id, FilmConstants.MediumType_DVD);
+            context.Media.Add(tiffanyDVD);
+            context.SaveChanges();
+            var womanDVD = new Medium(woman.Id, FilmConstants.MediumType_DVD);
+            context.Media.Add(womanDVD);
             context.SaveChanges();
 
         }

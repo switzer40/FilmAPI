@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
+using FilmAPI.VviewModls;
 
 namespace FilmAPI.Services
 {
     public class KeyService : IKeyService
     {
+        private const char SEPCHAR = '*';
+        private char[] separators = {  SEPCHAR  };
         // Properties
         private string filmTitle;
 
@@ -87,27 +89,27 @@ namespace FilmAPI.Services
         // Methods
         string IKeyService.ConstructFilmPersonSurrorgateKey(FilmPersonViewModel model)
         {
-            return $"{model.FilmId}-{model.PersomId}-{model.Role}";
+            return $"{model.FilmTitle}{SEPCHAR}{model.FilmYear}{SEPCHAR}{model.PersonLastName}{SEPCHAR}{model.PersonBirthdate}{SEPCHAR}{model.Role}";
         }
 
         string IKeyService.ConstructFilmSurrogateKey(FilmViewModel model)
         {
-            return $"{model.Title}-{model.Year}";
+            return $"{model.Title}{SEPCHAR}{model.Year}";
         }
 
         string IKeyService.ConstructMediumSurrogateKey(MediumViewModel model)
         {
-            return $"{model.FilmId}-{model.MediumType}";
+            return $"{model.FilmTitle}{SEPCHAR}{model.FilmYear}{SEPCHAR}{model.MediumType}";
         }
 
         string IKeyService.ConstructPersonSurrogateKey(PersonViewModel model)
         {
-            return $"{model.LastName}-{model.BirthdateString}";
+            return $"{model.LastName}{SEPCHAR}{model.BirthdateString}";
         }
 
         void IKeyService.DeconstructFilmPersonSurrogateKey(string key)
         {
-            char[] separators = { '-' };
+            
             string[] parts = key.Split(separators);
             FilmPersonFilmId = int.Parse(parts[0]);
             FilmPersonPersonId = int.Parse(parts[1]);
@@ -116,24 +118,21 @@ namespace FilmAPI.Services
         }
 
         void IKeyService.DeconstructFilmSurrogateKey(string key)
-        {
-            char[] separators = { '-' };
+        {           
             string[] parts = key.Split(separators);
             FilmTitle = parts[0];
             FilmYear = short.Parse(parts[1]);
         }
 
         void IKeyService.DeconstructMedumSurrogateKey(string key)
-        {
-            char[] separators = { '-' };
+        {           
             string[] parts = key.Split(separators);
             MediumFilmId  =int.Parse(parts[0]);
             MediumMediumType = parts[1];
         }
 
         void IKeyService.DeconstructPesonSurrogateKey(string key)
-        {
-            char[] separators = { '-' };
+        {           
             string[] parts = key.Split(separators);
             PersonLastName = parts[0];
             PersonBirthdate = parts[1];

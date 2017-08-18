@@ -1,25 +1,25 @@
-﻿using FilmAPI.Core.SharedKernel;
+﻿using FilmAPI.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FilmAPI.ViewModels
+namespace FilmAPI.VviewModls
 {
     public class MediumViewModel : BaseViewModel
     {
-        public MediumViewModel(int filmId, string mediumType, string location = "")
+        public MediumViewModel(Film f, string mediumType)
         {
-            FilmId = filmId;
+            FilmTitle = f.Title;
+            FilmYear = f.Year;
             MediumType = mediumType;
-            Location = location;
         }
         [Required]
-        public int FilmId { get; set; }
+        public string FilmTitle { get; set; }
+        [Required]
+        public short FilmYear { get; set; }
         [Required]
         public string MediumType { get; set; }
-        public string Location { get; set; }
     }
 }
-

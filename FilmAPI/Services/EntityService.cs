@@ -2,6 +2,8 @@
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
+using FilmAPI.VviewModls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
