@@ -19,7 +19,7 @@ namespace FilmAPI.Services
             throw new NotImplementedException();
         }
 
-        public void Delete(FilmPersonViewModel m)
+        public void DeleteAsync(FilmPersonViewModel m)
         {
             throw new NotImplementedException();
         }

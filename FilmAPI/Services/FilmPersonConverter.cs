@@ -1,10 +1,6 @@
 ﻿using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
-using FilmAPI.VviewModls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FilmAPI.ViewModels;
 
 namespace FilmAPI.Services
 {
@@ -17,11 +13,11 @@ namespace FilmAPI.Services
             _filmRepository = frepo;
             _personRepository = prepo;
         }
-        public FilmPerson Convert(FilmPersonViewModel model)
+        public FilmPerson Convert(FilmPersonViewModel m)
         {
             Film f = _filmRepository.GetByTitleAndYear(m.FilmTitle, m.FilmYear);
             Person p = _personRepository.GetByLastNameAndBirthdate(m.PersonLastName, m.PersonBirthdate);
-            return new FilmPerson(f.Id, p.Id, model.Role);
+            return new FilmPerson(f.Id, p.Id, m.Role);
         }
     }
 }

@@ -1,11 +1,7 @@
 ﻿using FilmAPI.Core.Entities;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace FilmAPI.VviewModls
+namespace FilmAPI.ViewModels
 {
     public class MediumViewModel : BaseViewModel
     {
@@ -15,6 +11,7 @@ namespace FilmAPI.VviewModls
             FilmYear = f.Year;
             MediumType = mediumType;
         }
+
         [Required]
         public string FilmTitle { get; set; }
         [Required]

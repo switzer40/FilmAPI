@@ -1,12 +1,8 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
 using FilmAPI.Core.Entities;
 using FilmAPI.ViewModels;
-using FilmAPI.Core.Interfaces;
-using FilmAPI.VviewModls;
-using FilmAPI.Core.SharedKernel;
 
-namespace FilmAPIdest.
+namespace FilmAPI
 {
     public  class AutoMapperConfig : Profile
     {        

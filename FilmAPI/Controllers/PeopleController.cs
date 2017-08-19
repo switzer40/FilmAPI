@@ -16,10 +16,16 @@ namespace FilmAPI.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> Get()
         {
             var models = await _service.GetAllAsync();
             return Ok(models);
+        }
+        [HttpGet("{key}")]
+        public async Task<IActionResult> Get(string key)
+        {
+            var model = await _service.GetBySurrogateKeyAsync(key);
+            return Ok(model);
         }
     }
 }

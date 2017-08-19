@@ -1,5 +1,5 @@
 ﻿using FilmAPI.Core.Entities;
-using FilmAPI.VviewModls;
+using FilmAPI.ViewModels;
 using Xunit;
 
 namespace FilmAPI.Tests.UnitTests

@@ -7,13 +7,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using FilmAPI.Core.Interfaces;
-using FilmAPI.VviewModls;
 
 namespace FilmAPI.Services
 {
     public class FilmService : EntityService<Film, FilmViewModel>, IFilmService
     {
-        public FilmService(IFilmRepository repository, IMapper mapper, IKeyService keyService) : base(repository, mapper, keyService)
+        public FilmService(IRepository<Film> repository, IMapper mapper, IKeyService keyService) : base(repository, mapper, keyService)
         {
         }
 
@@ -25,8 +24,7 @@ namespace FilmAPI.Services
 
         public override async Task<FilmViewModel> GetBySurrogateKeyAsync(string key)
         {
-            return await Task.Run(() => GetBySurrogateKey(key));
+            return await Task.Run<FilmViewModel>(() => GetBySurrogateKey(key));
         }
-
     }
 }

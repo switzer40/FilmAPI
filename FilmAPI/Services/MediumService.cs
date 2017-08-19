@@ -1,9 +1,6 @@
 ﻿using FilmAPI.Core.Entities;
 using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using FilmAPI.Core.Interfaces;
@@ -18,13 +15,13 @@ namespace FilmAPI.Services
 
         public override MediumViewModel GetBySurrogateKey(string key)
         {
-            _keyService.DeconstructMedumSurrogateKey(key);
-            return new MediumViewModel(_keyService,  _keyService.MediumFilmId, _keyService.MediumMediumType);
+            Film f = new Film(_keyService.FilmTitle, _keyService.FilmYear);
+            return new MediumViewModel(f, _keyService.MediumMediumType);
         }
 
         public override async Task<MediumViewModel> GetBySurrogateKeyAsync(string key)
         {
-            return await Task.Run(() => GetBySurrogateKey(key));
+            return await Task.Run<MediumViewModel>(() => GetBySurrogateKey(key));
         }
     }
 }

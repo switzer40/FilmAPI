@@ -1,10 +1,5 @@
 ﻿using FilmAPI.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FilmAPI.Core.Entities;
-using FilmAPI.VviewModls;
+using FilmAPI.ViewModels;
 
 namespace FilmAPI.Services
 {

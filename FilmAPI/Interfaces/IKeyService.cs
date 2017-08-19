@@ -1,4 +1,4 @@
-﻿using FilmAPI.VviewModls;
+﻿using FilmAPI.ViewModels;
 
 namespace FilmAPI.Interfaces
 {

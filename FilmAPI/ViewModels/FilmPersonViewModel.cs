@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FilmAPI.VviewModls
+namespace FilmAPI.ViewModels
 {
     public class FilmPersonViewModel: BaseViewModel
     {
@@ -13,7 +13,7 @@ namespace FilmAPI.VviewModls
         {
             FilmTitle = f.Title;
             FilmYear = f.Year;
-            PersonLasrName = p.LastName;
+            PersonLastName = p.LastName;
             PersonBirthdate = p.BirthdateString;
             Role = role;
         }

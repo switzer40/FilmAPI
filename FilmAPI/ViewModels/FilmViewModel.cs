@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FilmAPI.VviewModls
+namespace FilmAPI.ViewModels
 {
     public class FilmViewModel : BaseViewModel
     {
