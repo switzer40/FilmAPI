@@ -1,9 +1,9 @@
 ﻿using FilmAPI.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FilmAPI.VviewModls;
+using FilmAPI.ViewModels;
+using FilmAPI.Core.Entities;
 
 namespace FilmAPI.Services
 {
@@ -19,17 +19,23 @@ namespace FilmAPI.Services
             throw new NotImplementedException();
         }
 
+        public void Delete(FilmPersonViewModel m)
+        {
+            throw new NotImplementedException();
+        }
+
         public void DeleteAsync(FilmPersonViewModel m)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(FilmPersonViewModel m)
+
+        public List<FilmPersonViewModel> GetAall()
         {
             throw new NotImplementedException();
         }
 
-        public List<FilmPersonViewModel> GetAall()
+        public List<FilmPersonViewModel> GetAll()
         {
             throw new NotImplementedException();
         }
@@ -55,6 +61,11 @@ namespace FilmAPI.Services
         }
 
         public Task UpdateAsync(FilmPersonViewModel m)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IEntityService<FilmPerson, FilmPersonViewModel>.DeleteAsync(FilmPersonViewModel m)
         {
             throw new NotImplementedException();
         }

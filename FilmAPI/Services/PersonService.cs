@@ -19,7 +19,7 @@ namespace FilmAPI.Services
         public override PersonViewModel GetBySurrogateKey(string key)
         {
             _keyService.DeconstructPesonSurrogateKey(key);
-            PersonViewModel model = new PersonViewModel(_keyService, _keyService.PersonLastName, _keyService.PersonBirthdate);
+            PersonViewModel model = new PersonViewModel(new Person(_keyService.PersonLastName, _keyService.PersonBirthdate));
             return model;
         }
 

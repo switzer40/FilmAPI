@@ -15,8 +15,6 @@ using AutoMapper;
 using FilmAPI.Core.SharedKernel;
 using StructureMap;
 using FilmAPI.ViewModels;
-using FilmAPI.Controllers;
-using FilmAPI.VviewModls;
 
 namespace FilmAPI
 {
@@ -156,7 +154,7 @@ namespace FilmAPI
             var tiffanyHepburn = new FilmPerson(tiffany.Id, hepburn.Id, FilmConstants.Role_Actor);
             context.FilmPeople.Add(tiffanyHepburn);
             context.SaveChanges();
-            var womanRoberts = new FilmPerson(woman/Id, roberts.Id, FilmConstants.Role_Actor);
+            var womanRoberts = new FilmPerson(woman.Id, roberts.Id, FilmConstants.Role_Actor);
             context.FilmPeople.Add(womanRoberts);
             context.SaveChanges();
             var tiffanyDVD  = new Medium(tiffany.Id, FilmConstants.MediumType_DVD);

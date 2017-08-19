@@ -24,7 +24,7 @@ namespace FilmAPI.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            var model = _service.GetBySurrogateKeyAsync(key);
+            var model = await _service.GetBySurrogateKeyAsync(key);
             return Ok(model);
         }
     }
