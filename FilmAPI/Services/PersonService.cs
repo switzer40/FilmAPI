@@ -12,14 +12,14 @@ namespace FilmAPI.Services
 {
     public class PersonService : EntityService<Person, PersonViewModel>, IPersonService
     {
-        public PersonService(IPersonRepository repository, IMapper mapper, IKeyService keyService) : base(repository, mapper, keyService)
+        public PersonService(IPersonRepository repository, IPersonMapper mapper, IKeyService keyService) : base(repository, mapper, keyService)
         {
         }
 
         public override PersonViewModel GetBySurrogateKey(string key)
         {
             _keyService.DeconstructPesonSurrogateKey(key);
-            PersonViewModel model = new PersonViewModel(new Person(_keyService.PersonLastName, _keyService.PersonBirthdate));
+            PersonViewModel model = new PersonViewModel(new Person(_keyService.PersonLastName, _keyService.PersonBirthdate), key);
             return model;
         }
 

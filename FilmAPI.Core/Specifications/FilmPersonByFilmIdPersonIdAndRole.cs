@@ -18,6 +18,6 @@ namespace FilmAPI.Core.Specifications
             _personId = personId;
             _role = role;
         }
-        public Expression<Func<FilmPerson, bool>> Predicate => (fp) => (fp.FilmId == _filmId && fp.PersomId == _personId && fp.Role == _role);
+        public Expression<Func<FilmPerson, bool>> Predicate => (fp) => (fp.FilmId == _filmId && fp.PersonId == _personId && fp.Role == _role);
     }
 }

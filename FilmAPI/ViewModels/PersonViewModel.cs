@@ -9,11 +9,15 @@ namespace FilmAPI.ViewModels
 {
     public class PersonViewModel : BaseViewModel
     {
-        public PersonViewModel(Person p)
+        public PersonViewModel()
+        {
+        }
+        public PersonViewModel(Person p, string key)
         {
             FirstMidName = p.FirstMidName;
             LastName = p.LastName;
             BirthdateString = p.BirthdateString;
+            SurrogateKey = key;
         }
         public string FirstMidName { get; set; }
         [Required]
@@ -34,5 +38,7 @@ namespace FilmAPI.ViewModels
                 return $"{FirstMidName} {LastName}";
             }
         }
+
+        public override string SurrogateKey { get; set; }
     }
 }

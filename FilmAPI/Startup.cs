@@ -91,10 +91,10 @@ namespace FilmAPI
             services.AddMvc()
                 .AddControllersAsServices();
             
-            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
-            var mapper = config.CreateMapper();
-            services.AddScoped<MapperConfiguration>(_ => config);
-            services.AddScoped<IMapper>(_ => mapper);
+            //var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
+            //var mapper = config.CreateMapper();
+            //services.AddScoped<MapperConfiguration>(_ => config);
+            //services.AddScoped<IMapper>(_ => mapper);
             return ConfigureIoC(services);
 
         }
@@ -117,8 +117,7 @@ namespace FilmAPI
                 config.For<IEntityService<FilmPerson, FilmPersonViewModel>>().Use<FilmPersonService>();
                 config.For<IEntityService<Film, FilmViewModel>>().Use<FilmService>();
                 config.For<IEntityService<Medium, MediumViewModel>>().Use<MediumService>();
-                config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();
-
+                config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();                
                 config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
 
                 // this should have been done by WithDefaultConventions:

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.ViewModels
 {
-    public class BaseViewModel
+    public abstract class BaseViewModel
     {
-        public virtual string SurrogateKey { get; set; }
+        public abstract string SurrogateKey { get; set; }
     }
 }

@@ -15,13 +15,13 @@ namespace FilmAPI.Core.Entities
         public FilmPerson(int filmId, int personId, string role)
         {
             FilmId = filmId;
-            PersomId = personId;
+            PersonId = personId;
             Role = role;
         }
         [Required]
         public int FilmId { get; set; }
         [Required]
-        public int PersomId { get; set; }
+        public int PersonId { get; set; }
         [Required]
         public string Role { get; set; }
     }

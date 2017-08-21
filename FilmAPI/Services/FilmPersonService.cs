@@ -1,73 +1,33 @@
-﻿using FilmAPI.Interfaces;
+﻿using AutoMapper;
+using FilmAPI.Core.Entities;
+using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.SharedKernel;
+using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using FilmAPI.ViewModels;
-using FilmAPI.Core.Entities;
 
 namespace FilmAPI.Services
 {
-    public class FilmPersonService : IFilmPersonService
+    public class FilmPersonService : EntityService<FilmPerson, FilmPersonViewModel>, IFilmPersonService
     {
-        public FilmPersonViewModel Add(FilmPersonViewModel m)
+        public FilmPersonService(IFilmPersonRepository repository, IFilmPersonMapper mapper, KeyService keyService) : base(repository, mapper, keyService)
         {
-            throw new NotImplementedException();
+
+        }
+        public override FilmPersonViewModel GetBySurrogateKey(string key)
+        {
+            _keyService.DeconstructFilmPersonSurrogateKey(key);
+            Film f = new Film(_keyService.FilmTitle, _keyService.FilmYear);
+            Person p = new Person(_keyService.PersonLastName, _keyService.PersonBirthdate);
+            return new FilmPersonViewModel(f, p, _keyService.FilmPersonRole, key);
         }
 
-        public Task<FilmPersonViewModel> AddAsync(FilmPersonViewModel m)
+        public override async Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void DeleteAsync(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-
-        public List<FilmPersonViewModel> GetAall()
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<FilmPersonViewModel> GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<List<FilmPersonViewModel>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public FilmPersonViewModel GetBySurrogateKey(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateAsync(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IEntityService<FilmPerson, FilmPersonViewModel>.DeleteAsync(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
+            return await Task.Run<FilmPersonViewModel>(() => GetBySurrogateKey(key));
         }
     }
 }

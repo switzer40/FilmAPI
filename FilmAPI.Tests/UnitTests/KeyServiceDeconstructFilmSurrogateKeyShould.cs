@@ -15,10 +15,10 @@ namespace FilmAPI.Tests.UnitTests
             // Arrange
             string title = "Mad Max";
             short year = 2016;
-            FilmViewModel m = new FilmViewModel(new Film(title, year));
+            string key = _keyService.ConstructFilmSurrogateKey(title, year);
+            FilmViewModel m = new FilmViewModel(new Film(title, year), key);
 
-            //Act
-            string key = _keyService.ConstructFilmSurrogateKey(m);
+            //Act            ;
             _keyService.DeconstructFilmSurrogateKey(key);
 
             //Assert

@@ -15,12 +15,12 @@ namespace FilmAPI.Core.Interfaces
         Task DeleteAsync(T t);
         T GetById(int id);
         Task<T> GetByIdAsync(int id);        
-        IEnumerable<T> List();
-        IEnumerable<T> List(Expression<Func<T, bool>> predicate);
-        IEnumerable<T> List(ISpecification<T> specification);
-        Task<IEnumerable<T>> ListAsync();
-        Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> predicate);
-        Task<IEnumerable<T>> ListAsync(ISpecification<T> specification);
+        List<T> List();
+        List<T> List(Expression<Func<T, bool>> predicate);
+        List<T> List(ISpecification<T> specification);
+        Task<List<T>> ListAsync();
+        Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate);
+        Task<List<T>> ListAsync(ISpecification<T> specification);
         void Update(T t);
         Task UpdateAsync(T t);
     }

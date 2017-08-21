@@ -12,10 +12,10 @@ namespace FilmAPI.Tests.UnitTests
             // Arrange
             string lastName = "Gibson";
             string birthdate = "1949-12-13";
-            PersonViewModel m = new PersonViewModel(new Person(lastName, birthdate));
+            string key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            PersonViewModel m = new PersonViewModel(new Person(lastName, birthdate), key);
 
-            // Act
-            string key = _keyService.ConstructPersonSurrogateKey(m);
+            // Act            
             _keyService.DeconstructPesonSurrogateKey(key);
 
             // Assert

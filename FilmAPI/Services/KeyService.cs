@@ -84,22 +84,22 @@ namespace FilmAPI.Services
         // Methods
         string IKeyService.ConstructFilmPersonSurrorgateKey(FilmPersonViewModel model)
         {
-            return $"{model.FilmTitle}{SEPCHAR}{model.FilmYear}{SEPCHAR}{model.PersonLastName}{SEPCHAR}{model.PersonBirthdate}{SEPCHAR}{model.Role}";
+            return ConstructFilmPersonSurrogateKey(model.FilmTitle, model.FilmYear, model.PersonLastName, model.PersonBirthdate, model.Role);
         }
 
         string IKeyService.ConstructFilmSurrogateKey(FilmViewModel model)
         {
-            return $"{model.Title}{SEPCHAR}{model.Year}";
+            return ConstructFilmSurrogateKey(model.Title, model.Year);
         }
 
         string IKeyService.ConstructMediumSurrogateKey(MediumViewModel model)
         {
-            return $"{model.FilmTitle}{SEPCHAR}{model.FilmYear}{SEPCHAR}{model.MediumType}";
+            return ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);
         }
 
         string IKeyService.ConstructPersonSurrogateKey(PersonViewModel model)
         {
-            return $"{model.LastName}{SEPCHAR}{model.BirthdateString}";
+            return ConstructPersonSurrogateKey(model.LastName, model.BirthdateString);
         }
 
         void IKeyService.DeconstructFilmPersonSurrogateKey(string key)
@@ -131,6 +131,26 @@ namespace FilmAPI.Services
             string[] parts = key.Split(separators);
             PersonLastName = parts[0];
             PersonBirthdate = parts[1];
+        }
+
+        public string ConstructFilmSurrogateKey(string title, short year)
+        {
+            return $"{title}{SEPCHAR}{year}";
+        }
+
+        public string ConstructPersonSurrogateKey(string lastName, string birtdate)
+        {
+            return $"{lastName}{SEPCHAR}{birtdate}";
+        }
+
+        public string ConstructFilmPersonSurrogateKey(string title, short year, string lastName, string birthdate, string role)
+        {
+            return $"{title}{SEPCHAR}{year}{SEPCHAR}{lastName}{SEPCHAR}{birthdate}{SEPCHAR}{role}";
+        }
+
+        public string ConstructMediumSurrogateKey(string title, short year, string mediumType)
+        {
+            return $"{title}{SEPCHAR}{year}{SEPCHAR}{mediumType}";
         }
     }
 }

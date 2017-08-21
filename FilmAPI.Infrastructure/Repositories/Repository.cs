@@ -67,32 +67,33 @@ namespace FilmAPI.Infrastructure.Repositories
             return await _set.FindAsync(id);
         }
     
-        public IEnumerable<T> List()
+        public List<T> List()
         {
-            return _set;
+            return _set.ToList();
+
         }
 
-        public IEnumerable<T> List(Expression<Func<T, bool>> predicate)
+        public List<T> List(Expression<Func<T, bool>> predicate)
         {
-            return _set.Where(predicate).AsEnumerable();
+            return _set.Where(predicate).ToList();
         }
 
-        public IEnumerable<T> List(ISpecification<T> specification)
+        public List<T> List(ISpecification<T> specification)
         {
             return List(specification.Predicate);
         }
 
-        public async Task<IEnumerable<T>> ListAsync()
+        public async Task<List<T>> ListAsync()
         {
             return await _set.ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> predicate)
+        public async Task<List<T>> ListAsync(Expression<Func<T, bool>> predicate)
         {
             return await _set.Where(predicate).ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification)
+        public async Task<List<T>> ListAsync(ISpecification<T> specification)
         {
             return await ListAsync(specification.Predicate);
         }

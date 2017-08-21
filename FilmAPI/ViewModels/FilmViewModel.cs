@@ -9,17 +9,21 @@ namespace FilmAPI.ViewModels
 {
     public class FilmViewModel : BaseViewModel
     {
-
-        public FilmViewModel(Film f)
+        public FilmViewModel()
+        {
+        }
+        public FilmViewModel(Film f, string key)
         {
             Title = f.Title;
             Year = f.Year;
             Length = f.Length;
+            SurrogateKey = key;
         }
         [Required]
         public string Title { get; set; }
         [Required]
         public short Year { get; set; }
         public short Length { get; set; }
+        public override string SurrogateKey { get; set; }
     }
 }
