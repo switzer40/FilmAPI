@@ -23,7 +23,7 @@ namespace FilmAPI.Mappers
 
         public override Person MapBack(PersonViewModel m)
         {
-            return new Person(m.LastName, m.BirthdateString);
+            return new Person(m.LastName, m.BirthdateString, m.FirstMidName);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Controllers
 {
+    [Produces("application/json")]
     [Route("api/films")]
     public class FilmsController : Controller
     {
@@ -26,6 +28,12 @@ namespace FilmAPI.Controllers
         {
             var model = await _service.GetBySurrogateKeyAsync(key);
             return Ok(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddAsync([FromBody] FilmViewModel model)
+        {
+            var savedModel = await _service.AddAsync(model);
+            return Ok(savedModel);
         }
     }
 }

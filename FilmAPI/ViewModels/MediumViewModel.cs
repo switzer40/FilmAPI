@@ -16,11 +16,12 @@ namespace FilmAPI.ViewModels
             SurrogateKey = key;
         }
 
-        public MediumViewModel(string filmTitle, short filmYear, string mediumType)
+        public MediumViewModel(string filmTitle, short filmYear, string mediumType, string location = "")
         {
             FilmTitle = filmTitle;
             FilmYear = filmYear;
             MediumType = mediumType;
+            Location = location;
         }
 
         [Required]
@@ -29,6 +30,7 @@ namespace FilmAPI.ViewModels
         public short FilmYear { get; set; }
         [Required]
         public string MediumType { get; set; }
+        public string Location { get; set; }
         public override string SurrogateKey { get; set; }
     }
 }
