@@ -76,6 +76,18 @@ namespace FilmAPI.Services
         {
             EntityType entityToDelete = _mapService.MapBack(m);
             _repository.Delete(entityToDelete);
-        }        
+        }
+
+        public void Delete(string key)
+        {
+            var modelToDelete = GetBySurrogateKey(key);
+            Delete(modelToDelete);
+        }
+
+        public async Task DeleteAsync(string key)
+        {
+            var modelToDelete = await GetBySurrogateKeyAsync(key);
+            await DeleteAsync(modelToDelete);
+        }
     }
 }

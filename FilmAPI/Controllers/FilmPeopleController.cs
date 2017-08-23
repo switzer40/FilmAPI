@@ -9,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FilmAPI.Controllers
 {
-    [Route("api/people")]
-    public class PeopleController : EntitiesController<Person, PersonViewModel>
+    [Route("api/filmpeople")]
+    public class FilmPeopleController : EntitiesController<FilmPerson, FilmPersonViewModel>
     {
-        public PeopleController(IEntityService<Person, PersonViewModel> service) : base(service)
+        public FilmPeopleController(IEntityService<FilmPerson, FilmPersonViewModel> service) : base(service)
         {
         }
     }

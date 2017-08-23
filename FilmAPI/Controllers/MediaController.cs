@@ -1,38 +1,19 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.Core.Entities;
 using FilmAPI.ViewModels;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FilmAPI.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace FilmAPI.Controllers
 {
     [Route("api/media")]
-    public class MediaController : Controller
+    public class MediaController : EntitiesController<Medium, MediumViewModel>
     {
-        private readonly IMediumService _service;
-        public MediaController(IMediumService service)
+        public MediaController(IEntityService<Medium, MediumViewModel> service) : base(service)
         {
-            _service = service;
-        }
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var models = await _service.GetAllAsync();
-            return Ok(models);
-        }
-        [HttpGet("{key}")]
-        public async Task<IActionResult> Get(string key)
-        {
-            var model = await _service.GetBySurrogateKeyAsync(key);
-            return Ok(model);
-        }
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody] MediumViewModel model)
-        {
-            var savedModel = await _service.AddAsync(model);
-            return Ok(savedModel);
         }
     }
 }
