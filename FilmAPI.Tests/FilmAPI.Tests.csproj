@@ -19,6 +19,7 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
+    <PackageReference Include="StructureMap.Microsoft.DependencyInjection" Version="1.3.1" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
   </ItemGroup>
@@ -31,6 +32,12 @@
 
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="IntegrationTests\FilmPeopleController\" />
+    <Folder Include="IntegrationTests\MediaController\" />
+    <Folder Include="IntegrationTests\PeopleController\" />
   </ItemGroup>
 
 </Project>

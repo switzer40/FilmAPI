@@ -12,6 +12,12 @@ namespace FilmAPI.ViewModels
         public FilmViewModel()
         {
         }
+        public FilmViewModel(string title, short year, short length = 10)
+        {
+            Title = title;
+            Year = year;
+            Length = length;
+        }
         public FilmViewModel(Film f, string key)
         {
             Title = f.Title;
@@ -20,8 +26,10 @@ namespace FilmAPI.ViewModels
             SurrogateKey = key;
         }
         [Required]
+        [MaxLength(50)]
         public string Title { get; set; }
         [Required]
+        [Range(1850, 2100)]
         public short Year { get; set; }
         public short Length { get; set; }
         public override string SurrogateKey { get; set; }

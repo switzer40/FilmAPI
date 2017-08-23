@@ -19,6 +19,8 @@ namespace FilmAPI.Core.Entities
         }
         public string FirstMidName { get; set; }
         [Required]
+        [MaxLength(50)]
+        [MinLength(5)]
         public string LastName { get; set; }
         [Required]
         public string BirthdateString { get; set; }

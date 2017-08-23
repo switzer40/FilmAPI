@@ -104,23 +104,24 @@ namespace FilmAPI
             var container = new Container();
             container.Configure(config =>
             {
-                config.Scan(_ =>
-                {
-                    _.AssemblyContainingType(typeof(Startup));
-                    _.AssemblyContainingType(typeof(IRepository<>));
-                     _.AssemblyContainingType(typeof(Repository<>));
-                    _.WithDefaultConventions();
+            config.Scan(_ =>
+            {
+                _.AssemblyContainingType(typeof(Startup));
+                _.AssemblyContainingType(typeof(IRepository<>));
+                _.AssemblyContainingType(typeof(Repository<>));
+                _.WithDefaultConventions();
 
-                });
-                //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
-                // Map Each EntityService manually
-                config.For<IEntityService<FilmPerson, FilmPersonViewModel>>().Use<FilmPersonService>();
-                config.For<IEntityService<Film, FilmViewModel>>().Use<FilmService>();
-                config.For<IEntityService<Medium, MediumViewModel>>().Use<MediumService>();
-                config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();                
-                config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
+            });
+            //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
+            // Map Each EntityService manually
+            config.For<IEntityService<FilmPerson, FilmPersonViewModel>>().Use<FilmPersonService>();
+            config.For<IEntityService<Film, FilmViewModel>>().Use<FilmService>();
+            config.For<IEntityService<Medium, MediumViewModel>>().Use<MediumService>();
+            config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();
+            config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
+            //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
 
-                // this should have been done by WithDefaultConventions:
+            // this shoIuld have been done by WithDefaultConventions:
                 config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
                 config.Populate(services);
             });
