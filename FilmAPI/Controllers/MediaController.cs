@@ -12,10 +12,24 @@ namespace FilmAPI.Controllers
 {
     [Route("api/media")]
     [ValidateModel]
-    public class MediaController : EntitiesController<Medium, MediumViewModel>
+    public class MediaController : Controller
     {
-        public MediaController(IEntityService<Medium, MediumViewModel> service) : base(service)
+        private readonly IMediumService _service;
+        public MediaController(IMediumService service)
         {
+            _service = service;
+        }
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var media = await _service.GetAllAsync();
+            return Ok(media);
+        }
+        [HttpGet("{key}")]
+        public async Task<IActionResult> Get(string key)
+        {
+            var medium = await _service.GetBySurrogateKeyAsync(key);
+            return Ok(medium);
         }
     }
 }

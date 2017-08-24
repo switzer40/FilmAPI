@@ -12,10 +12,24 @@ namespace FilmAPI.Controllers
 {
     [Route("api/films")]
     [ValidateModel]
-    public class FilmsController : EntitiesController<Film, FilmViewModel>
+    public class FilmsController : Controller
     {
-        public FilmsController(IEntityService<Film, FilmViewModel> service) : base(service)
+        private readonly IFilmService _service;
+        public FilmsController(IFilmService service)
         {
+            _service = service;
+        }
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var films = await _service.GetAllAsync();
+            return Ok(films);
+        }
+        [HttpGet("{key}")]
+        public async Task<IActionResult> Get(string key)
+        {
+            var person = await _service.GetBySurrogateKeyAsync(key);
+            return Ok(person);
         }
     }
 }

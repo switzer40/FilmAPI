@@ -1,5 +1,4 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
+﻿using FilmAPI.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace FilmAPI.Tests.IntegrationTests.FilmsController
+namespace FilmAPI.Tests.IntegrationTests.PeopleController
 {
     public class Get : TestBase
     {
@@ -21,16 +20,16 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         }
 
         [Fact]
-        public async Task ReturnsListOfFilms()
+        public async Task RturnsListOfPeople()
         {
-            var response = await _client.GetAsync("/api/films");
+            var response = await _client.GetAsync("api/people");
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<List<FilmViewModel>>(stringResponse);
+            var result = JsonConvert.DeserializeObject<List<PersonViewModel>>(stringResponse);
 
             Assert.Equal(2, result.Count);
-            Assert.Equal(1, result.Where(f => f.Title.Contains("Tiffany")).Count());
-            Assert.Equal(1, result.Where(f => f.Title.Contains("Woman")).Count());
+            Assert.Equal(1, result.Where(p => p.LastName.Contains("Hepburn")).Count());
+            Assert.Equal(1, result.Where(p => p.LastName.Contains("Roberts")).Count());
         }
-    }
+    }        
 }

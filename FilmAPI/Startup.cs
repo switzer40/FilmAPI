@@ -15,6 +15,7 @@ using AutoMapper;
 using FilmAPI.Core.SharedKernel;
 using StructureMap;
 using FilmAPI.ViewModels;
+using FilmAPI.Controllers;
 
 namespace FilmAPI
 {
@@ -119,6 +120,11 @@ namespace FilmAPI
             config.For<IEntityService<Medium, MediumViewModel>>().Use<MediumService>();
             config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();
             config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
+            config.For(typeof(EntityService<Film, FilmViewModel>)).Add(typeof(FilmService));
+            config.For(typeof(EntityService<Person, PersonViewModel>)).Add(typeof(PersonService));
+            config.For(typeof(EntityService<Medium, MediumViewModel>)).Add(typeof(MediumService));
+            config.For(typeof(EntityService<FilmPerson, FilmPersonViewModel>)).Add(typeof(FilmPersonService));
+            
             //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
 
             // this shoIuld have been done by WithDefaultConventions:

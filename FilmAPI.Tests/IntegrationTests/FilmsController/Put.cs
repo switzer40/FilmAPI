@@ -26,7 +26,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             string key = "Howdy"; // A surrogate key that certainly does not exist.
             var filmToPut = new FilmViewModel("", 1957, 123);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPut), Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync("api/films", jsonContent);
+            var response = await _client.PutAsync($"api/films/{key}", jsonContent);
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
 

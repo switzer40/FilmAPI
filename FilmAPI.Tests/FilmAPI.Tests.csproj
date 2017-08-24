@@ -37,7 +37,6 @@
   <ItemGroup>
     <Folder Include="IntegrationTests\FilmPeopleController\" />
     <Folder Include="IntegrationTests\MediaController\" />
-    <Folder Include="IntegrationTests\PeopleController\" />
   </ItemGroup>
 
 </Project>
