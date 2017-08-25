@@ -44,12 +44,14 @@ namespace FilmAPI.Controllers
             return Ok(savedMedium);
         }
         [HttpPut("{key}")]
+        [ValidateMediumExists]
         public async Task<IActionResult> Put(string key, [FromBody] MediumViewModel model)
         {
             await _service.UpdateAsync(model);
             return Ok();
         }
         [HttpDelete("{key}")]
+        [ValidateMediumExists]
         public async Task<IActionResult> Delete(string key)
         {
             await _service.DeleteAsync(key);
