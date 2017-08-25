@@ -14,11 +14,17 @@ namespace FilmAPI.Controllers
     [ValidateModel]
     public class MediaController : Controller
     {
+        public MediaController()
+        {
+        }
         private readonly IMediumService _service;
         public MediaController(IMediumService service)
         {
             _service = service;
         }
+
+       
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
