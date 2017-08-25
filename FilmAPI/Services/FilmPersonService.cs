@@ -11,23 +11,94 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
-    public class FilmPersonService : EntityService<FilmPerson, FilmPersonViewModel>, IFilmPersonService
+    public class FilmPersonService : IFilmPersonService
     {
-        public FilmPersonService(IFilmPersonRepository repository, IFilmPersonMapper mapper, KeyService keyService) : base(repository, mapper, keyService)
+        private readonly IFilmPersonRepository _repository;
+        private readonly IMapper _mapper;
+        private readonly IKeyService _keyService;
+        private readonly IFilmRepository _filmRepository;
+        private readonly IPersonRepository _personRepository;
+        public FilmPersonService(IFilmPersonRepository repository,
+                                 IMapper mapper,
+                                 IKeyService keyService,
+                                 IFilmRepository filmRepository,
+                                 IPersonRepository personRepository)
         {
-
+            _repository = repository;
+            _mapper = mapper;
+            _keyService = keyService;
+            _filmRepository = filmRepository;
+            _personRepository = personRepository;
         }
-        public override FilmPersonViewModel GetBySurrogateKey(string key)
+        public FilmPersonViewModel Add(FilmPersonViewModel m)
+        {
+            var filmPersonToAdd = _mapper.Map<FilmPerson>(m);
+            var savedFilmPerson = _repository.Add(filmPersonToAdd);
+            return _mapper.Map<FilmPersonViewModel>(savedFilmPerson);
+        }
+
+        public async Task<FilmPersonViewModel> AddAsync(FilmPersonViewModel m)
+        {
+            var filmPersonToAdd = _mapper.Map<FilmPerson>(m);
+            var savedFilmPerson = await _repository.AddAsync(filmPersonToAdd);
+            return _mapper.Map<FilmPersonViewModel>(savedFilmPerson);
+        }
+
+        public void Delete(FilmPersonViewModel m)
+        {
+            var filmPersonToDelete = _mapper.Map<FilmPerson>(m);
+            _repository.Delete(filmPersonToDelete);
+        }
+
+        public void Delete(string key)
+        {
+            var modelToDelete = GetBySurrogateKey(key);
+            Delete(modelToDelete);
+        }
+
+        public Task DeleteAsync(FilmPersonViewModel m)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<FilmPersonViewModel> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<FilmPersonViewModel>> GetAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public FilmPersonViewModel GetBySurrogateKey(string key)
         {
             _keyService.DeconstructFilmPersonSurrogateKey(key);
-            Film f = new Film(_keyService.FilmTitle, _keyService.FilmYear);
-            Person p = new Person(_keyService.PersonLastName, _keyService.PersonBirthdate);
+            var f = new Film(_keyService.FilmTitle, _keyService.FilmYear);
+            var p = new Person(_keyService.PersonLastName, _keyService.PersonBirthdate);
             return new FilmPersonViewModel(f, p, _keyService.FilmPersonRole, key);
         }
 
-        public override async Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)
+        public async Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)
         {
-            return await Task.Run<FilmPersonViewModel>(() => GetBySurrogateKey(key));
+            return await Task.Run(() => GetBySurrogateKey(key));
+        }
+
+        public void Update(FilmPersonViewModel m)
+        {
+            var filmPersonToUpdate = _mapper.Map<FilmPerson>(m);
+            _repository.Update(filmPersonToUpdate);
+        }
+
+        public async Task UpdateAsync(FilmPersonViewModel m)
+        {
+            var filmPersonToUpdate = _mapper.Map<FilmPerson>(m);
+             await  _repository.UpdateAsync(filmPersonToUpdate);           
         }
     }
 }

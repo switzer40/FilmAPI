@@ -37,5 +37,23 @@ namespace FilmAPI.Controllers
             var medium = await _service.GetBySurrogateKeyAsync(key);
             return Ok(medium);
         }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] MediumViewModel model)
+        {
+            var savedMedium =await _service.AddAsync(model);
+            return Ok(savedMedium);
+        }
+        [HttpPut("{key}")]
+        public async Task<IActionResult> Put(string key, [FromBody] MediumViewModel model)
+        {
+            await _service.UpdateAsync(model);
+            return Ok();
+        }
+        [HttpDelete("{key}")]
+        public async Task<IActionResult> Delete(string key)
+        {
+            await _service.DeleteAsync(key);
+            return Ok();
+        }
     }
 }

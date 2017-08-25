@@ -19,6 +19,12 @@ namespace FilmAPI.ViewModels
             BirthdateString = p.BirthdateString;
             SurrogateKey = key;
         }
+        public PersonViewModel(string lastName, string birthdate, string firstMidName = "")
+        {
+            FirstMidName = firstMidName;
+            LastName = lastName;
+            BirthdateString = birthdate;
+        }
         public string FirstMidName { get; set; }
         [Required]
         public string LastName { get; set; }

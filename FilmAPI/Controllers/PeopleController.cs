@@ -1,5 +1,6 @@
 ﻿using FilmAPI.Filters;
 using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,26 @@ namespace FilmAPI.Controllers
         {
             var people = await _service.GetAllAsync();
             return Ok(people);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] PersonViewModel model)
+        {
+            var savedPerson = await _service.AddAsync(model);
+            return Ok(savedPerson);
+        }
+        [HttpPut("{key}")]
+        [ValidatePersonExists]
+        public async Task<IActionResult> Put(string key, [FromBody] PersonViewModel model)
+        {
+            await _service.UpdateAsync(model);
+            return Ok();
+        }
+        [HttpDelete("{key}")]
+        [ValidatePersonExists]
+        public async Task<IActionResult> Delete(string key)
+        {
+            await _service.DeleteAsync(key);
+            return Ok();
         }
     }
 }

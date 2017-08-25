@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 namespace FilmAPI.ViewModels
 {
     public class MediumViewModel : BaseViewModel
-    {
-        public MediumViewModel()
+    {   public MediumViewModel()
         {
         }
+
+
         public MediumViewModel(Film f, string mediumType, string key)
         {
             FilmTitle = f.Title;

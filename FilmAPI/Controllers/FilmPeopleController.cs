@@ -34,5 +34,23 @@ namespace FilmAPI.Controllers
             var filmPerson = await _service.GetBySurrogateKeyAsync(key);
             return Ok(filmPerson);
         }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody]FilmPersonViewModel model)
+        {
+            var savedModel = await _service.AddAsync(model);
+            return Ok(savedModel);
+        }
+        [HttpPut("{key}")]
+        public async Task<IActionResult> Put(string key, [FromBody] FilmPersonViewModel model)
+        {
+            await _service.UpdateAsync(model);
+            return Ok();
+        }
+        [HttpDelete("{key}")]
+        public async Task<IActionResult> Delete(string key)
+        {
+            await _service.DeleteAsync(key);
+            return Ok();
+        }
     }
 }

@@ -115,10 +115,7 @@ namespace FilmAPI
             });
             //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
             // Map Each EntityService manually
-            config.For<IEntityService<FilmPerson, FilmPersonViewModel>>().Use<FilmPersonService>();
-            config.For<IEntityService<Film, FilmViewModel>>().Use<FilmService>();
-            config.For<IEntityService<Medium, MediumViewModel>>().Use<MediumService>();
-            config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();
+            
             config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
             config.For(typeof(EntityService<Film, FilmViewModel>)).Add(typeof(FilmService));
             config.For(typeof(EntityService<Person, PersonViewModel>)).Add(typeof(PersonService));
