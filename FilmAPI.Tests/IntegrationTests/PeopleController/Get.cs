@@ -1,4 +1,5 @@
-﻿using FilmAPI.ViewModels;
+﻿using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,12 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
     public class Get : TestBase
     {
         private readonly HttpClient _client;
+        private readonly IKeyService _keyService;
 
-        public Get()
+        public Get(IKeyService keyService)
         {
             _client = base.GetClient();
+            _keyService = keyService;
         }
 
         [Fact]
@@ -30,6 +33,22 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             Assert.Equal(2, result.Count);
             Assert.Equal(1, result.Where(p => p.LastName.Contains("Hepburn")).Count());
             Assert.Equal(1, result.Where(p => p.LastName.Contains("Roberts")).Count());
+        }
+        [Fact]
+        public async Task ReturnsHepburnGivenValidSurrogateKey()
+        {
+            string lastName = "Hepburn";
+            string birthdate = "1929-05-04";
+            string key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var response = await _client.GetAsync($"api/people/{key}");
+            response.EnsureSuccessStatusCode();
+
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<PersonViewModel>(stringResponse);
+
+            Assert.Equal(lastName, result.LastName);
+            Assert.Equal(birthdate, result.BirthdateString);
+
         }
     }        
 }

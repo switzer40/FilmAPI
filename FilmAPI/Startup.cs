@@ -113,19 +113,18 @@ namespace FilmAPI
                 _.WithDefaultConventions();
 
             });
-            //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
-            // Map Each EntityService manually
+            // I hope StructureMap´s conventions will take care of configuring
+            // the relationship IEntityService -> EntityService for each of the 4 entity types.
             
-            config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
-            config.For(typeof(EntityService<Film, FilmViewModel>)).Add(typeof(FilmService));
-            config.For(typeof(EntityService<Person, PersonViewModel>)).Add(typeof(PersonService));
-            config.For(typeof(EntityService<Medium, MediumViewModel>)).Add(typeof(MediumService));
-            config.For(typeof(EntityService<FilmPerson, FilmPersonViewModel>)).Add(typeof(FilmPersonService));
-            
+            //config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
+            //config.For(typeof(EntityService<Film, FilmViewModel>)).Add(typeof(FilmService));
+            //config.For(typeof(EntityService<Person, PersonViewModel>)).Add(typeof(PersonService));
+            //config.For(typeof(EntityService<Medium, MediumViewModel>)).Add(typeof(MediumService));
+            //config.For(typeof(EntityService<FilmPerson, FilmPersonViewModel>)).Add(typeof(FilmPersonService));            
             //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
 
             // this shoIuld have been done by WithDefaultConventions:
-                config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
+            //config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
                 config.Populate(services);
             });
             return container.GetInstance<IServiceProvider>();

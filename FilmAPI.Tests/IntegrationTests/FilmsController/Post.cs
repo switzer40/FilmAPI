@@ -3,6 +3,7 @@ using FilmAPI.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             var response = await _client.PostAsync("api/films", jsonContent);
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Contains("Title", stringResponse);
         }
         [Fact]
@@ -36,8 +37,8 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/films", jsonContent);
 
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
+            
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
         public async Task ReturnsBadRequestGivenYearOutsideRange1850To2100()
