@@ -41,12 +41,14 @@ namespace FilmAPI.Controllers
             return Ok(savedModel);
         }
         [HttpPut("{key}")]
+        [ValidateFilmPersonExists]
         public async Task<IActionResult> Put(string key, [FromBody] FilmPersonViewModel model)
         {
             await _service.UpdateAsync(model);
             return Ok();
         }
         [HttpDelete("{key}")]
+        [ValidateFilmPersonExists]
         public async Task<IActionResult> Delete(string key)
         {
             await _service.DeleteAsync(key);
