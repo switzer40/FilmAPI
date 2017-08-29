@@ -31,8 +31,9 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         public async Task ReturnsOkGivenValidPersonData()
         {
             string lastName = "Gere";
-            var personToPost = new Person(lastName, "1949-07-30", "Richard");
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF7, "application/json");
+            string birthdate = "1949-08-30";
+            var personToPost = new Person(lastName, birthdate , "Richard");
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/people", jsonContent);
             response.EnsureSuccessStatusCode();
 
@@ -40,6 +41,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             var model = JsonConvert.DeserializeObject<PersonViewModel>(stringResponse);
 
             Assert.Equal(lastName, model.LastName);
+            Assert.Equal(birthdate, model.BirthdateString);
         }
     }
 }

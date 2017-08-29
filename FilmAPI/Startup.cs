@@ -16,6 +16,7 @@ using FilmAPI.Core.SharedKernel;
 using StructureMap;
 using FilmAPI.ViewModels;
 using FilmAPI.Controllers;
+using FluentValidation.AspNetCore;
 
 namespace FilmAPI
 {
@@ -89,8 +90,10 @@ namespace FilmAPI
         // This m ethod gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-                .AddControllersAsServices();
+            services.AddMvc(setup => {
+
+            }).AddFluentValidation();
+                
             
             //var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
             //var mapper = config.CreateMapper();

@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Core.Entities;
+using FilmAPI.Core.Validators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,6 +30,7 @@ namespace FilmAPI.ViewModels
         [Required]
         public string LastName { get; set; }
         [Required]
+        [ValidateDateString]
         public string BirthdateString { get; set; }
         public DateTime Birthdate
         {
