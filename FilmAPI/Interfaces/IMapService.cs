@@ -1,11 +1,6 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.Core.SharedKernel;
-using FilmAPI.Mappers;
+﻿using FilmAPI.Core.SharedKernel;
 using FilmAPI.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {

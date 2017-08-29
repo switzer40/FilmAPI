@@ -81,7 +81,7 @@ namespace FilmAPI.Services
             _keyService.DeconstructFilmPersonSurrogateKey(key);
             var f = new Film(_keyService.FilmTitle, _keyService.FilmYear);
             var p = new Person(_keyService.PersonLastName, _keyService.PersonBirthdate);
-            return new FilmPersonViewModel(f, p, _keyService.FilmPersonRole, key);
+            return new FilmPersonViewModel(f.Title, f.Year, p.LastName, p.BirthdateString, _keyService.FilmPersonRole, key);
         }
 
         public async Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)

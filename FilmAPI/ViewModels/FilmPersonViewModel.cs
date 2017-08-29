@@ -1,38 +1,32 @@
-﻿using FilmAPI.Core.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmAPI.ViewModels
 {
-    public class FilmPersonViewModel: BaseViewModel
+    public class FilmPersonViewModel : BaseViewModel
     {
-        public FilmPersonViewModel()
+        public FilmPersonViewModel(string title,
+                                   short year,
+                                   string lastName,
+                                   string birthdate,
+                                   string role,
+                                   string key)
         {
-        }
-        public FilmPersonViewModel(Film f, Person p, string role, string key)
-        {
-            FilmTitle = f.Title;
-            FilmYear = f.Year;
-            PersonLastName = p.LastName;
-            PersonBirthdate = p.BirthdateString;
+            FilmTitle = title;
+            FilmYear = year;
+            PersonLastName = lastName;
+            PersonBirthdate = birthdate;
             Role = role;
-            SurrogateKey = key;
+            _key = key;
         }
-        [Required]
         public string FilmTitle { get; set; }
-        [Required]
         public short FilmYear { get; set; }
-        [Required]
         public string PersonLastName { get; set; }
-        [Required]
-        public string PersonBirthdate { get; set; }        
-        [Required]
+        public string PersonBirthdate { get; set; }
         public string Role { get; set; }
-
-        
-public override string SurrogateKey { get; set; }
+        private string _key;
+        public override string SurrogateKey { get { return _key; } set { _key = value; } }
     }
 }
