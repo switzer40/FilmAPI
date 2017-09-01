@@ -14,9 +14,7 @@ namespace FilmAPI.Controllers
     [ValidateModel]
     public class FilmsController : Controller
     {
-        public FilmsController()
-        {
-        }
+        
         private readonly IFilmService _service;
         public FilmsController(IFilmService service)
         {

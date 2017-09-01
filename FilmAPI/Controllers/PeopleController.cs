@@ -13,9 +13,7 @@ namespace FilmAPI.Controllers
     [ValidateModel]
     public class PeopleController : Controller
     {
-        public PeopleController()
-        {
-        }
+        
         private readonly IPersonService _service;
         public PeopleController(IPersonService service)
         {

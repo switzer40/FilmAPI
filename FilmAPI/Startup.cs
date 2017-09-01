@@ -92,13 +92,13 @@ namespace FilmAPI
         {
             services.AddMvc(setup => {
 
-            }).AddFluentValidation();
+            }).AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<IFilmValidator>());
                 
             
-            //var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
-            //var mapper = config.CreateMapper();
-            //services.AddScoped<MapperConfiguration>(_ => config);
-            //services.AddScoped<IMapper>(_ => mapper);
+            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperProfile()); });
+            var mapper = config.CreateMapper();
+            services.AddScoped<MapperConfiguration>(_ => config);
+            services.AddScoped<IMapper>(_ => mapper);
             return ConfigureIoC(services);
 
         }

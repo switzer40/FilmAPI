@@ -1,14 +1,13 @@
 ﻿using FilmAPI.ViewModels;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentValidation.AspNetCore;
-using FluentValidation;
 
 namespace FilmAPI.Interfaces
 {
-    public interface IFilmValidator : IModelValidator<FilmViewModel>
+    public interface IModelValidator<ModelType> :  IValidator<ModelType> where ModelType : BaseViewModel
     {
     }
 }

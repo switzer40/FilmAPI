@@ -9,7 +9,7 @@ namespace FilmAPI.Filters
 {
     public class ValidateModelAttribute : ActionFilterAttribute
     {
-        public override void OnActionExecuted(ActionExecutedContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid)
             {

@@ -8,7 +8,12 @@ namespace FilmAPI.ViewModels
         {
         }
 
-
+        public MediumViewModel(string title, short year, string mediumType)
+        {
+            FilmTitle = title;
+            FilmYear = year;
+            MediumType = mediumType;
+        }
         public MediumViewModel(Film f, string mediumType, string key)
         {
             FilmTitle = f.Title;

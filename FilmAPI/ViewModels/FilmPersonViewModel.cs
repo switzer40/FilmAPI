@@ -11,6 +11,18 @@ namespace FilmAPI.ViewModels
                                    short year,
                                    string lastName,
                                    string birthdate,
+                                   string role)
+        {
+            FilmTitle = title;
+            FilmYear = year;
+            PersonLastName = lastName;
+            PersonBirthdate = birthdate;
+            Role = role;
+        }
+        public FilmPersonViewModel(string title,
+                                   short year,
+                                   string lastName,
+                                   string birthdate,
                                    string role,
                                    string key)
         {
@@ -21,6 +33,7 @@ namespace FilmAPI.ViewModels
             Role = role;
             _key = key;
         }
+       
         public string FilmTitle { get; set; }
         public short FilmYear { get; set; }
         public string PersonLastName { get; set; }
