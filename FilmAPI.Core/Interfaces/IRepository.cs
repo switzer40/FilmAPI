@@ -13,6 +13,8 @@ namespace FilmAPI.Core.Interfaces
         Task<T> AddAsync(T t);
         void Delete(T t);
         Task DeleteAsync(T t);
+        void Delete(int id);
+        Task DeleteAsync(int id);
         T GetById(int id);
         Task<T> GetByIdAsync(int id);        
         List<T> List();

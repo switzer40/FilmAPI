@@ -13,8 +13,10 @@ namespace FilmAPI.Interfaces
         Task<List<ModelType>> GetAllAsync();
         ModelType Add(ModelType m);
         Task<ModelType> AddAsync(ModelType m);
-        void Delete(ModelType m);                  
-        Task DeleteAsync(ModelType m);       
+        void Delete(ModelType m);
+        void Delete(string key);
+        Task DeleteAsync(ModelType m);
+        Task DeleteAsync(string key);
         void Update(ModelType m);
         Task UpdateAsync(ModelType m);        
         ModelType GetBySurrogateKey(string key);

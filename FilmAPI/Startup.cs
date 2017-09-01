@@ -15,6 +15,8 @@ using AutoMapper;
 using FilmAPI.Core.SharedKernel;
 using StructureMap;
 using FilmAPI.ViewModels;
+using FilmAPI.Controllers;
+using FluentValidation.AspNetCore;
 
 namespace FilmAPI
 {
@@ -88,13 +90,15 @@ namespace FilmAPI
         // This m ethod gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
-                .AddControllersAsServices();
+            services.AddMvc(setup => {
+
+            }).AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<IFilmValidator>());
+                
             
-            //var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperConfig()); });
-            //var mapper = config.CreateMapper();
-            //services.AddScoped<MapperConfiguration>(_ => config);
-            //services.AddScoped<IMapper>(_ => mapper);
+            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperProfile()); });
+            var mapper = config.CreateMapper();
+            services.AddScoped<MapperConfiguration>(_ => config);
+            services.AddScoped<IMapper>(_ => mapper);
             return ConfigureIoC(services);
 
         }
@@ -104,24 +108,26 @@ namespace FilmAPI
             var container = new Container();
             container.Configure(config =>
             {
-                config.Scan(_ =>
-                {
-                    _.AssemblyContainingType(typeof(Startup));
-                    _.AssemblyContainingType(typeof(IRepository<>));
-                     _.AssemblyContainingType(typeof(Repository<>));
-                    _.WithDefaultConventions();
+            config.Scan(_ =>
+            {
+                _.AssemblyContainingType(typeof(Startup));
+                _.AssemblyContainingType(typeof(IRepository<>));
+                _.AssemblyContainingType(typeof(Repository<>));
+                _.WithDefaultConventions();
 
-                });
-                //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
-                // Map Each EntityService manually
-                config.For<IEntityService<FilmPerson, FilmPersonViewModel>>().Use<FilmPersonService>();
-                config.For<IEntityService<Film, FilmViewModel>>().Use<FilmService>();
-                config.For<IEntityService<Medium, MediumViewModel>>().Use<MediumService>();
-                config.For<IEntityService<Person, PersonViewModel>>().Use<PersonService>();                
-                config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
+            });
+            // I hope StructureMap´s conventions will take care of configuring
+            // the relationship IEntityService -> EntityService for each of the 4 entity types.
+            
+            //config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
+            //config.For(typeof(EntityService<Film, FilmViewModel>)).Add(typeof(FilmService));
+            //config.For(typeof(EntityService<Person, PersonViewModel>)).Add(typeof(PersonService));
+            //config.For(typeof(EntityService<Medium, MediumViewModel>)).Add(typeof(MediumService));
+            //config.For(typeof(EntityService<FilmPerson, FilmPersonViewModel>)).Add(typeof(FilmPersonService));            
+            //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
 
-                // this should have been done by WithDefaultConventions:
-                config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
+            // this shoIuld have been done by WithDefaultConventions:
+            //config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
                 config.Populate(services);
             });
             return container.GetInstance<IServiceProvider>();

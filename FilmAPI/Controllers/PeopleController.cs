@@ -1,4 +1,5 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.Filters;
+using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,8 +10,10 @@ using System.Threading.Tasks;
 namespace FilmAPI.Controllers
 {
     [Route("api/people")]
+    [ValidateModel]
     public class PeopleController : Controller
     {
+        
         private readonly IPersonService _service;
         public PeopleController(IPersonService service)
         {
@@ -19,20 +22,28 @@ namespace FilmAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var models = await _service.GetAllAsync();
-            return Ok(models);
-        }
-        [HttpGet("{key}")]
-        public async Task<IActionResult> Get(string key)
-        {
-            var model = await _service.GetBySurrogateKeyAsync(key);
-            return Ok(model);
+            var people = await _service.GetAllAsync();
+            return Ok(people);
         }
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody] PersonViewModel model)
+        public async Task<IActionResult> Post([FromBody] PersonViewModel model)
         {
             var savedPerson = await _service.AddAsync(model);
             return Ok(savedPerson);
+        }
+        [HttpPut("{key}")]
+        [ValidatePersonExists]
+        public async Task<IActionResult> Put(string key, [FromBody] PersonViewModel model)
+        {
+            await _service.UpdateAsync(model);
+            return Ok();
+        }
+        [HttpDelete("{key}")]
+        [ValidatePersonExists]
+        public async Task<IActionResult> Delete(string key)
+        {
+            await _service.DeleteAsync(key);
+            return Ok();
         }
     }
 }

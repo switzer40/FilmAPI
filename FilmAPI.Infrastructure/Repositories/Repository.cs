@@ -108,5 +108,17 @@ namespace FilmAPI.Infrastructure.Repositories
             _context.Entry(t).State = EntityState.Modified;
             await SaveAsync();
         }
+
+        public void Delete(int id)
+        {
+            var entityToDelete = GetById(id);
+            Delete(entityToDelete);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var entityToDelete = await GetByIdAsync(id);
+            await DeleteAsync(entityToDelete);
+        }
     }
 }

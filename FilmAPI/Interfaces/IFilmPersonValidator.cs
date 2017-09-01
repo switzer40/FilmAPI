@@ -1,5 +1,5 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
+﻿using FilmAPI.ViewModels;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    public interface IFilmMapper : IEntityMapper<Film, FilmViewModel>
+    public interface IFilmPersonValidator : IValidator<FilmPersonViewModel>
     {
     }
 }

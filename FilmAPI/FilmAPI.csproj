@@ -5,11 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="AutoMapperProfileccs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Specifictions\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="7.1.1" />
     
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.3" />
