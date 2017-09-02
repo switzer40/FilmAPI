@@ -11,10 +11,10 @@ namespace FilmAPI.Services
     public class MediumService : IMediumService
     {
         private readonly IMediumRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IMediumMapper _mapper;
         private readonly IKeyService _keyService;
         private readonly IFilmRepository _filmRepository;
-        public MediumService(IMediumRepository repository, IMapper mapper, IKeyService keyService, IFilmRepository filmRepository)
+        public MediumService(IMediumRepository repository, IMediumMapper mapper, IKeyService keyService, IFilmRepository filmRepository)
         {
             _repository = repository;
             _mapper = mapper;
@@ -23,21 +23,19 @@ namespace FilmAPI.Services
         }
         public MediumViewModel Add(MediumViewModel m)
         {
-            var mediumToAdd = _mapper.Map<Medium>(m);
+            var mediumToAdd = _mapper.MapBack(m);
             var savedMedium = _repository.Add(mediumToAdd);
-            return _mapper.Map<MediumViewModel>(savedMedium);
+            return _mapper.Map(savedMedium);
         }
 
         public async Task<MediumViewModel> AddAsync(MediumViewModel m)
         {
-            var mediumToAdd = _mapper.Map<Medium>(m);
-            var savedMedium = await _repository.AddAsync(mediumToAdd);
-            return _mapper.Map<MediumViewModel>(savedMedium);
+            return await Task.Run(() => Add(m));
         }
 
         public void Delete(MediumViewModel m)
         {
-            var mediumToDelete = _mapper.Map<Medium>(m);
+            var mediumToDelete = _mapper.MapBack(m);
             _repository.Delete(mediumToDelete);
         }
 
@@ -50,27 +48,28 @@ namespace FilmAPI.Services
 
         public async Task DeleteAsync(MediumViewModel m)
         {
-            var mediumToDelete = _mapper.Map<Medium>(m);
-            await _repository.DeleteAsync(mediumToDelete);
+            await Task.Run(() => Delete(m));
         }
 
         public async Task DeleteAsync(string key)
         {
-            _keyService.DeconstructMedumSurrogateKey(key);
-            int id = _keyService.MediumFilmId;
-            await  _repository.DeleteAsync(id);
+            await Task.Run(() => Delete(key));
         }
 
         public List<MediumViewModel> GetAll()
         {
             List<Medium> media = _repository.List();
-            return _mapper.Map<List<MediumViewModel>>(media);
+            var models = _mapper.MapList(media);
+            foreach (var m in models)
+            {
+                m.SurrogateKey = _keyService.ConstructMediumSurrogateKey(m);
+            }
+            return models;
         }
 
         public async Task<List<MediumViewModel>> GetAllAsync()
         {
-            List<Medium> media = await  _repository.ListAsync();
-            return _mapper.Map<List<MediumViewModel>>(media);
+            return await Task.Run(() => GetAll());
         }
 
         public MediumViewModel GetBySurrogateKey(string key)
@@ -88,14 +87,13 @@ namespace FilmAPI.Services
 
         public void Update(MediumViewModel m)
         {
-            var mediumToUpdate = _mapper.Map<Medium>(m);
+            var mediumToUpdate = _mapper.MapBack(m);
             _repository.Update(mediumToUpdate);
         }
 
         public async Task UpdateAsync(MediumViewModel m)
         {
-            var mediumToUpdate = _mapper.Map<Medium>(m);
-            await _repository.UpdateAsync(mediumToUpdate);
+            await Task.Run(() => Update(m));
         }
     }
 }

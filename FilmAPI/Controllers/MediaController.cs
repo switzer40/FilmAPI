@@ -13,10 +13,7 @@ namespace FilmAPI.Controllers
     [Route("api/media")]
     [ValidateModel]
     public class MediaController : Controller
-    {
-        public MediaController()
-        {
-        }
+    {        
         private readonly IMediumService _service;
         public MediaController(IMediumService service)
         {

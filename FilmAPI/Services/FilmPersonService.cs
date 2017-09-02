@@ -14,12 +14,12 @@ namespace FilmAPI.Services
     public class FilmPersonService : IFilmPersonService
     {
         private readonly IFilmPersonRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IFilmPersonMapper _mapper;
         private readonly IKeyService _keyService;
         private readonly IFilmRepository _filmRepository;
         private readonly IPersonRepository _personRepository;
         public FilmPersonService(IFilmPersonRepository repository,
-                                 IMapper mapper,
+                                 IFilmPersonMapper mapper,
                                  IKeyService keyService,
                                  IFilmRepository filmRepository,
                                  IPersonRepository personRepository)
@@ -32,21 +32,19 @@ namespace FilmAPI.Services
         }
         public FilmPersonViewModel Add(FilmPersonViewModel m)
         {
-            var filmPersonToAdd = _mapper.Map<FilmPerson>(m);
+            var filmPersonToAdd = _mapper.MapBack(m);
             var savedFilmPerson = _repository.Add(filmPersonToAdd);
-            return _mapper.Map<FilmPersonViewModel>(savedFilmPerson);
+            return _mapper.Map(savedFilmPerson);
         }
 
         public async Task<FilmPersonViewModel> AddAsync(FilmPersonViewModel m)
         {
-            var filmPersonToAdd = _mapper.Map<FilmPerson>(m);
-            var savedFilmPerson = await _repository.AddAsync(filmPersonToAdd);
-            return _mapper.Map<FilmPersonViewModel>(savedFilmPerson);
+            return await Task.Run(() => Add(m));
         }
 
         public void Delete(FilmPersonViewModel m)
         {
-            var filmPersonToDelete = _mapper.Map<FilmPerson>(m);
+            var filmPersonToDelete = _mapper.MapBack(m);
             _repository.Delete(filmPersonToDelete);
         }
 
@@ -56,24 +54,30 @@ namespace FilmAPI.Services
             Delete(modelToDelete);
         }
 
-        public Task DeleteAsync(FilmPersonViewModel m)
+        public async Task DeleteAsync(FilmPersonViewModel m)
         {
-            throw new NotImplementedException();
+            await Task.Run(() => Delete(m));
         }
 
-        public Task DeleteAsync(string key)
+        public async Task DeleteAsync(string key)
         {
-            throw new NotImplementedException();
+            await Task.Run(() => Delete(key));
         }
 
         public List<FilmPersonViewModel> GetAll()
         {
-            throw new NotImplementedException();
+            List<FilmPerson> filmPeople = _repository.List();
+            List<FilmPersonViewModel> models = _mapper.MapList(filmPeople);
+            foreach (var m in models)
+            {
+                m.SurrogateKey = _keyService.ConstructFilmPersonSurrorgateKey(m);
+            }
+            return models;
         }
 
-        public Task<List<FilmPersonViewModel>> GetAllAsync()
+        public async Task<List<FilmPersonViewModel>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await Task.Run(() => GetAll());
         }
 
         public FilmPersonViewModel GetBySurrogateKey(string key)
@@ -91,14 +95,13 @@ namespace FilmAPI.Services
 
         public void Update(FilmPersonViewModel m)
         {
-            var filmPersonToUpdate = _mapper.Map<FilmPerson>(m);
+            var filmPersonToUpdate = _mapper.MapBack(m);
             _repository.Update(filmPersonToUpdate);
         }
 
         public async Task UpdateAsync(FilmPersonViewModel m)
         {
-            var filmPersonToUpdate = _mapper.Map<FilmPerson>(m);
-             await  _repository.UpdateAsync(filmPersonToUpdate);           
+            await Task.Run(() => Update(m));         
         }
     }
 }

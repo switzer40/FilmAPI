@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="AutoMapperProfileccs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="Specifictions\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

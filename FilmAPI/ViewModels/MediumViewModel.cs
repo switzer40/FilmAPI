@@ -1,10 +1,15 @@
 ﻿using FilmAPI.Core.Entities;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace FilmAPI.ViewModels
 {
     public class MediumViewModel : BaseViewModel
-    {   public MediumViewModel()
+    {
+        private string title;
+        private short year;
+
+        public MediumViewModel()
         {
         }
 
@@ -29,6 +34,14 @@ namespace FilmAPI.ViewModels
             MediumType = mediumType;
             Location = location;
         }
+
+        public MediumViewModel(string title, short year)
+        {
+            this.title = title;
+            this.year = year;
+        }
+
+       
 
         [Required]
         public string FilmTitle { get; set; }

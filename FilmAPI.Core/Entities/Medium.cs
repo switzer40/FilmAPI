@@ -21,6 +21,6 @@ namespace FilmAPI.Core.Entities
         public int FilmId { get; set; }
         [Required]
         public string MediumType { get; set; }
-        public string Location { get; set; }
+        public string Location { get; set; }        
     }
 }

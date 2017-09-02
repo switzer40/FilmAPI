@@ -14,6 +14,8 @@ namespace FilmAPI
         {
             CreateMap<Film, FilmViewModel>();
             CreateMap<FilmViewModel, Film>();
+            CreateMap<Person, PersonViewModel>();
+            CreateMap<PersonViewModel, Person>();            
         }
     }
 }

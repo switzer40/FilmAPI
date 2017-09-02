@@ -64,13 +64,17 @@ namespace FilmAPI.Services
         public List<PersonViewModel> GetAll()
         {
             List<Person> people = _repository.List();
-            return _mapper.Map<List<PersonViewModel>>(people);
+            var models = _mapper.Map<List<PersonViewModel>>(people);
+            foreach (var m in models)
+            {
+                m.SurrogateKey = _keyService.ConstructPersonSurrogateKey(m);
+            }
+            return models;
         }
 
         public async Task<List<PersonViewModel>> GetAllAsync()
         {
-            List<Person> people = await _repository.ListAsync();
-            return _mapper.Map<List<PersonViewModel>>(people);
+            return await Task.Run(() => GetAll());
         }
 
         public PersonViewModel GetBySurrogateKey(string key)
