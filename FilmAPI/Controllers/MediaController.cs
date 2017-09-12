@@ -15,9 +15,11 @@ namespace FilmAPI.Controllers
     public class MediaController : Controller
     {        
         private readonly IMediumService _service;
-        public MediaController(IMediumService service)
+        private readonly IKeyService _keyService;
+        public MediaController(IMediumService service, IKeyService keyService)
         {
             _service = service;
+            _keyService = keyService;
         }
 
        
@@ -37,14 +39,16 @@ namespace FilmAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MediumViewModel model)
         {
-            var savedMedium =await _service.AddAsync(model);
+            model.SurrogateKey = _keyService.ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);
+            var savedMedium =await _service.AddAsync(model.SurrogateKey);
             return Ok(savedMedium);
         }
         [HttpPut("{key}")]
         [ValidateMediumExists]
         public async Task<IActionResult> Put(string key, [FromBody] MediumViewModel model)
         {
-            await _service.UpdateAsync(model);
+            model.SurrogateKey = _keyService.ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);model.SurrogateKey = _keyService.ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);
+            await _service.UpdateAsync(model.SurrogateKey);
             return Ok();
         }
         [HttpDelete("{key}")]

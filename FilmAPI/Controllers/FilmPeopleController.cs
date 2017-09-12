@@ -16,9 +16,11 @@ namespace FilmAPI.Controllers
     {
        
         private readonly IFilmPersonService _service;
-        public FilmPeopleController(IFilmPersonService service)
+        private readonly IKeyService _keyService;
+        public FilmPeopleController(IFilmPersonService service, IKeyService keyService)
         {
             _service = service;
+            _keyService = keyService;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -35,14 +37,24 @@ namespace FilmAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]FilmPersonViewModel model)
         {
-            var savedModel = await _service.AddAsync(model);
+            model.SurrogateKey = _keyService.ConstructFilmPersonSurrogateKey(model.FilmTitle, 
+                                                                             model.FilmYear,
+                                                                             model.PersonLastName,
+                                                                             model.PersonBirthdate,
+                                                                             model.Role);
+            var savedModel = await _service.AddAsync(model.SurrogateKey);
             return Ok(savedModel);
         }
         [HttpPut("{key}")]
         [ValidateFilmPersonExists]
         public async Task<IActionResult> Put(string key, [FromBody] FilmPersonViewModel model)
         {
-            await _service.UpdateAsync(model);
+            model.SurrogateKey = _keyService.ConstructFilmPersonSurrogateKey(model.FilmTitle,
+                                                                             model.FilmYear,
+                                                                             model.PersonLastName,
+                                                                             model.PersonBirthdate,
+                                                                             model.Role);
+            await _service.UpdateAsync(model.SurrogateKey);
             return Ok();
         }
         [HttpDelete("{key}")]

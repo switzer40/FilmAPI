@@ -32,9 +32,7 @@ namespace FilmAPI.Filters
                     var key = (string)context.ActionArguments["key"];
                     if (key != "")
                     {
-                        _keyService.DeconstructPesonSurrogateKey(key);
-                        string lastName = _keyService.PersonLastName;
-                        string birthdate = _keyService.PersonBirthdate;
+                        (string lastName, string birthdate) = _keyService.DeconstructPesonSurrogateKey(key);                        
                         Person p = _repository.GetByLastNameAndBirthdate(lastName, birthdate);
                         if (p == null)
                         {

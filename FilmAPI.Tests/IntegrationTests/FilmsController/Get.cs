@@ -1,5 +1,6 @@
 ﻿using FilmAPI.Core.Entities;
 using FilmAPI.Interfaces;
+using FilmAPI.Services;
 using FilmAPI.ViewModels;
 using Newtonsoft.Json;
 using System;
@@ -18,10 +19,12 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         private readonly HttpClient _client;
         private readonly IKeyService _keyService;
 
-        public Get(IKeyService keyService)
+        public Get()
         {
             _client = base.GetClient();
-            _keyService = keyService;
+            _keyService = new KeyService();
+            // mock dependencies here
+            //_keyService = ;
         }
 
         [Fact]

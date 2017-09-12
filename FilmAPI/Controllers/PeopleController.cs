@@ -15,9 +15,11 @@ namespace FilmAPI.Controllers
     {
         
         private readonly IPersonService _service;
-        public PeopleController(IPersonService service)
+        private readonly IKeyService _keyService;
+        public PeopleController(IPersonService service,IKeyService keyService)
         {
             _service = service;
+            _keyService = keyService;
         }
         [HttpGet]
         public async Task<IActionResult> Get()
@@ -28,14 +30,16 @@ namespace FilmAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PersonViewModel model)
         {
-            var savedPerson = await _service.AddAsync(model);
+            model.SurrogateKey = _keyService.ConstructPersonSurrogateKey(model.LastName, model.BirthdateString);
+            var savedPerson = await _service.AddAsync(model.SurrogateKey);
             return Ok(savedPerson);
         }
         [HttpPut("{key}")]
         [ValidatePersonExists]
         public async Task<IActionResult> Put(string key, [FromBody] PersonViewModel model)
         {
-            await _service.UpdateAsync(model);
+            model.SurrogateKey = _keyService.ConstructPersonSurrogateKey(model.LastName, model.BirthdateString);
+            await _service.UpdateAsync(model.SurrogateKey);
             return Ok();
         }
         [HttpDelete("{key}")]

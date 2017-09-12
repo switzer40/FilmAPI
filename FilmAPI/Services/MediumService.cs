@@ -1,99 +1,60 @@
-﻿using FilmAPI.Core.Entities;
+﻿using AutoMapper;
+using FilmAPI.Core.Entities;
+using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
-using System.Threading.Tasks;
-using AutoMapper;
-using FilmAPI.Core.Interfaces;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
-    public class MediumService : IMediumService
+    public class MediumService : EntityService <Medium, MediumViewModel>, IMediumService
     {
-        private readonly IMediumRepository _repository;
-        private readonly IMediumMapper _mapper;
-        private readonly IKeyService _keyService;
         private readonly IFilmRepository _filmRepository;
-        public MediumService(IMediumRepository repository, IMediumMapper mapper, IKeyService keyService, IFilmRepository filmRepository)
+        public MediumService(IMediumRepository repo,
+                             IMapper mapper,
+                             IKeyService keyService,
+                             IFilmRepository frepo) : base(mapper, keyService)
         {
-            _repository = repository;
-            _mapper = mapper;
-            _keyService = keyService;
-            _filmRepository = filmRepository;
-        }
-        public MediumViewModel Add(MediumViewModel m)
-        {
-            var mediumToAdd = _mapper.MapBack(m);
-            var savedMedium = _repository.Add(mediumToAdd);
-            return _mapper.Map(savedMedium);
+            _repository = repo;
+            _filmRepository = frepo;
         }
 
-        public async Task<MediumViewModel> AddAsync(MediumViewModel m)
+        public override Medium CreateEntity(string key)
         {
-            return await Task.Run(() => Add(m));
+            var data = GetData(key);
+            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            return new Medium(f.Id, data.mediumType);
         }
 
-        public void Delete(MediumViewModel m)
+        private (string title, short year, string mediumType) GetData(string key)
         {
-            var mediumToDelete = _mapper.MapBack(m);
-            _repository.Delete(mediumToDelete);
+            return _keyService.DeconstructMediumSurrogateKey(key);
         }
 
-        public void Delete(string key)
+        public override MediumViewModel EntityToModel(Medium e)
         {
-            _keyService.DeconstructMedumSurrogateKey(key);
-            int id = _keyService.MediumFilmId;            
-            _repository.Delete(id);
+            Film f = _filmRepository.GetById(e.FilmId);
+            string key = _keyService.ConstructMediumSurrogateKey(f.Title, f.Year, e.MediumType);
+           var model = new MediumViewModel(f, e.MediumType, key);
+            model.Location = e.Location;
+            return model;
         }
 
-        public async Task DeleteAsync(MediumViewModel m)
+        public override Medium GetEntity(string key)
         {
-            await Task.Run(() => Delete(m));
+            var data = GetData(key);
+            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            return ((IMediumRepository)_repository).GetByFilmIdAndMediumType(f.Id, data.mediumType);
         }
 
-        public async Task DeleteAsync(string key)
+        public override Medium ModelToEntity(MediumViewModel m)
         {
-            await Task.Run(() => Delete(key));
-        }
-
-        public List<MediumViewModel> GetAll()
-        {
-            List<Medium> media = _repository.List();
-            var models = _mapper.MapList(media);
-            foreach (var m in models)
-            {
-                m.SurrogateKey = _keyService.ConstructMediumSurrogateKey(m);
-            }
-            return models;
-        }
-
-        public async Task<List<MediumViewModel>> GetAllAsync()
-        {
-            return await Task.Run(() => GetAll());
-        }
-
-        public MediumViewModel GetBySurrogateKey(string key)
-        {
-            _keyService.DeconstructMedumSurrogateKey(key);
-            int id = _keyService.MediumFilmId;
-            var film = _filmRepository.GetById(id);
-            return new MediumViewModel(film, _keyService.MediumMediumType, key);
-        }
-
-        public async Task<MediumViewModel> GetBySurrogateKeyAsync(string key)
-        {
-            return await Task.Run(() => GetBySurrogateKey(key));
-        }
-
-        public void Update(MediumViewModel m)
-        {
-            var mediumToUpdate = _mapper.MapBack(m);
-            _repository.Update(mediumToUpdate);
-        }
-
-        public async Task UpdateAsync(MediumViewModel m)
-        {
-            await Task.Run(() => Update(m));
+            var medium = GetEntity(m.SurrogateKey);
+            medium.Location = m.Location;
+            return GetEntity(m.SurrogateKey);
         }
     }
 }

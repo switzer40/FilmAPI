@@ -32,9 +32,7 @@ namespace FilmAPI.Filters
                     var key = (string) context.ActionArguments["key"];
                     if (key != "")
                     {
-                        _keyService.DeconstructFilmSurrogateKey(key);
-                        string title = _keyService.FilmTitle;
-                        short year = _keyService.FilmYear;
+                        (string title, short year) = _keyService.DeconstructFilmSurrogateKey(key);                        
                         Film f = _repository.GetByTitleAndYear(title, year);
                         if (f == null)
                         {

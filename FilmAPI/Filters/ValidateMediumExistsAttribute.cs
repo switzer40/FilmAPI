@@ -18,11 +18,13 @@ namespace FilmAPI.Filters
         private class ValidateMediumExistsFilterImpl : IAsyncActionFilter
         {
             private readonly IMediumRepository _repository;
+            private readonly IFilmRepository _filmRepository;
             private readonly IKeyService _keyService;
-            public ValidateMediumExistsFilterImpl(IMediumRepository repository, IKeyService keyService)
+            public ValidateMediumExistsFilterImpl(IMediumRepository repository, IKeyService keyService, IFilmRepository frepo)
             {
                 _repository = repository;
                 _keyService = keyService;
+                _filmRepository = frepo;
             }
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
@@ -31,10 +33,9 @@ namespace FilmAPI.Filters
                     var key = (string)context.ActionArguments["key"];
                     if (key != "")
                     {
-                        _keyService.DeconstructMedumSurrogateKey(key);
-                        int filmId = _keyService.MediumFilmId;
-                        string mediumType = _keyService.MediumMediumType;
-                        Medium m = _repository.GetByFilmIdAndMediumType(filmId, mediumType);
+                        (string title, short year, string mediumType) = _keyService.DeconstructMediumSurrogateKey(key);
+                        Film f = _filmRepository.GetByTitleAndYear(title, year);
+                        Medium m = _repository.GetByFilmIdAndMediumType(f.Id, mediumType);
                         if (m == null)
                         {
                             context.Result = new NotFoundObjectResult(key);

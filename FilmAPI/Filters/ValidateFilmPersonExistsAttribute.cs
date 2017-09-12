@@ -19,10 +19,17 @@ namespace FilmAPI.Filters
         {
             private readonly IFilmPersonRepository _repository;
             private readonly IKeyService _keyService;
-            public ValidateFilmPersonExistsFilterImpl(IFilmPersonRepository repository, IKeyService keyService)
+            private readonly IFilmRepository _filmRepository;
+            private readonly IPersonRepository _personRepository;
+            public ValidateFilmPersonExistsFilterImpl(IFilmPersonRepository repository,
+                                                     IKeyService keyService,
+                                                     IFilmRepository filmRepository,
+                                                     IPersonRepository personRepository)
             {
                 _repository = repository;
                 _keyService = keyService;
+                _filmRepository = filmRepository;
+                _personRepository = personRepository;
             }
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
@@ -31,11 +38,12 @@ namespace FilmAPI.Filters
                     var key = (string)context.ActionArguments["key"];
                     if (key != "")
                     {
+                        (string title, short year, string lastName, string birthdate, string role) =
+                            _keyService.DeconstructFilmPersonSurrogateKey(key);
                         _keyService.DeconstructFilmPersonSurrogateKey(key);
-                        int filmId = _keyService.FilmPersonFilmId;
-                        int personId = _keyService.FilmPersonPersonId;
-                        string role = _keyService.FilmPersonRole;
-                        FilmPerson fp = _repository.GetByFilmIdPersonIdAndRole(filmId, personId, role);
+                        Film f = _filmRepository.GetByTitleAndYear(title, year);
+                        Person p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
+                        FilmPerson fp = _repository.GetByFilmIdPersonIdAndRole(f.Id, p.Id, role);
                         if (fp == null)
                         {
                             context.Result = new NotFoundObjectResult(key);

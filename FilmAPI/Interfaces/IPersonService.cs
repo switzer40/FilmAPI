@@ -7,17 +7,20 @@ namespace FilmAPI.Interfaces
 {
     public interface IPersonService
     {
-        System.Collections.Generic.List<PersonViewModel> GetAll();
-        Task<List<PersonViewModel>> GetAllAsync();
+        
+        PersonViewModel Add(string key);
         PersonViewModel Add(PersonViewModel m);
+        Task<PersonViewModel> AddAsync(string key);
         Task<PersonViewModel> AddAsync(PersonViewModel m);
-        void Delete(PersonViewModel m);
-        void Delete(string key);
-        Task DeleteAsync(PersonViewModel m);
-        Task DeleteAsync(string key);
-        void Update(PersonViewModel m);
-        Task UpdateAsync(PersonViewModel m);
+        List<PersonViewModel> GetAll();
+        Task<List<PersonViewModel>> GetAllAsync();               
+        void Delete(string key);      
+        Task DeleteAsync(string key);               
         PersonViewModel GetBySurrogateKey(string key);
         Task<PersonViewModel> GetBySurrogateKeyAsync(string key);
+        void Update(string key);
+        void Update(PersonViewModel m);
+        Task UpdateAsync(string key);
+        Task UpdateAsync(PersonViewModel m);
     }
 }

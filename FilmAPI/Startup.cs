@@ -116,9 +116,9 @@ namespace FilmAPI
                 _.WithDefaultConventions();
 
             });
-            // I had hoped StructureMap´s conventions will take care of configuring
-            // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
-            
+                // I had hoped StructureMap´s conventions will take care of configuring
+                // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
+                
             config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
             config.For(typeof(IFilmService)).Add(typeof(FilmService));
             config.For(typeof(IPersonService)).Add(typeof(PersonService));
@@ -162,10 +162,10 @@ namespace FilmAPI
             var womanRoberts = new FilmPerson(woman.Id, roberts.Id, FilmConstants.Role_Actor);
             context.FilmPeople.Add(womanRoberts);
             context.SaveChanges();
-            var tiffanyDVD  = new Medium(tiffany.Id, FilmConstants.MediumType_DVD);
+            var tiffanyDVD  = new Medium(tiffany.Id, FilmConstants.MediumType_DVD, FilmConstants.Location_Left);
             context.Media.Add(tiffanyDVD);
             context.SaveChanges();
-            var womanDVD = new Medium(woman.Id, FilmConstants.MediumType_DVD);
+            var womanDVD = new Medium(woman.Id, FilmConstants.MediumType_DVD, FilmConstants.Location_Left);
             context.Media.Add(womanDVD);
             context.SaveChanges();
 

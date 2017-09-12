@@ -25,7 +25,7 @@ namespace FilmAPI.ViewModels
         public string FirstMidName { get; set; }
         [Required]
         public string LastName { get; set; }
-       
+       [Required]
         public string BirthdateString { get; set; }
         public DateTime Birthdate
         {

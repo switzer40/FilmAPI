@@ -1,103 +1,48 @@
-﻿using FilmAPI.Interfaces;
+﻿using AutoMapper;
+using FilmAPI.Core.Entities;
+using FilmAPI.Core.Interfaces;
+using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FilmAPI.ViewModels;
-using AutoMapper;
-using FilmAPI.Core.Interfaces;
-using FilmAPI.Core.Entities;
 
 namespace FilmAPI.Services
 {
-    public class PersonService : IPersonService
+    public class PersonService : EntityService<Person, PersonViewModel>, IPersonService
     {
-        private readonly IPersonRepository _repository;
-        private readonly IMapper _mapper;
-        private readonly IKeyService _keyService;
-        public PersonService(IPersonRepository repository, IMapper mapper, IKeyService keyService)
+        public PersonService(IPersonRepository repo, IMapper mapper, IKeyService keyService) : base(mapper, keyService)
         {
-            _repository = repository;
-            _mapper = mapper;
-            _keyService = keyService;
-        }
-        public PersonViewModel Add(PersonViewModel m)
-        {
-            var personToAdd = _mapper.Map<Person>(m);
-            var savedPerson = _repository.Add(personToAdd);
-            return _mapper.Map<PersonViewModel>(savedPerson);
+            _repository = repo;
         }
 
-        public async Task<PersonViewModel> AddAsync(PersonViewModel m)
+        public override Person CreateEntity(string key)
         {
-            var personToAdd = _mapper.Map<Person>(m);
-            var savedPerson = await _repository.AddAsync(personToAdd);
-            return _mapper.Map<PersonViewModel>(savedPerson);
+            var data = GetData(key);
+            return new Person(data.lastName, data.birthdate);
         }
 
-        public void Delete(PersonViewModel m)
+        private (string lastName, string birthdate) GetData(string key)
         {
-            var personToDelete = _mapper.Map<Person>(m);
-            _repository.Delete(personToDelete);
+            return _keyService.DeconstructPesonSurrogateKey(key);
         }
 
-        public void Delete(string key)
+        public override PersonViewModel EntityToModel(Person e)
         {
-            _keyService.DeconstructPesonSurrogateKey(key);
-            var personToDelete = new PersonViewModel(_keyService.PersonLastName, _keyService.PersonBirthdate);
-            Delete(personToDelete);
+            string key = _keyService.ConstructPersonSurrogateKey(e.LastName, e.BirthdateString);
+            return new PersonViewModel(e, key);
         }
 
-        public async Task DeleteAsync(PersonViewModel m)
+        public override Person GetEntity(string key)
         {
-            var personToDelete = _mapper.Map<Person>(m);
-            await _repository.DeleteAsync(personToDelete);
+            var data = GetData(key);
+            return ((IPersonRepository)_repository).GetByLastNameAndBirthdate(data.lastName, data.birthdate);
         }
 
-        public async Task DeleteAsync(string key)
+        public override Person ModelToEntity(PersonViewModel m)
         {
-            _keyService.DeconstructPesonSurrogateKey(key);
-            var personToDelete = new PersonViewModel(_keyService.PersonLastName, _keyService.PersonBirthdate);
-            await DeleteAsync(personToDelete);
-        }
-
-        public List<PersonViewModel> GetAll()
-        {
-            List<Person> people = _repository.List();
-            var models = _mapper.Map<List<PersonViewModel>>(people);
-            foreach (var m in models)
-            {
-                m.SurrogateKey = _keyService.ConstructPersonSurrogateKey(m);
-            }
-            return models;
-        }
-
-        public async Task<List<PersonViewModel>> GetAllAsync()
-        {
-            return await Task.Run(() => GetAll());
-        }
-
-        public PersonViewModel GetBySurrogateKey(string key)
-        {
-            _keyService.DeconstructPesonSurrogateKey(key);
-            return new PersonViewModel(_keyService.PersonLastName, _keyService.PersonBirthdate);
-        }
-
-        public async Task<PersonViewModel> GetBySurrogateKeyAsync(string key)
-        {
-            return await Task.Run(() => GetBySurrogateKey(key));
-        }
-
-        public void Update(PersonViewModel m)
-        {
-            var personToUpdate = _mapper.Map<Person>(m);
-            _repository.Update(personToUpdate);
-        }
-
-        public async Task UpdateAsync(PersonViewModel m)
-        {
-            var personToUpdate = _mapper.Map<Person>(m);
-            await _repository.UpdateAsync(personToUpdate);
+            return _mapper.Map<Person>(m);
         }
     }
 }

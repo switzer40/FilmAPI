@@ -18,12 +18,12 @@ namespace FilmAPI.Tests.UnitTests
             string key = _keyService.ConstructFilmSurrogateKey(title, year);
             FilmViewModel m = new FilmViewModel(new Film(title, year), key);
 
-            //Act            ;
-            _keyService.DeconstructFilmSurrogateKey(key);
+            //Act 
+            (string FilmTitle, short FilmYear) = _keyService.DeconstructFilmSurrogateKey(key);
 
             //Assert
-            Assert.Equal(title, _keyService.FilmTitle);
-            Assert.Equal(year, _keyService.FilmYear);
-        }
+            Assert.Equal(title, FilmTitle);
+            Assert.Equal(year, FilmYear);
+        }  
     }
 }

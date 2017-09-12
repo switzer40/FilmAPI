@@ -18,12 +18,7 @@ namespace FilmAPI.ViewModels
             Year = year;
             Length = length;
         }
-        public FilmViewModel(short year, string title = null, short length = 0)
-        {
-            Title = title;
-            Year = year;
-            Length = length;
-        }
+        
         public FilmViewModel(short year, short length = 0)
         {
             Title = null;

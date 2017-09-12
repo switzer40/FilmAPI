@@ -7,7 +7,7 @@ using System.Text;
 namespace FilmAPI.Core.Entities
 {
     public class Medium : BaseEntity
-    {
+    {        
         public Medium()
         {
         }
@@ -17,6 +17,8 @@ namespace FilmAPI.Core.Entities
             MediumType = mediumType;
             Location = location;
         }
+
+
         [Required]
         public int FilmId { get; set; }
         [Required]

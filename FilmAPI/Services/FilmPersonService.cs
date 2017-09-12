@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
-using FilmAPI.Core.SharedKernel;
+using FilmAPI.Infrastructure.Repositories;
 using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
 using System;
@@ -11,97 +11,54 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
-    public class FilmPersonService : IFilmPersonService
+    public class FilmPersonService : EntityService<FilmPerson, FilmPersonViewModel>, IFilmPersonService
     {
-        private readonly IFilmPersonRepository _repository;
-        private readonly IFilmPersonMapper _mapper;
-        private readonly IKeyService _keyService;
         private readonly IFilmRepository _filmRepository;
         private readonly IPersonRepository _personRepository;
-        public FilmPersonService(IFilmPersonRepository repository,
-                                 IFilmPersonMapper mapper,
+        public FilmPersonService(FilmPersonRepository repo,
+                                 IMapper mapper,
                                  IKeyService keyService,
-                                 IFilmRepository filmRepository,
-                                 IPersonRepository personRepository)
+                                 IFilmRepository frepo,
+                                 IPersonRepository prepo) : base(mapper, keyService)
         {
-            _repository = repository;
-            _mapper = mapper;
-            _keyService = keyService;
-            _filmRepository = filmRepository;
-            _personRepository = personRepository;
-        }
-        public FilmPersonViewModel Add(FilmPersonViewModel m)
-        {
-            var filmPersonToAdd = _mapper.MapBack(m);
-            var savedFilmPerson = _repository.Add(filmPersonToAdd);
-            return _mapper.Map(savedFilmPerson);
+            _repository = repo;
+            _filmRepository = frepo;
+            _personRepository = prepo;
         }
 
-        public async Task<FilmPersonViewModel> AddAsync(FilmPersonViewModel m)
+        public override FilmPerson CreateEntity(string key)
         {
-            return await Task.Run(() => Add(m));
+            var data = GetData(key);
+            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            Person p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+            return new FilmPerson(f.Id, p.Id, data.role);
         }
 
-        public void Delete(FilmPersonViewModel m)
+        private (string title, short year, string lastName, string birthdate, string role) GetData(string key)
         {
-            var filmPersonToDelete = _mapper.MapBack(m);
-            _repository.Delete(filmPersonToDelete);
+            return _keyService.DeconstructFilmPersonSurrogateKey(key);
         }
 
-        public void Delete(string key)
+        public override FilmPersonViewModel EntityToModel(FilmPerson e)
         {
-            var modelToDelete = GetBySurrogateKey(key);
-            Delete(modelToDelete);
+            Film f = _filmRepository.GetById(e.FilmId);
+            Person p = _personRepository.GetById(e.PersonId);
+            string key = _keyService.ConstructFilmPersonSurrogateKey(f.Title, f.Year, p.LastName, p.BirthdateString, e.Role);
+            return new FilmPersonViewModel(f.Title, f.Year, p.LastName, p.BirthdateString, e.Role, key);
+        }
+        
+
+        public override FilmPerson ModelToEntity(FilmPersonViewModel m)
+        {
+            return GetEntity((m.SurrogateKey));
         }
 
-        public async Task DeleteAsync(FilmPersonViewModel m)
+        public override FilmPerson GetEntity(string key)
         {
-            await Task.Run(() => Delete(m));
-        }
-
-        public async Task DeleteAsync(string key)
-        {
-            await Task.Run(() => Delete(key));
-        }
-
-        public List<FilmPersonViewModel> GetAll()
-        {
-            List<FilmPerson> filmPeople = _repository.List();
-            List<FilmPersonViewModel> models = _mapper.MapList(filmPeople);
-            foreach (var m in models)
-            {
-                m.SurrogateKey = _keyService.ConstructFilmPersonSurrorgateKey(m);
-            }
-            return models;
-        }
-
-        public async Task<List<FilmPersonViewModel>> GetAllAsync()
-        {
-            return await Task.Run(() => GetAll());
-        }
-
-        public FilmPersonViewModel GetBySurrogateKey(string key)
-        {
-            _keyService.DeconstructFilmPersonSurrogateKey(key);
-            var f = new Film(_keyService.FilmTitle, _keyService.FilmYear);
-            var p = new Person(_keyService.PersonLastName, _keyService.PersonBirthdate);
-            return new FilmPersonViewModel(f.Title, f.Year, p.LastName, p.BirthdateString, _keyService.FilmPersonRole, key);
-        }
-
-        public async Task<FilmPersonViewModel> GetBySurrogateKeyAsync(string key)
-        {
-            return await Task.Run(() => GetBySurrogateKey(key));
-        }
-
-        public void Update(FilmPersonViewModel m)
-        {
-            var filmPersonToUpdate = _mapper.MapBack(m);
-            _repository.Update(filmPersonToUpdate);
-        }
-
-        public async Task UpdateAsync(FilmPersonViewModel m)
-        {
-            await Task.Run(() => Update(m));         
+            var data = GetData(key);
+            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            Person p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+            return ((IFilmPersonRepository)_repository).GetByFilmIdPersonIdAndRole(f.Id, p.Id, data.role);                                
         }
     }
 }

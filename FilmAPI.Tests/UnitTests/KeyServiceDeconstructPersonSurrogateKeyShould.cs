@@ -15,12 +15,12 @@ namespace FilmAPI.Tests.UnitTests
             string key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
             PersonViewModel m = new PersonViewModel(new Person(lastName, birthdate), key);
 
-            // Act            
-            _keyService.DeconstructPesonSurrogateKey(key);
+            // Act    
+            (string LastName, string Birthdate) = _keyService.DeconstructPesonSurrogateKey(key);
 
             // Assert
-            Assert.Equal(lastName, _keyService.PersonLastName);
-            Assert.Equal(birthdate, _keyService.PersonBirthdate);
+            Assert.Equal(lastName, LastName);
+            Assert.Equal(birthdate, Birthdate);
         }
     }
 }
