@@ -33,8 +33,16 @@ namespace FilmAPI.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            var medium = await _service.GetBySurrogateKeyAsync(key);
-            return Ok(medium);
+            MediumViewModel model = null;
+            try
+            {
+                model = await _service.GetBySurrogateKeyAsync(key);
+            }
+            catch
+            {
+                return BadRequest(key);
+            }
+            return Ok(model);            
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MediumViewModel model)
@@ -55,7 +63,14 @@ namespace FilmAPI.Controllers
         [ValidateMediumExists]
         public async Task<IActionResult> Delete(string key)
         {
-            await _service.DeleteAsync(key);
+            try
+            {
+                await _service.DeleteAsync(key);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(key);
+            }
             return Ok();
         }
     }

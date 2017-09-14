@@ -33,6 +33,10 @@ namespace FilmAPI.Core.SharedKernel
         public const string Location_Bottom = "Commode bottom drawer";
         public const string Location_Shelf1 = "Bedroom bookshelf1";
 
+        // Constant strings needed by KeyService
+        public const string BADKEY = "Bad key";
+        public const string FORTYTWO = "42";
+
 
 
     }

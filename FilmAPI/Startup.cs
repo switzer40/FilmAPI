@@ -33,14 +33,6 @@ namespace FilmAPI
         }
 
         public IConfigurationRoot Configuration { get; }
-        public void ConfigureTestingServices(IServiceCollection services)
-        {                       
-            services.AddDbContext<FilmContext>(options =>
-            {
-                options.UseInMemoryDatabase();
-            });
-            ConfigureServices(services);
-        }
 
         private FilmContext BuildAndPopulateContext(DbContextOptionsBuilder<FilmContext> builder, bool refresh)
         {
@@ -87,6 +79,16 @@ namespace FilmAPI
 
 
         }
+
+        public IServiceProvider ConfigureTestingServices(IServiceCollection services)
+        {
+            services.AddDbContext<FilmContext>(options =>
+            {
+                options.UseInMemoryDatabase(System.Guid.NewGuid().ToString());
+            });
+            return ConfigureServices(services);
+        }
+
         // This m ethod gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {

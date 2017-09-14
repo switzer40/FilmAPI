@@ -44,7 +44,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             string badKey = "Howdy";
             var response = await _client.GetAsync($"/api/films/{badKey}");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
         public async Task ReturnPrettyWomanGivenValidSurrogateKey()

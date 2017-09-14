@@ -31,15 +31,23 @@ namespace FilmAPI.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            var model = await _service.GetBySurrogateKeyAsync(key);
+            FilmViewModel model = null;
+            try
+            {
+                model = await _service.GetBySurrogateKeyAsync(key);
+            }
+            catch
+            {
+                return BadRequest(key);
+            }            
             return Ok(model);
         }
-        [HttpPost("key")]
+        [HttpPost]
         [ValidateFilmNotDuplicate]
-        public async Task<IActionResult> Post(string key,  [FromBody] FilmViewModel model)
+        public async Task<IActionResult> Post([FromBody] FilmViewModel model)
         {
             model.SurrogateKey = _keyService.ConstructFilmSurrogateKey(model.Title, model.Year);
-            var savedModel = await _service.AddAsync(model.SurrogateKey);
+            var savedModel = await _service.AddAsync(model);
             return Ok(savedModel);
         }
         [HttpPut("{key}")]
@@ -54,7 +62,7 @@ namespace FilmAPI.Controllers
         [ValidateFilmExists]
         public async Task<IActionResult> Delete(string key)
         {
-            await _service.DeleteAsync(key);
+            await _service.DeleteAsync(key);                   
             return Ok();
         }
             

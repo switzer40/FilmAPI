@@ -29,21 +29,25 @@ namespace FilmAPI.Filters
             {
                 if (context.ActionArguments.ContainsKey("key"))
                 {
-                    var key = (string) context.ActionArguments["key"];
-                    if (key != "")
+                    var key = (string)context.ActionArguments["key"];
+                    if (!string.IsNullOrEmpty(key))
                     {
-                        (string title, short year) = _keyService.DeconstructFilmSurrogateKey(key);                        
-                        Film f = _repository.GetByTitleAndYear(title, year);
-                        if (f == null)
+                        (string title, short year)data  =_keyService.DeconstructFilmSurrogateKey(key);
+                        if (data.title == FilmConstants.BADKEY)
+                        {
+                            context.Result = new BadRequestObjectResult(key);
+                            return;
+                        }
+                        var film = _repository.GetByTitleAndYear(data.title, data.year);
+                        if (film == null)
                         {
                             context.Result = new NotFoundObjectResult(key);
                             return;
-                        }                      
+                        }                        
                     }
                 }
                 await next();
             }
-        }
+        }                
     }
-
 }

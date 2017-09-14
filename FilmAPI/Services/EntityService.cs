@@ -57,6 +57,10 @@ namespace FilmAPI.Services
         public void Delete(string key)
         {
             var entityToDelete = GetEntity(key);
+            if (entityToDelete == null)
+            {
+                throw new BadKeyException();
+            }
             _repository.Delete(entityToDelete);
         }
 
@@ -86,6 +90,10 @@ namespace FilmAPI.Services
         public ModelType GetBySurrogateKey(string key)
         {
             var entityToReturn = GetEntity(key);
+            if (entityToReturn == null)
+            {
+                throw new BadKeyException();
+            }
             return EntityToModel(entityToReturn);
         }
 
@@ -103,6 +111,10 @@ namespace FilmAPI.Services
         public void Update(string key)
         {
             var entityToUpdate = GetEntity(key);
+            if (entityToUpdate == null)
+            {
+                throw new BadKeyException();
+            }
             _repository.Update(entityToUpdate);
         }
 

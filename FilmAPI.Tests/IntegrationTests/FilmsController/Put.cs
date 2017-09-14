@@ -21,17 +21,17 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
 
 
         [Fact]
-        public async Task ReturnsNotFoundGivenNonExistentSurrogateKy()
+        public async Task ReturnsBadRequestGivenNonExistentSurrogateKy()
         {
             string key = "Howdy"; // A surrogate key that certainly does not exist.
-            var filmToPut = new FilmViewModel("", 1957, 123);
+            var filmToPut = new FilmViewModel("LalaLand", 1957, 123);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPut), Encoding.UTF8, "application/json");
             var response = await _client.PutAsync($"api/films/{key}", jsonContent);
 
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Equal("", stringResponse);
+            Assert.Equal("Howdy", stringResponse);
         }
     }
 }

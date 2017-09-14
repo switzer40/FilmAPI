@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Interfaces;
+using FilmAPI.Services;
 using FilmAPI.ViewModels;
 using Newtonsoft.Json;
 using System;
@@ -16,10 +17,10 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         private readonly HttpClient _client;
         private readonly IKeyService _keyService;
 
-        public Get(IKeyService keyService)
+        public Get()
         {
             _client = base.GetClient();
-            _keyService = keyService;
+            _keyService = new KeyService();
         }
 
         [Fact]

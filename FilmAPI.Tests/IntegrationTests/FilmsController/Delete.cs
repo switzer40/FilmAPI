@@ -25,19 +25,21 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             string key = "Howdy";
             var response = await _client.DeleteAsync($"api/films/{key}");
 
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Equal(key, stringResponse);
         }
         [Fact]
         public async Task ReturnsOkGivenValidSurrogateKey()
         {
-            var response = await _client.GetAsync("api/films");
+            var key = "Pretty Woman*1990";
+            var response = await _client.GetAsync($"api/films/{key}");
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var films = JsonConvert.DeserializeObject<List<FilmViewModel>>(stringResponse);
-            var keyToDelete = films[0].SurrogateKey;
-            var response2 = await _client.DeleteAsync($"apifilms/{keyToDelete}");
+            var model = JsonConvert.DeserializeObject<FilmViewModel>(stringResponse);
+            var keyToDelete = model.SurrogateKey;         
+            keyToDelete = Uri.EscapeUriString(keyToDelete);
+            var response2 = await _client.DeleteAsync($"api/films/{keyToDelete}");
             response2.EnsureSuccessStatusCode();
         }                        
     }

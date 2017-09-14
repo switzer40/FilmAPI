@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
 using System;
@@ -25,6 +26,10 @@ namespace FilmAPI.Services
         public override Medium CreateEntity(string key)
         {
             var data = GetData(key);
+            if (data.title == FilmConstants.BADKEY)
+            {
+                return null;
+            }
             Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
             return new Medium(f.Id, data.mediumType);
         }
@@ -46,6 +51,10 @@ namespace FilmAPI.Services
         public override Medium GetEntity(string key)
         {
             var data = GetData(key);
+            if (data.title == FilmConstants.BADKEY)
+            {
+                return null;
+            }
             Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
             return ((IMediumRepository)_repository).GetByFilmIdAndMediumType(f.Id, data.mediumType);
         }

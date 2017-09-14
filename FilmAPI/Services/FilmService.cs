@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
 using System;
@@ -19,6 +20,10 @@ namespace FilmAPI.Services
         public override Film CreateEntity(string key)
         {
             var data = GetData(key);
+            if (data.title == FilmConstants.BADKEY)
+            {
+                return null;
+            }
             return new Film(data.title, data.year);
         }
 
@@ -36,6 +41,10 @@ namespace FilmAPI.Services
         public override Film GetEntity(string key)
         {
             var data = GetData(key);
+            if (data.title == FilmConstants.BADKEY)
+            {
+                return null;
+            }
             return ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year);
         }
 

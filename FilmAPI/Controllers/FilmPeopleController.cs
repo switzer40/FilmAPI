@@ -31,8 +31,16 @@ namespace FilmAPI.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            var filmPerson = await _service.GetBySurrogateKeyAsync(key);
-            return Ok(filmPerson);
+            FilmPersonViewModel model = null;
+            try
+            {
+                model = await _service.GetBySurrogateKeyAsync(key);
+            }
+            catch
+            {
+                return BadRequest(key);
+            }
+            return Ok(model);
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]FilmPersonViewModel model)
@@ -61,7 +69,14 @@ namespace FilmAPI.Controllers
         [ValidateFilmPersonExists]
         public async Task<IActionResult> Delete(string key)
         {
-            await _service.DeleteAsync(key);
+            try
+            {
+                await _service.DeleteAsync(key);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(key);
+            }
             return Ok();
         }
     }
