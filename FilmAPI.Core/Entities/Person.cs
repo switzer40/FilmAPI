@@ -28,11 +28,21 @@ namespace FilmAPI.Core.Entities
         public DateTime Birthdate
         {
             get
-            {                
-                return DateTime.Parse(BirthdateString);
-            }
+            {
+                // This looks strange; we don´t want to throw an
+                // exception, if the user enters an invalid date string.
+                // Some other mechanism will have to prevent that from happening.
+                DateTime result = DateTime.Parse(FilmConstants.ImprobableDateString);
+                DateTime dummy = DateTime.Now;
+                if (DateTime.TryParse(BirthdateString, out dummy))
+                {
+                    result = dummy;
+                }
+                return result;
+            }        
         }
-        public string FullName { get {
+        public string FullName { get
+            {
                 return $"{FirstMidName} {LastName}";
             }
         }

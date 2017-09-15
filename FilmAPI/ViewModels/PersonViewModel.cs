@@ -1,11 +1,12 @@
 ﻿using FilmAPI.Core.Entities;
+using FilmAPI.Core.SharedKernel;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FilmAPI.ViewModels
 {
     public class PersonViewModel : BaseViewModel
-    {
+    {        
         public PersonViewModel()
         {
         }
@@ -31,7 +32,16 @@ namespace FilmAPI.ViewModels
         {
             get
             {
-                return DateTime.Parse(BirthdateString);
+                // This looks strange; we don´t want to throw an
+                // exception, if the user enters an invalid date string.
+                // Some other mechanism will have to prevent that from happening.
+                DateTime result = DateTime.Parse(FilmConstants.ImprobableDateString);
+                DateTime dummy = DateTime.Now;
+                if (DateTime.TryParse(BirthdateString, out dummy))
+                {
+                    result = dummy;
+                }                
+                return result;
             }
         }
         public string FullName

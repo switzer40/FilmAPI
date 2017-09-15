@@ -37,7 +37,8 @@ namespace FilmAPI.Core.SharedKernel
         public const string BADKEY = "Bad key";
         public const string FORTYTWO = "42";
 
-
+        // A date string for dealing with invalid data input
+        public const string ImprobableDateString = "1517-06-17";
 
     }
 }

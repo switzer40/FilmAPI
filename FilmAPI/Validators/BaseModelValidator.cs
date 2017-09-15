@@ -12,7 +12,7 @@ namespace FilmAPI.Validators
     {
         protected bool BeAValidDate(string arg)
         {
-            return DateTime.TryParse(arg, out var redult);
+            return DateTime.TryParse(arg, out var result);
         }
         private string[] _mediaTypes =
         {
