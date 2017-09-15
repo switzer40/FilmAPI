@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,13 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             Assert.Equal(2, result.Count);
             Assert.Equal(1, result.Where(p => p.LastName.Contains("Hepburn")).Count());
             Assert.Equal(1, result.Where(p => p.LastName.Contains("Roberts")).Count());
+        }
+        [Fact]
+        public async Task ReturnsNotFoundGivenNonexistentSurrogateKey()
+        {
+            string badKey = "Howdy";
+            var response = await _client.GetAsync($"/api/people/{badKey}");
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         [Fact]
         public async Task ReturnsHepburnGivenValidSurrogateKey()

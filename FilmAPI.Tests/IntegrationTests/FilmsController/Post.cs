@@ -39,5 +39,36 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             Assert.Equal(year, model.Year);
             Assert.Equal(length, model.Length);
         }
+        [Fact]
+        public async Task ReturnBadRequestGivenEarlyYearAsync()
+        {
+            var title = "Gone with the Wind";
+            short year = 1849;
+            var filmToPost = new Film(title, year);
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("api/films", jsonContent);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+        [Fact]
+        public async Task ReturnBadRequestGivenLateYearAsync()
+        {
+            var title = "Gone with the Wind";
+            short year = 2051;
+            var filmToPost = new Film(title, year);
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("api/films", jsonContent);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+        [Fact]
+        public async Task ReturnBadRequestGivenEmptyTitleAsync()
+        {
+            var title = "";
+            short year = 1957;
+            var filmToPost = new Film(title, year);
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("api/films", jsonContent);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+
+        }
     }
 }

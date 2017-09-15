@@ -44,7 +44,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             string badKey = "Howdy";
             var response = await _client.GetAsync($"/api/films/{badKey}");
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         [Fact]
         public async Task ReturnPrettyWomanGivenValidSurrogateKey()
@@ -60,6 +60,15 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
 
             Assert.Equal(title, result.Title);
             Assert.Equal(year, result.Year);
+        }
+        [Fact]
+        public async Task ReturnNotFoundGivenSurrogateKeyOfUnknownFilm()
+        {
+            string title = "Star Wars";
+            short year = 2017;
+            string key = _keyService.ConstructFilmSurrogateKey(title, year);
+            var response = await _client.GetAsync($"api/films/{key}");
+            AssemblyTraitAttribute.Equals(HttpStatusCode.NotFound, response.StatusCode);
         }
     }
 }

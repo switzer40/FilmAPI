@@ -23,11 +23,12 @@ namespace FilmAPI.Core.Entities
         [MinLength(5)]
         public string LastName { get; set; }
         [Required]
+
         public string BirthdateString { get; set; }
         public DateTime Birthdate
         {
             get
-            {
+            {                
                 return DateTime.Parse(BirthdateString);
             }
         }

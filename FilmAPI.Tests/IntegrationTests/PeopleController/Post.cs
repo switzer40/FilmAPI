@@ -43,5 +43,16 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             Assert.Equal(lastName, model.LastName);
             Assert.Equal(birthdate, model.BirthdateString);
         }
+        [Fact]
+        public async Task ReturnBadRequestGivenInvalidBirthdateAsync()
+        {
+            string lastName = "Cooper";
+            string birthdate = "1952-06-31";
+            var personToPost = new Person(lastName, birthdate, "Gary");
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("api/people", jsonContent);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
     }
 }

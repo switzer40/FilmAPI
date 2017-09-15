@@ -19,7 +19,7 @@ namespace FilmAPI.Infrastructure.Repositories
         public Film GetByTitleAndYear(string title, short year)
         {
             var spec = new FilmByTitleAndYear(title, year);
-            return List(spec).Single();
+            return List(spec).SingleOrDefault();
         }
 
         public async Task<Film> GetByTitleAndYearAsync(string title, short year)
