@@ -31,15 +31,11 @@ namespace FilmAPI.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            FilmViewModel model = null;
-            try
+            FilmViewModel model = await _service.GetBySurrogateKeyAsync(key);
+            if (model == null)
             {
-                model = await _service.GetBySurrogateKeyAsync(key);
-            }
-            catch
-            {
-                return BadRequest(key);
-            }            
+                return NotFound(key);
+            };
             return Ok(model);
         }
         [HttpPost]

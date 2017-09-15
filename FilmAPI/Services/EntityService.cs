@@ -88,13 +88,9 @@ namespace FilmAPI.Services
         }
 
         public ModelType GetBySurrogateKey(string key)
-        {
+        {            
             var entityToReturn = GetEntity(key);
-            if (entityToReturn == null)
-            {
-                throw new BadKeyException();
-            }
-            return EntityToModel(entityToReturn);
+            return (entityToReturn == null) ? null : EntityToModel(entityToReturn);           
         }
 
         public async Task<ModelType> GetBySurrogateKeyAsync(string key)
