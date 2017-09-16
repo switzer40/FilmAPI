@@ -17,7 +17,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
     public class Get : TestBase
     {
         private readonly HttpClient _client;
-        private readonly IKeyService _keyService;
+        
 
         public Get()
         {
@@ -40,11 +40,11 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             Assert.Equal(1, result.Where(f => f.Title.Contains("Woman")).Count());
         }
         [Fact]
-        public async Task ReturnsNotFoundGivenNonexistentSurrogateKey()
+        public async Task ReturnsBadRequestGivenNonexistentSurrogateKey()
         {
             string badKey = "Howdy";
             var response = await _client.GetAsync($"/api/films/{badKey}");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
         public async Task ReturnPrettyWomanGivenValidSurrogateKey()

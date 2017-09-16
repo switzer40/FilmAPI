@@ -1,4 +1,6 @@
 ﻿using FilmAPI.Infrastructure.Data;
+using FilmAPI.Interfaces;
+using FilmAPI.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using System;
@@ -12,11 +14,11 @@ namespace FilmAPI.Tests.IntegrationTests
 {
     public class TestBase
     {
-        //protected readonly FilmContext _context;
-        //public TestBase(FilmContext context)
-        //{
-        //    _context = context;
-        //}
+        protected IKeyService _keyService;
+        public TestBase()
+        {
+            _keyService = new KeyService();
+        }
         protected HttpClient GetClient()
         {
             var builder = new WebHostBuilder()

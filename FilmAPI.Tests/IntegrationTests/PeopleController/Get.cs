@@ -16,7 +16,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
     public class Get : TestBase
     {
         private readonly HttpClient _client;
-        private readonly IKeyService _keyService;
+        
 
         public Get()
         {
@@ -25,7 +25,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         }
 
         [Fact]
-        public async Task RturnsListOfPeople()
+        public async Task ReturnsListOfPeople()
         {
             var response = await _client.GetAsync("api/people");
             response.EnsureSuccessStatusCode();
@@ -37,11 +37,11 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             Assert.Equal(1, result.Where(p => p.LastName.Contains("Roberts")).Count());
         }
         [Fact]
-        public async Task ReturnsNotFoundGivenNonexistentSurrogateKey()
+        public async Task ReturnBadRequestGivenInvalidPersonSurrogateKeyAsync()
         {
             string badKey = "Howdy";
             var response = await _client.GetAsync($"/api/people/{badKey}");
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
         public async Task ReturnsHepburnGivenValidSurrogateKey()

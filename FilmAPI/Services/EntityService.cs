@@ -57,11 +57,10 @@ namespace FilmAPI.Services
         public void Delete(string key)
         {
             var entityToDelete = GetEntity(key);
-            if (entityToDelete == null)
+            if (entityToDelete != null)
             {
-                throw new BadKeyException();
-            }
-            _repository.Delete(entityToDelete);
+                _repository.Delete(entityToDelete);
+            }            
         }
 
         public async Task DeleteAsync(string key)

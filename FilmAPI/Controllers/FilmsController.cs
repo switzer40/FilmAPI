@@ -29,6 +29,7 @@ namespace FilmAPI.Controllers
             return Ok(films);
         }
         [HttpGet("{key}")]
+        [ValidateFilmExists]
         public async Task<IActionResult> Get(string key)
         {
             FilmViewModel model = await _service.GetBySurrogateKeyAsync(key);

@@ -1,5 +1,6 @@
 ﻿using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using FilmAPI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -32,8 +33,14 @@ namespace FilmAPI.Filters
                     var key = (string)context.ActionArguments["key"];
                     if (key != "")
                     {
-                        (string lastName, string birthdate) = _keyService.DeconstructPesonSurrogateKey(key);                        
-                        Person p = _repository.GetByLastNameAndBirthdate(lastName, birthdate);
+                        (string lastName, string birthdate) = _keyService.DeconstructPesonSurrogateKey(key);
+                        Person p = null;
+                        if (lastName == FilmConstants.BADKEY)
+                        {
+                            context.Result = new BadRequestObjectResult(key);
+                            return;
+                        }
+                        p = _repository.GetByLastNameAndBirthdate(lastName, birthdate);
                         if (p == null)
                         {
                             context.Result = new NotFoundObjectResult(key);

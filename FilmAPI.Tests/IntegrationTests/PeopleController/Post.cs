@@ -28,7 +28,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
-        public async Task ReturnsOkGivenValidPersonData()
+        public async Task ReturnOkGivenValidPersonDataAsync()
         {
             string lastName = "Gere";
             string birthdate = "1949-08-30";
@@ -48,6 +48,17 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         {
             string lastName = "Cooper";
             string birthdate = "1952-06-31";
+            var personToPost = new Person(lastName, birthdate, "Gary");
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync("api/people", jsonContent);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+        [Fact]
+        public async Task ReturnBadRequestGivenEmptyLastNameAsync()
+        {
+            string lastName = "";
+            string birthdate = "1952-06-30";
             var personToPost = new Person(lastName, birthdate, "Gary");
             var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/people", jsonContent);

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FilmAPI.Infrastructure.Data;
 using System.Linq;
 using FilmAPI.Core.Specifications;
+using FilmAPI.Core.SharedKernel;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
@@ -18,6 +19,10 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public Person GetByLastNameAndBirthdate(string lastName, string birthdate)
         {
+            if (lastName == FilmConstants.BADKEY)
+            {
+                return new Person(lastName, birthdate);
+            }
             var spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
             return List(spec).Single();
         }

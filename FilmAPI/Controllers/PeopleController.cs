@@ -1,4 +1,5 @@
-﻿using FilmAPI.Filters;
+﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.Filters;
 using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +29,10 @@ namespace FilmAPI.Controllers
             return Ok(people);
         }
         [HttpGet("{key}")]
+        [ValidatePersonExists]
         public async Task<IActionResult> Get(string key)
         {
-            PersonViewModel model = await _service.GetBySurrogateKeyAsync(key);
-            if (model == null)
-            {
-                return NotFound();
-            }
+            PersonViewModel model = await _service.GetBySurrogateKeyAsync(key);            
             return Ok(model);
         }
         [HttpPost]
