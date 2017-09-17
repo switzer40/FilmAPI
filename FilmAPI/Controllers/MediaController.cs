@@ -1,8 +1,5 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
+﻿using FilmAPI.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -31,17 +28,10 @@ namespace FilmAPI.Controllers
             return Ok(media);
         }
         [HttpGet("{key}")]
+        [ValidateMediumExists]
         public async Task<IActionResult> Get(string key)
         {
-            MediumViewModel model = null;
-            try
-            {
-                model = await _service.GetBySurrogateKeyAsync(key);
-            }
-            catch
-            {
-                return BadRequest(key);
-            }
+            MediumViewModel model = await _service.GetBySurrogateKeyAsync(key);            
             return Ok(model);            
         }
         [HttpPost]

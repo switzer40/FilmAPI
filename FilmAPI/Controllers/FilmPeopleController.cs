@@ -29,6 +29,7 @@ namespace FilmAPI.Controllers
             return Ok(filmPeople);
         }
         [HttpGet("{key}")]
+        [ValidateFilmPersonExists]
         public async Task<IActionResult> Get(string key)
         {
             FilmPersonViewModel model = null;
