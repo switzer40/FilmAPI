@@ -1,5 +1,6 @@
 ﻿using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -34,7 +35,17 @@ namespace FilmAPI.Filters
                     if (key != "")
                     {
                         (string title, short year, string mediumType) = _keyService.DeconstructMediumSurrogateKey(key);
+                        if (title == FilmConstants.BADKEY)
+                        {
+                            context.Result = new BadRequestObjectResult(key);
+                            return;
+                        }
                         Film f = _filmRepository.GetByTitleAndYear(title, year);
+                        if (f == null)
+                        {
+                            context.Result = new NotFoundObjectResult(key);
+                            return;
+                        }
                         Medium m = _repository.GetByFilmIdAndMediumType(f.Id, mediumType);
                         if (m == null)
                         {

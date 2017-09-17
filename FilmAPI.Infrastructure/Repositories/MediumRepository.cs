@@ -19,7 +19,7 @@ namespace FilmAPI.Infrastructure.Repositories
         public Medium GetByFilmIdAndMediumType(int filmId, string mediumType)
         {
             var spec = new MediumByFilmIdAndMediumType(filmId, mediumType);
-            return List(spec).Single();
+            return List(spec).SingleOrDefault();
         }
 
         public async Task<Medium> GetByFilmIdAndMediumTypeAsync(int filmId, string mediumType)
