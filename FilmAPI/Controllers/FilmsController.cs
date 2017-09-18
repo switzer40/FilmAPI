@@ -53,9 +53,8 @@ namespace FilmAPI.Controllers
         [HttpPut("{key}")]
         [ValidateFilmExists]
         public async Task<IActionResult> Put(string key, [FromBody] FilmViewModel model)
-        {
-            model.SurrogateKey = _keyService.ConstructFilmSurrogateKey(model.Title, model.Year);
-            await _service.UpdateAsync(model.SurrogateKey);
+        {            
+            await _service.UpdateAsync(model);
             return Ok();
         }
         [HttpDelete("{key}")]

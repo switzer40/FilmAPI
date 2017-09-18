@@ -22,46 +22,22 @@ namespace FilmAPI.Services
             _mapper = mapper;
             _keyService = keyService;
         }
-
-        public ModelType Add(string key)
-        {
-            var entityToAdd = CreateEntity(key);
-            var savedEntity = _repository.Add(entityToAdd);
-            return EntityToModel(savedEntity);
-        }
-
+        
         public ModelType Add(ModelType m)
         {
             var entityToAdd = ModelToEntity(m);
             var savedEntity = _repository.Add(entityToAdd);
             return EntityToModel(savedEntity);
         }
-
-        public async Task<ModelType> AddAsync(string key)
-        {
-            if (key == null)
-            {
-                throw new BadKeyException("null");
-            }
-            return await Task.Run(() => Add(key));
-        }
-
+       
         public async Task<ModelType> AddAsync(ModelType m)
         {
             return await Task.Run(() => Add(m));
         }
 
-        public abstract ModelType AddForce(string key);
-
 
         public abstract ModelType AddForce(ModelType m);
         
-
-        public async Task<ModelType> AddForceAsync(string key)
-        {
-            return await Task.Run(() => AddForce(key));
-        }
-
         public async Task<ModelType> AddForceAsync(ModelType m)
         {
             return await Task.Run(() => AddForce(m));
@@ -116,28 +92,11 @@ namespace FilmAPI.Services
         public abstract EntityType GetEntity(string key);
 
         public abstract EntityType ModelToEntity(ModelType m);
-        
-         
-
-        public void Update(string key)
-        {
-            var entityToUpdate = GetEntity(key);
-            if (entityToUpdate == null)
-            {
-                throw new BadKeyException();
-            }
-            _repository.Update(entityToUpdate);
-        }
-
+  
         public void Update(ModelType m)
         {
             var entityToUpdate = ModelToEntity(m);
             _repository.Update(entityToUpdate);
-        }
-
-        public async Task UpdateAsync(string key)
-        {
-            await Task.Run(() => Update(key));
         }
 
         public async Task UpdateAsync(ModelType m)

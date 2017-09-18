@@ -1,6 +1,7 @@
 ﻿using FilmAPI.Core.Entities;
 using System.ComponentModel.DataAnnotations;
 using System;
+using FilmAPI.Interfaces;
 
 namespace FilmAPI.ViewModels
 {
@@ -9,33 +10,37 @@ namespace FilmAPI.ViewModels
         private string title;
         private short year;
 
-        public MediumViewModel()
+        public MediumViewModel() : base()
         {
         }
 
-        public MediumViewModel(string title, short year, string mediumType)
+        public MediumViewModel(string title, short year, string mediumType) : base()
         {
             FilmTitle = title;
             FilmYear = year;
             MediumType = mediumType;
         }
-        public MediumViewModel(Film f, string mediumType, string key)
+        public MediumViewModel(Film f, string mediumType) : base()
         {
             FilmTitle = f.Title;
             FilmYear = f.Year;
             MediumType = mediumType;
-            SurrogateKey = key;
+            _key = _keyService.ConstructMediumSurrogateKey(FilmTitle, FilmYear, MediumType);
         }
 
-        public MediumViewModel(string filmTitle, short filmYear, string mediumType, string location = "")
+        public MediumViewModel(string filmTitle,
+                              short filmYear,
+                              string mediumType,
+                              string location = "") : base()
         {
             FilmTitle = filmTitle;
             FilmYear = filmYear;
+            _key = _keyService.ConstructMediumSurrogateKey(FilmTitle, FilmYear, MediumType);
             MediumType = mediumType;
             Location = location;
         }
 
-        public MediumViewModel(string title, short year)
+        public MediumViewModel(string title, short year) : base()
         {
             this.title = title;
             this.year = year;
@@ -50,6 +55,7 @@ namespace FilmAPI.ViewModels
         [Required]
         public string MediumType { get; set; }
         public string Location { get; set; }
-        public override string SurrogateKey { get; set; }
+        private string _key;
+        public override string SurrogateKey { get { return _key; } }
     }
 }

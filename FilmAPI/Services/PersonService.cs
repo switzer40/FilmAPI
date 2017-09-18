@@ -32,7 +32,7 @@ namespace FilmAPI.Services
         public override PersonViewModel EntityToModel(Person e)
         {
             string key = _keyService.ConstructPersonSurrogateKey(e.LastName, e.BirthdateString);
-            return new PersonViewModel(e, key);
+            return new PersonViewModel(e);
         }
 
         public override Person GetEntity(string key)
@@ -44,11 +44,6 @@ namespace FilmAPI.Services
         public override Person ModelToEntity(PersonViewModel m)
         {
             return _mapper.Map<Person>(m);
-        }
-
-        public override PersonViewModel AddForce(string key)
-        {
-            return Add(key);
         }
 
         public override PersonViewModel AddForce(PersonViewModel m)

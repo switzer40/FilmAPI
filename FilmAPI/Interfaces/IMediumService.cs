@@ -10,20 +10,14 @@ namespace FilmAPI.Interfaces
    public interface IMediumService
     {   
         List<MediumViewModel> GetAll();
-        Task<List<MediumViewModel>> GetAllAsync();
-        MediumViewModel Add(string key);
-        MediumViewModel Add(MediumViewModel m);
-        MediumViewModel AddForce(string key);
+        Task<List<MediumViewModel>> GetAllAsync();        
+        MediumViewModel Add(MediumViewModel m);       
         MediumViewModel AddForce(MediumViewModel m);
-        Task<MediumViewModel> AddAsync(string key);
-        Task<MediumViewModel> AddAsync(MediumViewModel m);
-        Task<MediumViewModel> AddForceAsync(string key);
+        Task<MediumViewModel> AddAsync(MediumViewModel m);        
         Task<MediumViewModel> AddForceAsync(MediumViewModel m);
         void Delete(string key);       
-        Task DeleteAsync(string key);
-        void Update(string key);
-        void Update(MediumViewModel m);
-        Task UpdateAsync(string key);
+        Task DeleteAsync(string key);        
+        void Update(MediumViewModel m);        
         Task UpdateAsync(MediumViewModel m);
         MediumViewModel GetBySurrogateKey(string key);
         Task<MediumViewModel> GetBySurrogateKeyAsync(string key);

@@ -36,32 +36,24 @@ namespace FilmAPI.Controllers
             return Ok(model);
         }
         [HttpPost]
+        [ValidatePersonNotDuplicate]
         public async Task<IActionResult> Post([FromBody] PersonViewModel model)
-        {
-            model.SurrogateKey = _keyService.ConstructPersonSurrogateKey(model.LastName, model.BirthdateString);
-            var savedPerson = await _service.AddForceAsync(model.SurrogateKey);
+        {            
+            var savedPerson = await _service.AddForceAsync(model);
             return Ok(savedPerson);
         }
         [HttpPut("{key}")]
         [ValidatePersonExists]
         public async Task<IActionResult> Put(string key, [FromBody] PersonViewModel model)
-        {
-            model.SurrogateKey = _keyService.ConstructPersonSurrogateKey(model.LastName, model.BirthdateString);
-            await _service.UpdateAsync(model.SurrogateKey);
+        {            
+            await _service.UpdateAsync(model);
             return Ok();
         }
         [HttpDelete("{key}")]
         [ValidatePersonExists]
         public async Task<IActionResult> Delete(string key)
         {
-            try
-            {
-                await _service.DeleteAsync(key);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(key);
-            }
+            await _service.DeleteAsync(key);            
             return Ok();
         }
     }

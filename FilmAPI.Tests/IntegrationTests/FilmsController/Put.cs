@@ -1,4 +1,6 @@
-﻿using FilmAPI.ViewModels;
+﻿using FilmAPI.Interfaces;
+using FilmAPI.Services;
+using FilmAPI.ViewModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
     public class Put : TestBase
     {
         private readonly HttpClient _client;
+        private readonly IKeyService service = new KeyService();
 
         public Put()
         {

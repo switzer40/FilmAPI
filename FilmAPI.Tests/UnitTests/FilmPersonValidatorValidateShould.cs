@@ -5,11 +5,13 @@ using System.Text;
 using Xunit;
 using FluentValidation.TestHelper;
 using FilmAPI.ViewModels;
+using FilmAPI.Interfaces;
+using FilmAPI.Services;
 
 namespace FilmAPI.Tests.UnitTests
 {
     public class FilmPersonValidatorValidateShould : ValidatorTestBase
-    {
+    {        
         [Fact]
         public void FailGivenEmptyTitle()
         {

@@ -45,39 +45,22 @@ namespace FilmAPI.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]FilmPersonViewModel model)
-        {
-            model.SurrogateKey = _keyService.ConstructFilmPersonSurrogateKey(model.FilmTitle, 
-                                                                             model.FilmYear,
-                                                                             model.PersonLastName,
-                                                                             model.PersonBirthdate,
-                                                                             model.Role);
-            var savedModel = await _service.AddForceAsync(model.SurrogateKey);
+        {            
+            var savedModel = await _service.AddForceAsync(model);
             return Ok(savedModel);
         }
         [HttpPut("{key}")]
         [ValidateFilmPersonExists]
         public async Task<IActionResult> Put(string key, [FromBody] FilmPersonViewModel model)
-        {
-            model.SurrogateKey = _keyService.ConstructFilmPersonSurrogateKey(model.FilmTitle,
-                                                                             model.FilmYear,
-                                                                             model.PersonLastName,
-                                                                             model.PersonBirthdate,
-                                                                             model.Role);
-            await _service.UpdateAsync(model.SurrogateKey);
+        {            
+            await _service.UpdateAsync(model);
             return Ok();
         }
         [HttpDelete("{key}")]
         [ValidateFilmPersonExists]
         public async Task<IActionResult> Delete(string key)
         {
-            try
-            {
-                await _service.DeleteAsync(key);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(key);
-            }
+            await _service.DeleteAsync(key);            
             return Ok();
         }
     }

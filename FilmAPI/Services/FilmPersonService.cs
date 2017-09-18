@@ -5,9 +5,6 @@ using FilmAPI.Infrastructure.Repositories;
 using FilmAPI.Interfaces;
 using FilmAPI.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
@@ -44,7 +41,11 @@ namespace FilmAPI.Services
             Film f = _filmRepository.GetById(e.FilmId);
             Person p = _personRepository.GetById(e.PersonId);
             string key = _keyService.ConstructFilmPersonSurrogateKey(f.Title, f.Year, p.LastName, p.BirthdateString, e.Role);
-            return new FilmPersonViewModel(f.Title, f.Year, p.LastName, p.BirthdateString, e.Role, key);
+            return new FilmPersonViewModel(f.Title,
+                                            f.Year,
+                                            p.LastName,
+                                            p.BirthdateString,
+                                            e.Role);
         }
         
 
@@ -61,30 +62,21 @@ namespace FilmAPI.Services
             return ((IFilmPersonRepository)_repository).GetByFilmIdPersonIdAndRole(f.Id, p.Id, data.role);                                
         }
 
-        public override FilmPersonViewModel AddForce(string key)
+        public override FilmPersonViewModel AddForce(FilmPersonViewModel m)
         {
-            var data = GetData(key);
-            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
-            Person p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+            Film f = _filmRepository.GetByTitleAndYear(m.FilmTitle, m.FilmYear);
+            Person p = _personRepository.GetByLastNameAndBirthdate(m.PersonLastName, m.PersonBirthdate);
             if (f == null)
             {
-                f = new Film(data.title, data.year);
+                f = new Film(m.FilmTitle, m.FilmYear);
             }
             if (p == null)
             {
-                p = new Person(data.lastName, data.birthdate);
+                p = new Person(m.PersonLastName, m.PersonBirthdate);
             }
-            FilmPersonViewModel m = new FilmPersonViewModel(f.Title,
-                                                            f.Year,
-                                                            p.LastName,
-                                                            p.BirthdateString,
-                                                            data.role);
-            return AddForce(m);
-        }
-
-        public override FilmPersonViewModel AddForce(FilmPersonViewModel m)
-        {
-            throw new NotImplementedException();
+            FilmPerson fp = new FilmPerson(f.Id, p.Id, m.Role);
+            var savedFilmPerson = _repository.Add(fp);
+            return EntityToModel(savedFilmPerson);
         }
     }
 }

@@ -1,27 +1,31 @@
 ﻿using FilmAPI.Core.Entities;
 using FilmAPI.Core.SharedKernel;
+using FilmAPI.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace FilmAPI.ViewModels
 {
     public class PersonViewModel : BaseViewModel
-    {        
-        public PersonViewModel()
+    {       
+        public PersonViewModel() : base()
         {
         }
-        public PersonViewModel(Person p, string key)
+        public PersonViewModel(Person p) : base()
         {
             FirstMidName = p.FirstMidName;
             LastName = p.LastName;
             BirthdateString = p.BirthdateString;
-            SurrogateKey = key;
+            _key = _keyService.ConstructPersonSurrogateKey(LastName, BirthdateString);
         }
-        public PersonViewModel(string lastName, string birthdate, string firstMidName = "")
+        public PersonViewModel(string lastName,
+                               string birthdate,
+                               string firstMidName = "") : base()
         {
             FirstMidName = firstMidName;
             LastName = lastName;
             BirthdateString = birthdate;
+            _key = _keyService.ConstructPersonSurrogateKey(LastName, BirthdateString);
         }
         public string FirstMidName { get; set; }
         [Required]
@@ -51,7 +55,7 @@ namespace FilmAPI.ViewModels
                 return $"{FirstMidName} {LastName}";
             }
         }
-
-        public override string SurrogateKey { get; set; }
+        private string _key;
+        public override string SurrogateKey { get { return _key; } }
     }
 }

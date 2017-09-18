@@ -16,7 +16,7 @@ namespace FilmAPI.Tests.UnitTests
             string title = "Mad Max";
             short year = 2016;
             string key = _keyService.ConstructFilmSurrogateKey(title, year);
-            FilmViewModel m = new FilmViewModel(new Film(title, year), key);
+            FilmViewModel m = new FilmViewModel(new Film(title, year));
 
             //Act 
             (string FilmTitle, short FilmYear) = _keyService.DeconstructFilmSurrogateKey(key);

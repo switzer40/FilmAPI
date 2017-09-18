@@ -36,31 +36,22 @@ namespace FilmAPI.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] MediumViewModel model)
-        {
-            model.SurrogateKey = _keyService.ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);
-            var savedMedium =await _service.AddForceAsync(model.SurrogateKey);
+        {            
+            var savedMedium =await _service.AddForceAsync(model);
             return Ok(savedMedium);
         }
         [HttpPut("{key}")]
         [ValidateMediumExists]
         public async Task<IActionResult> Put(string key, [FromBody] MediumViewModel model)
-        {
-            model.SurrogateKey = _keyService.ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);model.SurrogateKey = _keyService.ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);
-            await _service.UpdateAsync(model.SurrogateKey);
+        {            
+            await _service.UpdateAsync(model);
             return Ok();
         }
         [HttpDelete("{key}")]
         [ValidateMediumExists]
         public async Task<IActionResult> Delete(string key)
         {
-            try
-            {
-                await _service.DeleteAsync(key);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(key);
-            }
+            await _service.DeleteAsync(key);            
             return Ok();
         }
     }

@@ -5,21 +5,24 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using FluentValidation.TestHelper;
+using FilmAPI.Services;
+using FilmAPI.Interfaces;
 
 namespace FilmAPI.Tests.UnitTests
 {
     public class MediumValidatorValidateShould :  ValidatorTestBase
     {
+        private IKeyService service = new KeyService();
         [Fact]
         public void FailGivenEmptyTitle()
-        {
-            var model = new MediumViewModel("", 1957,GoodMediumType);
+        {            
+            var model = new MediumViewModel("", 1957, GoodMediumType);
             mediumValidator.ShouldHaveValidationErrorFor(m => m.FilmTitle, model);
         }
         [Fact]
         public void FailGivenToolongTitle()
         {
-            var model = new MediumViewModel(LongString, 1957,GoodMediumType);
+            var model = new MediumViewModel(LongString, 1957, GoodMediumType);
             mediumValidator.ShouldHaveValidationErrorFor(m => m.FilmTitle, model);
         }
         [Fact]
@@ -36,7 +39,7 @@ namespace FilmAPI.Tests.UnitTests
         }
         [Fact]
         public void FailGivenInvalidMediumType()
-        {
+        { 
             var model = new MediumViewModel(LongString, GoodYear, BadMediimType);
             mediumValidator.ShouldHaveValidationErrorFor(m => m.MediumType, model);
         }

@@ -77,7 +77,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
             var goodTitle = "MadMax";
             var goodYear = (short)1957;
             var invaliddMediumType = "Tape";
-            var mediumToPost = new MediumViewModel(goodTitle, goodYear, invaliddMediumType);
+            var mediumToPost = new MediumViewModel( goodTitle, goodYear, invaliddMediumType);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/media", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

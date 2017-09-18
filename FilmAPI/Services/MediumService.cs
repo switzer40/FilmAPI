@@ -48,7 +48,7 @@ namespace FilmAPI.Services
             MediumViewModel model = null;            
             Film f = _filmRepository.GetById(e.FilmId);
             string key = _keyService.ConstructMediumSurrogateKey(f.Title, f.Year, e.MediumType);
-            model = new MediumViewModel(f, e.MediumType, key);
+            model = new MediumViewModel(f, e.MediumType);
             model.Location = e.Location;
             return model;
         }
@@ -71,16 +71,6 @@ namespace FilmAPI.Services
             return GetEntity(m.SurrogateKey);
         }
 
-        public override MediumViewModel AddForce(string key)
-        {
-            var data = GetData(key);
-            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
-            if (f == null)
-            {
-                f = new Film(data.title, data.year);
-            }
-            return AddForce(new MediumViewModel(f.Title, f.Year, data.mediumType));
-        }
 
         public override MediumViewModel AddForce(MediumViewModel m)
         {

@@ -33,9 +33,8 @@ namespace FilmAPI.Services
         }
 
         public override FilmViewModel EntityToModel(Film e)
-        {
-            string key = _keyService.ConstructFilmSurrogateKey(e.Title, e.Year);
-            return new FilmViewModel(e, key);
+        {            
+            return new FilmViewModel(e);
         }
 
         public override Film GetEntity(string key)
@@ -52,12 +51,7 @@ namespace FilmAPI.Services
         {
             return _mapper.Map<Film>(m);
         }
-
-        public override FilmViewModel AddForce(string key)
-        {
-            return Add(key);
-        }
-
+        
         public override FilmViewModel AddForce(FilmViewModel m)
         {
             return Add(m);
