@@ -28,6 +28,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             short year = 2017;
             short length = 123;
             var filmToPost = new FilmViewModel(title, year, length);
+            filmToPost.SurrogateKey = _keyService.ConstructFilmSurrogateKey(title, year);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/films", jsonContent);
             response.EnsureSuccessStatusCode();
@@ -44,7 +45,8 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             var title = "Gone with the Wind";
             short year = 1849;
-            var filmToPost = new Film(title, year);
+            var filmToPost = new FilmViewModel(title, year);
+            filmToPost.SurrogateKey = _keyService.ConstructFilmSurrogateKey(title, year);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/films", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

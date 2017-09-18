@@ -1,5 +1,6 @@
 ﻿using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces;
+using FilmAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
@@ -24,13 +25,12 @@ namespace FilmAPI.Filters
             }
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                if (context.ActionArguments.ContainsKey("key"))
+                if (context.ActionArguments.ContainsKey("model"))
                 {
-                    var key = (string)context.ActionArguments["key"];
-                    if (!string.IsNullOrEmpty(key))
-                    {
-                        var data = _keyService.DeconstructFilmSurrogateKey(key);
-                        if ((await _filmRepository.ListAsync()).Any (f => f.Title == data.Item1 && f.Year == data.Item2))
+                    var model = (FilmViewModel)context.ActionArguments["model"];
+                    if (model != null)
+                    {                        
+                        if ((await _filmRepository.ListAsync()).Any (f => f.Title == model.Title && f.Year == model.Year))
                         {
                             context.Result =new  BadRequestObjectResult("duplicate");
                             return;
