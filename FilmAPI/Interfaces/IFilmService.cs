@@ -10,8 +10,12 @@ namespace FilmAPI.Interfaces
        
         FilmViewModel Add(string key);
         FilmViewModel Add(FilmViewModel m);
+        FilmViewModel AddForce(string key);
+        FilmViewModel AddForce(FilmViewModel m);
         Task<FilmViewModel> AddAsync(string key);
         Task<FilmViewModel> AddAsync(FilmViewModel m);
+        Task<FilmViewModel> AddForceAsync(string key);
+        Task<FilmViewModel> AddForceAsync(FilmViewModel m);
         void Delete(string key);
         Task DeleteAsync(string key);
         List<FilmViewModel> GetAll();

@@ -38,7 +38,7 @@ namespace FilmAPI.Controllers
         public async Task<IActionResult> Post([FromBody] MediumViewModel model)
         {
             model.SurrogateKey = _keyService.ConstructMediumSurrogateKey(model.FilmTitle, model.FilmYear, model.MediumType);
-            var savedMedium =await _service.AddAsync(model.SurrogateKey);
+            var savedMedium =await _service.AddForceAsync(model.SurrogateKey);
             return Ok(savedMedium);
         }
         [HttpPut("{key}")]

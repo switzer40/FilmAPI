@@ -39,7 +39,7 @@ namespace FilmAPI.Controllers
         public async Task<IActionResult> Post([FromBody] PersonViewModel model)
         {
             model.SurrogateKey = _keyService.ConstructPersonSurrogateKey(model.LastName, model.BirthdateString);
-            var savedPerson = await _service.AddAsync(model.SurrogateKey);
+            var savedPerson = await _service.AddForceAsync(model.SurrogateKey);
             return Ok(savedPerson);
         }
         [HttpPut("{key}")]

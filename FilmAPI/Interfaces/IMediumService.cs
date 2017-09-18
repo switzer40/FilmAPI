@@ -13,8 +13,12 @@ namespace FilmAPI.Interfaces
         Task<List<MediumViewModel>> GetAllAsync();
         MediumViewModel Add(string key);
         MediumViewModel Add(MediumViewModel m);
+        MediumViewModel AddForce(string key);
+        MediumViewModel AddForce(MediumViewModel m);
         Task<MediumViewModel> AddAsync(string key);
         Task<MediumViewModel> AddAsync(MediumViewModel m);
+        Task<MediumViewModel> AddForceAsync(string key);
+        Task<MediumViewModel> AddForceAsync(MediumViewModel m);
         void Delete(string key);       
         Task DeleteAsync(string key);
         void Update(string key);

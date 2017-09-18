@@ -31,6 +31,10 @@ namespace FilmAPI.Services
                 return null;
             }
             Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            if (f == null)
+            {
+                return new Medium(0, data.mediumType);
+            }
             return new Medium(f.Id, data.mediumType);
         }
 
@@ -41,9 +45,10 @@ namespace FilmAPI.Services
 
         public override MediumViewModel EntityToModel(Medium e)
         {
+            MediumViewModel model = null;            
             Film f = _filmRepository.GetById(e.FilmId);
             string key = _keyService.ConstructMediumSurrogateKey(f.Title, f.Year, e.MediumType);
-           var model = new MediumViewModel(f, e.MediumType, key);
+            model = new MediumViewModel(f, e.MediumType, key);
             model.Location = e.Location;
             return model;
         }
@@ -65,5 +70,27 @@ namespace FilmAPI.Services
             medium.Location = m.Location;
             return GetEntity(m.SurrogateKey);
         }
+
+        public override MediumViewModel AddForce(string key)
+        {
+            var data = GetData(key);
+            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            if (f == null)
+            {
+                f = new Film(data.title, data.year);
+            }
+            return AddForce(new MediumViewModel(f.Title, f.Year, data.mediumType));
+        }
+
+        public override MediumViewModel AddForce(MediumViewModel m)
+        {
+            Film f = _filmRepository.GetByTitleAndYear(m.FilmTitle, m.FilmYear);
+            if (f == null)
+            {
+                f = new Film(m.FilmTitle, m.FilmYear);
+            }
+            return AddForce(new MediumViewModel(f.Title, f.Year, m.MediumType));
+        }
+        
     }
 }

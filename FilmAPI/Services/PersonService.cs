@@ -45,5 +45,15 @@ namespace FilmAPI.Services
         {
             return _mapper.Map<Person>(m);
         }
+
+        public override PersonViewModel AddForce(string key)
+        {
+            return Add(key);
+        }
+
+        public override PersonViewModel AddForce(PersonViewModel m)
+        {
+            return Add(m);
+        }
     }
 }

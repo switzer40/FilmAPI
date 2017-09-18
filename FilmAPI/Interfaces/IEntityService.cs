@@ -19,6 +19,11 @@ namespace FilmAPI.Interfaces
         ModelType Add(ModelType m);
         Task<ModelType> AddAsync(string key);
         Task<ModelType> AddAsync(ModelType m);
+        // The AddForce... methods are needed by the entity Medium
+        ModelType AddForce(string key);
+        ModelType AddForce(ModelType m);
+        Task<ModelType> AddForceAsync(string key);
+        Task<ModelType> AddForceAsync(ModelType m);
         void Delete(string key);        
         Task DeleteAsync(string key);        
         void Update(string key);

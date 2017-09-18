@@ -44,7 +44,7 @@ namespace FilmAPI.Controllers
         public async Task<IActionResult> Post([FromBody] FilmViewModel model)
         {
             model.SurrogateKey = _keyService.ConstructFilmSurrogateKey(model.Title, model.Year);
-            var savedModel = await _service.AddAsync(model);
+            var savedModel = await _service.AddForceAsync(model);
             return Ok(savedModel);
         }
         [HttpPut("{key}")]

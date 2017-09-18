@@ -60,5 +60,31 @@ namespace FilmAPI.Services
             Person p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
             return ((IFilmPersonRepository)_repository).GetByFilmIdPersonIdAndRole(f.Id, p.Id, data.role);                                
         }
+
+        public override FilmPersonViewModel AddForce(string key)
+        {
+            var data = GetData(key);
+            Film f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            Person p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+            if (f == null)
+            {
+                f = new Film(data.title, data.year);
+            }
+            if (p == null)
+            {
+                p = new Person(data.lastName, data.birthdate);
+            }
+            FilmPersonViewModel m = new FilmPersonViewModel(f.Title,
+                                                            f.Year,
+                                                            p.LastName,
+                                                            p.BirthdateString,
+                                                            data.role);
+            return AddForce(m);
+        }
+
+        public override FilmPersonViewModel AddForce(FilmPersonViewModel m)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

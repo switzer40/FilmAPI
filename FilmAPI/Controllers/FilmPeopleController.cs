@@ -51,7 +51,7 @@ namespace FilmAPI.Controllers
                                                                              model.PersonLastName,
                                                                              model.PersonBirthdate,
                                                                              model.Role);
-            var savedModel = await _service.AddAsync(model.SurrogateKey);
+            var savedModel = await _service.AddForceAsync(model.SurrogateKey);
             return Ok(savedModel);
         }
         [HttpPut("{key}")]

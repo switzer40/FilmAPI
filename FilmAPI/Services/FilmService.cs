@@ -51,6 +51,16 @@ namespace FilmAPI.Services
         public override Film ModelToEntity(FilmViewModel m)
         {
             return _mapper.Map<Film>(m);
-        }        
+        }
+
+        public override FilmViewModel AddForce(string key)
+        {
+            return Add(key);
+        }
+
+        public override FilmViewModel AddForce(FilmViewModel m)
+        {
+            return Add(m);
+        }
     }
 }

@@ -51,6 +51,22 @@ namespace FilmAPI.Services
             return await Task.Run(() => Add(m));
         }
 
+        public abstract ModelType AddForce(string key);
+
+
+        public abstract ModelType AddForce(ModelType m);
+        
+
+        public async Task<ModelType> AddForceAsync(string key)
+        {
+            return await Task.Run(() => AddForce(key));
+        }
+
+        public async Task<ModelType> AddForceAsync(ModelType m)
+        {
+            return await Task.Run(() => AddForce(m));
+        }
+
         public abstract EntityType CreateEntity(string key);
         
 
