@@ -42,11 +42,7 @@ namespace FilmAPI.Controllers
         [HttpPost]
         [ValidateFilmNotDuplicate]
         public async Task<IActionResult> Post([FromBody] FilmViewModel model)
-        {
-            if (string.IsNullOrEmpty(model.SurrogateKey))
-            {
-                return BadRequest("missing surrogate key");
-            }
+        {            
             var savedModel = await _service.AddForceAsync(model);
             return Ok(savedModel);
         }

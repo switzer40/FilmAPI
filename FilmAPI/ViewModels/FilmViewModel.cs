@@ -24,6 +24,7 @@ namespace FilmAPI.ViewModels
         {
             Title = f.Title;
             Year = f.Year;
+            Length = f.Length;
             _key = _keyService.ConstructFilmSurrogateKey(Title, Year);
         }
         public FilmViewModel(short year, short length = 0) : base()

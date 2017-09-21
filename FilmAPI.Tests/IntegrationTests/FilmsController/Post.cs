@@ -24,12 +24,13 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         [Fact]
         public async Task ReturnsOkGivenValidFilmDataAsync()
         {
-            string title = "MadMax";
+            string title = "BadMax";
             short year = 2017;
             short length = 123;
-            var filmToPost = new FilmViewModel(title, year, length);            
+            var filmToPost = new FilmViewModel(title, year, length);
+            var jsonString = JsonConvert.SerializeObject(filmToPost);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("api/films", jsonContent);
+            var response = _client.PostAsync("api/films", jsonContent).Result;
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();

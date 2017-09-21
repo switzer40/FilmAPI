@@ -34,15 +34,10 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         {
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
-            var response = await _client.GetAsync($"api/people/{key}");
+            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);            
+            var  keyToDelete = Uri.EscapeUriString(key);
+            var response = await _client.DeleteAsync($"api/people/{keyToDelete}");
             response.EnsureSuccessStatusCode();
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<PersonViewModel>(stringResponse);
-            var keyToDelete = model.SurrogateKey;
-            keyToDelete = Uri.EscapeUriString(keyToDelete);
-            var response2 = await _client.DeleteAsync($"api/people/{keyToDelete}");
-            response2.EnsureSuccessStatusCode();
         }
     }
 }
