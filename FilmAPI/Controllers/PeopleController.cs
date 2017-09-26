@@ -42,8 +42,8 @@ namespace FilmAPI.Controllers
             var savedPerson = await _service.AddForceAsync(model);
             return Ok(savedPerson);
         }
-        [HttpPut("{key}")]
-        [ValidatePersonExists]
+        [HttpPut]
+        [ValidatePersonToUpdateExists]
         public async Task<IActionResult> Put(string key, [FromBody] PersonViewModel model)
         {            
             await _service.UpdateAsync(model);

@@ -78,5 +78,25 @@ namespace FilmAPI.Services
             var savedFilmPerson = _repository.Add(fp);
             return EntityToModel(savedFilmPerson);
         }
+
+        public override void CopyModelOntoEntity(FilmPerson e, FilmPersonViewModel m)
+        {
+            var f = _filmRepository.GetByTitleAndYear(m.FilmTitle, m.FilmYear);
+            var p = _personRepository.GetByLastNameAndBirthdate(m.PersonLastName, m.PersonBirthdate);
+            e.FilmId = f.Id;
+            e.PersonId = p.Id;
+            e.Role = m.Role;
+        }
+
+        public override FilmPerson FetchEntity(string key)
+        {
+            var data = GetData(key);
+            var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            var p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+            var storedFilmPerson = ((IFilmPersonRepository)_repository).GetByFilmIdPersonIdAndRole(f.Id, p.Id, data.role);
+            return _repository.GetById(storedFilmPerson.Id);
+
+        }
+
     }
 }

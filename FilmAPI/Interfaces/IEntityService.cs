@@ -10,9 +10,11 @@ namespace FilmAPI.Interfaces
         where ModelType : BaseViewModel     
     {
         EntityType CreateEntity(string key);
+        EntityType FetchEntity(string key);
         EntityType ModelToEntity(ModelType m);
         EntityType GetEntity(string key);
         ModelType EntityToModel(EntityType e);
+        void CopyModelOntoEntity(EntityType e, ModelType m);
         List<ModelType> GetAll();
         Task<List<ModelType>> GetAllAsync();
         ModelType Add(ModelType m);        

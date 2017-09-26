@@ -33,7 +33,7 @@ namespace FilmAPI.Services
         }
 
         public override FilmViewModel EntityToModel(Film e)
-        {            
+        {
             return new FilmViewModel(e);
         }
 
@@ -51,10 +51,24 @@ namespace FilmAPI.Services
         {
             return _mapper.Map<Film>(m);
         }
-        
+
         public override FilmViewModel AddForce(FilmViewModel m)
         {
             return Add(m);
+        }
+
+        public override Film FetchEntity(string key)
+        {
+            var data = GetData(key);
+            var storedFilm = ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year);
+            return _repository.GetById(storedFilm.Id);
+        }
+
+        public override void CopyModelOntoEntity(Film e, FilmViewModel m)
+        {
+            e.Title = m.Title;
+            e.Year = m.Year;
+            e.Length = m.Length;
         }
     }
 }

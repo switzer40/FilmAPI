@@ -30,24 +30,26 @@ namespace FilmAPI.Filters
                 if (context.ActionArguments.ContainsKey("key"))
                 {
                     var key = (string)context.ActionArguments["key"];
-                    if (!string.IsNullOrEmpty(key))
+                    if (key != "")
                     {
-                        (string title, short year)data  =_keyService.DeconstructFilmSurrogateKey(key);
-                        if (data.title == FilmConstants.BADKEY)
+                        var data =  _keyService.DeconstructFilmSurrogateKey(key);
+                        string title = data.Item1;
+                        short year = data.Item2;
+                        if (title == FilmConstants.BADKEY)
                         {
                             context.Result = new BadRequestObjectResult(key);
                             return;
                         }
-                        var film = _repository.GetByTitleAndYear(data.title, data.year);
-                        if (film == null)
+                        Film f = _repository.GetByTitleAndYear(title, year);
+                        if (f == null)
                         {
                             context.Result = new NotFoundObjectResult(key);
                             return;
-                        }                        
+                        }
                     }
                 }
                 await next();
             }
-        }                
+        }
     }
 }

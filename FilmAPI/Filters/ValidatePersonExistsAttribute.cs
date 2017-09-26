@@ -1,5 +1,4 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.Core.Interfaces;
+﻿using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using FilmAPI.Services;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Filters
 {
-    public class ValidatePersonExistsAttribute : TypeFilterAttribute
+    public class ValidatePersonExistsAttribute :  TypeFilterAttribute
     {
         public ValidatePersonExistsAttribute() : base(typeof(ValidatePersonExistsFilterImpl))
         {
@@ -21,32 +20,32 @@ namespace FilmAPI.Filters
         {
             private readonly IPersonRepository _repository;
             private readonly IKeyService _keyService;
-            public ValidatePersonExistsFilterImpl(IPersonRepository repository, IKeyService keyService)
+            public ValidatePersonExistsFilterImpl(IPersonRepository repo)
             {
-                _repository = repository;
-                _keyService = keyService;
+                _repository = repo;
+                _keyService = new KeyService();
             }
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 if (context.ActionArguments.ContainsKey("key"))
                 {
                     var key = (string)context.ActionArguments["key"];
-                    if (key != "")
+                    if (string.IsNullOrEmpty(key))
                     {
-                        (string lastName, string birthdate) = _keyService.DeconstructPesonSurrogateKey(key);
-                        Person p = null;
-                        if (lastName == FilmConstants.BADKEY)
-                        {
-                            context.Result = new BadRequestObjectResult(key);
-                            return;
-                        }
-                        p = _repository.GetByLastNameAndBirthdate(lastName, birthdate);
-                        if (p == null)
-                        {
-                            context.Result = new NotFoundObjectResult(key);
-                            return;
-                        }
-                    }                    
+                        context.Result = new BadRequestObjectResult("null key");
+                        return;
+                    }
+                    (string lastName, string birthdate) = _keyService.DeconstructPesonSurrogateKey(key);
+                    if (lastName == FilmConstants.BADKEY)
+                    {
+                        context.Result = new BadRequestObjectResult(key);
+                        return;
+                    }
+                    var p = _repository.GetByLastNameAndBirthdate(lastName, birthdate);
+                    if (p == null)
+                    {
+                        context.Result = new NotFoundObjectResult(p.FullName);
+                    }
                 }
                 await next();
             }

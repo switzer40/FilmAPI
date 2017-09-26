@@ -50,5 +50,19 @@ namespace FilmAPI.Services
         {
             return Add(m);
         }
+
+        public override void CopyModelOntoEntity(Person e, PersonViewModel m)
+        {
+            e.FirstMidName = m.FirstMidName;
+            e.LastName = m.LastName;
+            e.BirthdateString = m.BirthdateString;
+        }
+
+        public override Person FetchEntity(string key)
+        {
+            var data = GetData(key);
+            var storedPerson = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+            return _repository.GetById(storedPerson.Id);
+        }
     }
 }

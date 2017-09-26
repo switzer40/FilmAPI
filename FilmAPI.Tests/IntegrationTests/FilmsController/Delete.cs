@@ -62,7 +62,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             var model = JsonConvert.DeserializeObject<FilmViewModel>(stringResponse);
-            var keyToDelete = model.SurrogateKey;         
+            var keyToDelete = (string.IsNullOrEmpty(model.SurrogateKey)) ? key : model.SurrogateKey;     
             keyToDelete = Uri.EscapeUriString(keyToDelete);
             var response2 = await _client.DeleteAsync($"api/films/{keyToDelete}");
             response2.EnsureSuccessStatusCode();

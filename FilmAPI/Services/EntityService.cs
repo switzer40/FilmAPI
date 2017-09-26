@@ -43,6 +43,9 @@ namespace FilmAPI.Services
             return await Task.Run(() => AddForce(m));
         }
 
+        public abstract void CopyModelOntoEntity(EntityType e, ModelType m);
+        
+
         public abstract EntityType CreateEntity(string key);
         
 
@@ -61,7 +64,10 @@ namespace FilmAPI.Services
         }
 
         public abstract ModelType EntityToModel(EntityType e);
+
+        public abstract EntityType FetchEntity(string key);
         
+
         public List<ModelType> GetAll()
         {
             List<ModelType> result = new List<ModelType>();
@@ -92,12 +98,14 @@ namespace FilmAPI.Services
         public abstract EntityType GetEntity(string key);
 
         public abstract EntityType ModelToEntity(ModelType m);
-  
+
         public void Update(ModelType m)
         {
-            var entityToUpdate = ModelToEntity(m);
+            var entityToUpdate = FetchEntity(m.SurrogateKey);
+            CopyModelOntoEntity(entityToUpdate, m);
             _repository.Update(entityToUpdate);
         }
+       
 
         public async Task UpdateAsync(ModelType m)
         {

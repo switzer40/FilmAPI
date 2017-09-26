@@ -81,6 +81,20 @@ namespace FilmAPI.Services
             }
             return AddForce(new MediumViewModel(f.Title, f.Year, m.MediumType));
         }
-        
+
+        public override void CopyModelOntoEntity(Medium e, MediumViewModel m)
+        {
+            var f = _filmRepository.GetByTitleAndYear(m.FilmTitle, m.FilmYear);
+            e.FilmId = f.Id;
+            e.MediumType = m.MediumType;
+        }
+
+        public override Medium FetchEntity(string key)
+        {
+            var data = GetData(key);
+            var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            var storedMedium = ((IMediumRepository)_repository).GetByFilmIdAndMediumType(f.Id, data.mediumType);
+            return _repository.GetById(storedMedium.Id);
+        }
     }
 }

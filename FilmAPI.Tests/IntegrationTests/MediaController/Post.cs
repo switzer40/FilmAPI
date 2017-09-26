@@ -37,6 +37,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
 
             Assert.Equal(title, model.FilmTitle);
             Assert.Equal(year, model.FilmYear);
+            Assert.Equal(type, model.MediumType);
         }
         [Fact]
         public async Task ReturnBadRequestGivenEmptyTitleAsync()

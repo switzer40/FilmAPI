@@ -46,11 +46,12 @@ namespace FilmAPI.Controllers
             var savedModel = await _service.AddForceAsync(model);
             return Ok(savedModel);
         }
-        [HttpPut("{key}")]
-        [ValidateFilmExists]
-        public async Task<IActionResult> Put(string key, [FromBody] FilmViewModel model)
-        {            
-            await _service.UpdateAsync(model);
+        [HttpPut]
+        [ValidateFilmToUpdateExists]
+        public async Task<IActionResult> Put([FromBody] FilmViewModel model)
+        {
+            var reconstructedModel = new FilmViewModel(model.Title, model.Year, model.Length);
+            await _service.UpdateAsync(reconstructedModel);
             return Ok();
         }
         [HttpDelete("{key}")]
