@@ -40,6 +40,13 @@ namespace FilmAPI.Controllers
             var savedMedium =await _service.AddForceAsync(model);
             return Ok(savedMedium);
         }
+        [HttpPut]
+        [ValidateMediumToUpdateExists]
+        public async Task<IActionResult> Put([FromBody] MediumViewModel model)
+        {
+            await _service.UpdateAsync(model);
+            return Ok();
+        }
         [HttpPut("{key}")]
         [ValidateMediumExists]
         public async Task<IActionResult> Put(string key, [FromBody] MediumViewModel model)

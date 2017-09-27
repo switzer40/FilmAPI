@@ -19,6 +19,7 @@ namespace FilmAPI.ViewModels
             FilmTitle = title;
             FilmYear = year;
             MediumType = mediumType;
+            _key = _keyService.ConstructMediumSurrogateKey(FilmTitle, FilmYear, MediumType);
         }
         public MediumViewModel(Film f, string mediumType) : base()
         {
