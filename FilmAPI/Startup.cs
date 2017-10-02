@@ -14,9 +14,9 @@ using FilmAPI.Core.Entities;
 using AutoMapper;
 using FilmAPI.Core.SharedKernel;
 using StructureMap;
-using FilmAPI.ViewModels;
-using FilmAPI.Controllers;
 using FluentValidation.AspNetCore;
+using FilmAPI.Services.Film;
+using FilmAPI.Interfaces.Film;
 
 namespace FilmAPI
 {
@@ -121,11 +121,11 @@ namespace FilmAPI
                 // I had hoped StructureMap´s conventions will take care of configuring
                 // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
                 
-            config.For(typeof(IRepository<>)).Add(typeof(Repository<>));
-            config.For(typeof(IFilmService)).Add(typeof(FilmService));
-            config.For(typeof(IPersonService)).Add(typeof(PersonService));
-            config.For(typeof(IMediumService)).Add(typeof(MediumService));
-            config.For(typeof(IFilmPersonService)).Add(typeof(FilmPersonService));            
+            config.For(typeof(IFilmRepository)).Add(typeof(FilmRepository));
+            config.For(typeof(IPersonRepository)).Add(typeof(PersonRepository));
+            config.For(typeof(IMediumRepository)).Add(typeof(MediumRepository));
+                config.For(typeof(IFilmPersonRepository)).Add(typeof(FilmPersonRepository));
+            config.For(typeof(IFilmService)).Add(typeof(FilmService));                       
             //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
 
             // this shoIuld have been done by WithDefaultConventions:

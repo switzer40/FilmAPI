@@ -1,9 +1,7 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.DTOs;
+using FilmAPI.Interfaces;
 using FilmAPI.Services;
-using FilmAPI.ViewModels;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -27,7 +25,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             var firstName = "Alice";
             var lastName = "King";
             var birthdate = "1940-02-14";
-            var personToPut = new PersonViewModel(lastName, birthdate, firstName);
+            var personToPut = new PersonDto(lastName, birthdate, firstName);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPut), Encoding.UTF8, "application/json");
             var response = await _client.PutAsync($"api/people/{key}", jsonContent);
 

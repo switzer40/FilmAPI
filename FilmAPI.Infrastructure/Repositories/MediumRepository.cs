@@ -29,5 +29,12 @@ namespace FilmAPI.Infrastructure.Repositories
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
         }
+
+        public override void Update(Medium t)
+        {
+            var storedMedium = GetByFilmIdAndMediumType(t.FilmId, t.MediumType);
+            storedMedium.Copy(t);
+            Save();
+        }
     }
 }

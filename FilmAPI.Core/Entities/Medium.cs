@@ -23,6 +23,13 @@ namespace FilmAPI.Core.Entities
         public int FilmId { get; set; }
         [Required]
         public string MediumType { get; set; }
-        public string Location { get; set; }        
+        public string Location { get; set; }
+
+        public void Copy(Medium t)
+        {
+            FilmId = t.FilmId;
+            MediumType = t.MediumType;
+            Location = t.Location;
+        }
     }
 }

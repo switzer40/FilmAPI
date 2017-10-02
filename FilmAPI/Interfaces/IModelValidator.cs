@@ -1,13 +1,10 @@
-﻿using FilmAPI.ViewModels;
+﻿using FilmAPI.DTOs;
+using FilmAPI.DTOs.Film;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    public interface IModelValidator<ModelType> :  IValidator<ModelType> where ModelType : BaseViewModel
+    public interface IModelValidator<ModelType> :  IValidator<ModelType> where ModelType : BaseFilmDto
     {
     }
 }

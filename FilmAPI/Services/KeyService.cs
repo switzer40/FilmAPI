@@ -34,7 +34,7 @@ namespace FilmAPI.Services
             return $"{lastName}{SEPCHAR}{birtdate}";
         }
 
-        public (string, short, string, string, string) DeconstructFilmPersonSurrogateKey(string key)
+        public (string title, short year, string lastName, string birthdate, string role) DeconstructFilmPersonSurrogateKey(string key)
         {
             string[] parts = ParseKey(key, 5);
             if (parts[0] == BADKEY)
@@ -44,20 +44,27 @@ namespace FilmAPI.Services
                 parts[3] = BADKEY;
                 parts[4] = BADKEY;
             }
-            return (parts[0], short.Parse(parts[1]), parts[2], parts[3], parts[4]);
+            var title = parts[0];
+            var year = short.Parse(parts[1]);
+            var lastName = parts[2];
+            var birthdate = parts[3];
+            var role = parts[4];
+            return (title, year, lastName, birthdate, role);
         }
 
-        public (string, short) DeconstructFilmSurrogateKey(string key)
+        public (string title, short year) DeconstructFilmSurrogateKey(string key)
         {
             string[] parts = ParseKey(key, 2);
             if (parts[0] == BADKEY)
             {
                 parts[1] = FORTYTWO;
             }
-            return (parts[0], short.Parse(parts[1]));
+            var title = parts[0];
+            var year = short.Parse(parts[1]);
+            return (title, year);
         }
 
-        public (string, short, string) DeconstructMediumSurrogateKey(string key)
+        public (string title, short year, string mediumType) DeconstructMediumSurrogateKey(string key)
         {
             string[] parts = ParseKey(key, 3);
             if (parts[0] == BADKEY)
@@ -66,17 +73,22 @@ namespace FilmAPI.Services
                 parts[2] = BADKEY;
                 
             }
-            return (parts[0], short.Parse(parts[1]), parts[2]);
+            var title = parts[0];
+            var year = short.Parse(parts[1]);
+            var mediumType = parts[2];
+            return (title, year, mediumType);
         }
 
-        public (string, string) DeconstructPesonSurrogateKey(string key)
+        public (string lastName, string birthdate) DeconstructPesonSurrogateKey(string key)
         {
             string[] parts = ParseKey(key, 2);
             if (parts[0] == BADKEY)
             {
                 parts[1] = BADKEY;
-            }                    
-            return (parts[0], parts[1]);
+            }
+            var lastName = parts[0];
+            var birhdate = parts[1];
+            return (lastName, birhdate);
         }
         private string[] ParseKey(string key, int expectedLength)
         {

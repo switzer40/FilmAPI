@@ -46,6 +46,13 @@ namespace FilmAPI.Core.Entities
                 return $"{FirstMidName} {LastName}";
             }
         }
+
+        public void Copy(Person t)
+        {
+            FirstMidName = t.FirstMidName;
+            LastName = t.LastName;
+            BirthdateString = t.BirthdateString;
+        }
     }
 }
 

@@ -1,8 +1,6 @@
 ﻿using FilmAPI.Core.SharedKernel;
-using FilmAPI.ViewModels;
+using FilmAPI.DTOs;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +24,8 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
             var title = "Pretty Woman";
             var year = (short)1990;
             var type = FilmConstants.MediumType_DVD;
-            var model = new MediumViewModel(title, year, type);
+            var newLocation = FilmConstants.Location_Right;
+            var model = new MediumDto(title, year, type, newLocation);
             var key = model.SurrogateKey;
             var jsonContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
 
@@ -38,6 +37,11 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
 
             // Assert
             response1.EnsureSuccessStatusCode();
+
+             // And now test whether it was properly updated
+            var stringResponse = await response1.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<MediumDto>(stringResponse);
+            Assert.Equal(newLocation, result.Location);
         }
 }
 }

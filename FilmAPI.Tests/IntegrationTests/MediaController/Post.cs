@@ -1,13 +1,11 @@
 ﻿using FilmAPI.Core.SharedKernel;
-using FilmAPI.ViewModels;
+using FilmAPI.DTOs;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using System.Net;
+using System.Text;
 
 namespace FilmAPI.Tests.IntegrationTests.MediaController
 {
@@ -27,16 +25,16 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
             string title = "MadMax";
             short year = 2017;
             var type = FilmConstants.MediumType_BD;
-            var mediumToPost = new MediumViewModel(title, year, type);
+            var mediumToPost = new MediumDto(title, year, type);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/media", jsonContent);
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<MediumViewModel>(stringResponse);
+            var model = JsonConvert.DeserializeObject<MediumDto>(stringResponse);
 
-            Assert.Equal(title, model.FilmTitle);
-            Assert.Equal(year, model.FilmYear);
+            Assert.Equal(title, model.Title);
+            Assert.Equal(year, model.Year);
             Assert.Equal(type, model.MediumType);
         }
         [Fact]
@@ -45,7 +43,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
             var emptyTitle = "";
             var goodYear = (short)1967;
             var goodMediumType = FilmConstants.MediumType_BD;
-            var mediumToPost = new MediumViewModel(emptyTitle, goodYear, goodMediumType);
+            var mediumToPost = new MediumDto(emptyTitle, goodYear, goodMediumType);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/media", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -56,7 +54,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
             var goodTitle = "MadMax";
             var tooEarlyYear = (short)1849;
             var goodMediumType = FilmConstants.MediumType_BD;
-            var mediumToPost = new MediumViewModel(goodTitle, tooEarlyYear, goodMediumType);
+            var mediumToPost = new MediumDto(goodTitle, tooEarlyYear, goodMediumType);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/media", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -67,7 +65,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
             var goodTitle = "MadMax";
             var tooLateYear = (short)2051;
             var goodMediumType = FilmConstants.MediumType_BD;
-            var mediumToPost = new MediumViewModel(goodTitle, tooLateYear, goodMediumType);
+            var mediumToPost = new MediumDto(goodTitle, tooLateYear, goodMediumType);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/media", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -78,7 +76,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaController
             var goodTitle = "MadMax";
             var goodYear = (short)1957;
             var invaliddMediumType = "Tape";
-            var mediumToPost = new MediumViewModel( goodTitle, goodYear, invaliddMediumType);
+            var mediumToPost = new MediumDto( goodTitle, goodYear, invaliddMediumType);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/media", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

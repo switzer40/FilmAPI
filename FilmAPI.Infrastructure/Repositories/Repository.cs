@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public abstract class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly FilmContext _context;
         protected readonly DbSet<T> _set;
@@ -28,7 +28,7 @@ namespace FilmAPI.Infrastructure.Repositories
             return t;
         }
 
-        private void Save()
+        protected void Save()
         {
             _context.SaveChanges();
         }
@@ -98,10 +98,8 @@ namespace FilmAPI.Infrastructure.Repositories
             return await ListAsync(specification.Predicate);
         }
 
-        public void Update(T t)
-        {
-            Save();
-        }
+        public abstract void Update(T t);
+        
 
         public async Task UpdateAsync(T t)
         {

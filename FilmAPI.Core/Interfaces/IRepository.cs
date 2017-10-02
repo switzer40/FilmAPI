@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using FilmAPI.Core.Entities;
 
 namespace FilmAPI.Core.Interfaces
 {
@@ -25,5 +26,7 @@ namespace FilmAPI.Core.Interfaces
         Task<List<T>> ListAsync(ISpecification<T> specification);
         void Update(T t);
         Task UpdateAsync(T t);
+
+        
     }
 }

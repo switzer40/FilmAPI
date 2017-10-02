@@ -1,17 +1,19 @@
 ﻿using FilmAPI.Core.SharedKernel;
-using FilmAPI.ViewModels;
+using FilmAPI.DTOs;
 using FluentValidation;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace FilmAPI.Validators
 {
-    public class BaseModelValidator<ModelType> :AbstractValidator<ModelType> where ModelType : BaseViewModel
-    {
+    public class BaseModelValidator<ModelType> :AbstractValidator<ModelType> //where ModelType : BaseDto
+    { 
         protected bool BeAValidDate(string arg)
         {
+            if (arg == FilmConstants.ImprobableDateString)
+            {
+                return false;
+            }
             return DateTime.TryParse(arg, out var result);
         }
         private string[] _mediaTypes =

@@ -1,7 +1,7 @@
 ﻿using FilmAPI.Core.Entities;
 using FilmAPI.Interfaces;
 using FilmAPI.Services;
-using FilmAPI.ViewModels;
+using FilmAPI.DTOs;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using FilmAPI.DTOs.Film;
 
 namespace FilmAPI.Tests.IntegrationTests.FilmsController
 {
@@ -33,7 +34,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             var response = await _client.GetAsync("/api/films");
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<List<FilmViewModel>>(stringResponse);
+            var result = JsonConvert.DeserializeObject<List<KeyedFilmDto>>(stringResponse);
 
             Assert.Equal(2, result.Count);
             Assert.Equal(1, result.Where(f => f.Title.Contains("Tiffany")).Count());
@@ -56,7 +57,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<FilmViewModel>(stringResponse);
+            var result = JsonConvert.DeserializeObject<KeyedFilmDto>(stringResponse);
 
             Assert.Equal(title, result.Title);
             Assert.Equal(year, result.Year);

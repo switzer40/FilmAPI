@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FilmAPI.DTOs;
+using FilmAPI.DTOs.Film;
 
 namespace FilmAPI
 {
@@ -12,10 +9,8 @@ namespace FilmAPI
     {
         public AutoMapperProfile()
         {
-            CreateMap<Film, FilmViewModel>();
-            CreateMap<FilmViewModel, Film>();
-            CreateMap<Person, PersonViewModel>();
-            CreateMap<PersonViewModel, Person>();            
-        }
+            CreateMap<Film, KeyedFilmDto>();
+            CreateMap<KeyedFilmDto, Film>();
+        }            
     }
 }

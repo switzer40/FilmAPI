@@ -1,8 +1,7 @@
 ﻿using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
+using FilmAPI.DTOs;
+using FilmAPI.DTOs.Film;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -27,14 +26,14 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             string title = "BadMax";
             short year = 2017;
             short length = 123;
-            var filmToPost = new FilmViewModel(title, year, length);
+            var filmToPost = new BaseFilmDto(title, year, length);
             var jsonString = JsonConvert.SerializeObject(filmToPost);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
             var response = _client.PostAsync("api/films", jsonContent).Result;
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<FilmViewModel>(stringResponse);
+            var model = JsonConvert.DeserializeObject<KeyedFilmDto>(stringResponse);
 
             Assert.Equal(title, model.Title);
             Assert.Equal(year, model.Year);
@@ -45,7 +44,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             var title = "Gone with the Wind";
             short year = 1849;
-            var filmToPost = new FilmViewModel(title, year);            
+            var filmToPost = new KeyedFilmDto(title, year);            
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/films", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

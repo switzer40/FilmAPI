@@ -34,5 +34,12 @@ namespace FilmAPI.Infrastructure.Repositories
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
         }
+
+        public override void Update(Person t)
+        {
+            var storedPerson = GetByLastNameAndBirthdate(t.LastName, t.BirthdateString);
+            storedPerson.Copy(t);
+            Save();
+        }
     }
 }

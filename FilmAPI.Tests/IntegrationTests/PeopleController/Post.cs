@@ -1,8 +1,6 @@
 ﻿using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
+using FilmAPI.DTOs;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -38,10 +36,10 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<PersonViewModel>(stringResponse);
+            var model = JsonConvert.DeserializeObject<PersonDto>(stringResponse);
 
             Assert.Equal(lastName, model.LastName);
-            Assert.Equal(birthdate, model.BirthdateString);
+            Assert.Equal(birthdate, model.Birthdate);
         }
         [Fact]
         public async Task ReturnBadRequestGivenInvalidBirthdateAsync()

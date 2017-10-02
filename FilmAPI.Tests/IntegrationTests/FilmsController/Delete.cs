@@ -1,10 +1,9 @@
-﻿using FilmAPI.ViewModels;
+﻿using FilmAPI.DTOs;
+using FilmAPI.DTOs.Film;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -54,18 +53,18 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             var stringResponse = await response.Content.ReadAsStringAsync();
             Assert.Equal(key, stringResponse);
         }
-        [Fact]
-        public async Task ReturnsOkGivenValidSurrogateKey()
-        {
-            var key = "Pretty Woman*1990";
-            var response = await _client.GetAsync($"api/films/{key}");
-            response.EnsureSuccessStatusCode();
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<FilmViewModel>(stringResponse);
-            var keyToDelete = (string.IsNullOrEmpty(model.SurrogateKey)) ? key : model.SurrogateKey;     
-            keyToDelete = Uri.EscapeUriString(keyToDelete);
-            var response2 = await _client.DeleteAsync($"api/films/{keyToDelete}");
-            response2.EnsureSuccessStatusCode();
-        }                        
+        //[Fact]
+        //public async Task ReturnsOkGivenValidSurrogateKey()
+        //{
+        //    var key = "Pretty Woman*1990";
+        //    var response = await _client.GetAsync($"api/films/{key}");
+        //    response.EnsureSuccessStatusCode();
+        //    var stringResponse = await response.Content.ReadAsStringAsync();
+        //    var model = JsonConvert.DeserializeObject<KeyedFilmDto>(stringResponse);
+        //    var keyToDelete = (string.IsNullOrEmpty(model.SurrogateKey)) ? key : model.SurrogateKey;     
+        //    keyToDelete = Uri.EscapeUriString(keyToDelete);
+        //    var response2 = await _client.DeleteAsync($"api/films/{keyToDelete}");
+        //    response2.EnsureSuccessStatusCode();
+        //}                        
     }
 }

@@ -29,5 +29,12 @@ namespace FilmAPI.Infrastructure.Repositories
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
         }
+
+        public override void Update(FilmPerson t)
+        {
+            var storedFilmPerson = GetByFilmIdPersonIdAndRole(t.FilmId, t.PersonId, t.Role);
+            storedFilmPerson.Copy(t);
+            Save();
+        }
     }
 }

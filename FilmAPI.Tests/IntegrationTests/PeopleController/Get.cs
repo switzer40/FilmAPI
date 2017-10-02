@@ -1,13 +1,10 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.DTOs;
 using FilmAPI.Services;
-using FilmAPI.ViewModels;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -30,7 +27,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             var response = await _client.GetAsync("api/people");
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<List<PersonViewModel>>(stringResponse);
+            var result = JsonConvert.DeserializeObject<List<PersonDto>>(stringResponse);
 
             Assert.Equal(2, result.Count);
             Assert.Equal(1, result.Where(p => p.LastName.Contains("Hepburn")).Count());
@@ -53,10 +50,10 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<PersonViewModel>(stringResponse);
+            var result = JsonConvert.DeserializeObject<PersonDto>(stringResponse);
 
             Assert.Equal(lastName, result.LastName);
-            Assert.Equal(birthdate, result.BirthdateString);
+            Assert.Equal(birthdate, result.Birthdate);
 
         }
     }        
