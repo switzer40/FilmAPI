@@ -9,8 +9,10 @@ namespace FilmAPI.DTOs.Film
 {
     public class KeyedFilmDto : BaseFilmDto, IFilmDto
     {
-              
-        
+
+        public KeyedFilmDto()
+        {
+        }
 
         public KeyedFilmDto(string title, short year, short length = 0) : base(title, year, length)
         {          

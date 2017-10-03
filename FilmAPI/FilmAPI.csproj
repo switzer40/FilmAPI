@@ -13,20 +13,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Mappers\HomebrewMapper.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Controllers\FilmPerson\" />
-    <Folder Include="Controllers\Medium\" />
     <Folder Include="Controllers\Person\" />
-    <Folder Include="DTOs\Medium\" />
     <Folder Include="DTOs\FilmPerson\" />
     <Folder Include="DTOs\Person\" />
     <Folder Include="Filters\FilmPerson\" />
-    <Folder Include="Filters\Medium\" />
     <Folder Include="Filters\Person\" />
     <Folder Include="Interfaces\FilmPerson\" />
-    <Folder Include="Interfaces\Medium\" />
     <Folder Include="Interfaces\Person\" />
+    <Folder Include="Mappers\" />
     <Folder Include="Services\FilmPerson\" />
-    <Folder Include="Services\Medium\" />
     <Folder Include="Services\Person\" />
     <Folder Include="Specifictions\" />
     <Folder Include="Validators\FilmPerson\" />

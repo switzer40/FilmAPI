@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 namespace FilmAPI.DTOs.Film
 {
     public partial class BaseFilmDto
-    {        
+    {
+        public BaseFilmDto()
+        {
+
+        }
         public BaseFilmDto(string title, short year, short length = 0)
         {
             Title = title;

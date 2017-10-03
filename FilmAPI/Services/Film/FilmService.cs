@@ -13,11 +13,11 @@ namespace FilmAPI.Services.Film
         private readonly IFilmRepository _repository;
         private readonly IMapper _mapper;
         private readonly IKeyService _keyService;
-        public FilmService(IFilmRepository repo, IMapper mapper, IKeyService keyService)
+        public FilmService(IFilmRepository repo, IMapper mapper)
         {
             _repository = repo;
             _mapper = mapper;
-            _keyService = keyService;
+            _keyService = new KeyService();
         }
         public KeyedFilmDto Add(BaseFilmDto m)
         {
