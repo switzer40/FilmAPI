@@ -16,7 +16,7 @@ namespace FilmAPI.Interfaces
         Task<List<KeyedFilmDto>> GetAllAsync();
         KeyedFilmDto GetBySurrogateKey(string key);
         Task<KeyedFilmDto> GetBySurrogateKeyAsync(string key);        
-        void Update(KeyedFilmDto m);        
-        Task UpdateAsync(KeyedFilmDto m);
+        void Update(BaseFilmDto m);        
+        Task UpdateAsync(BaseFilmDto m);
     }
 }

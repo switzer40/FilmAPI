@@ -1,4 +1,5 @@
-﻿using FilmAPI.DTOs.Medium;
+﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.DTOs.Medium;
 using FilmAPI.Filters;
 using FilmAPI.Filters.Medium;
 using FilmAPI.Interfaces;
@@ -17,8 +18,10 @@ namespace FilmAPI.Controllers.Medium
     {
         private readonly IMediumService _service;
         private readonly IKeyService _keyService;
+        private bool _force = false;
         public MediaController(IMediumService service, IKeyService keyService)
         {
+            _force = FilmConstants.Force;
             _service = service;
             _keyService = keyService;
         }
@@ -39,7 +42,7 @@ namespace FilmAPI.Controllers.Medium
         [ValidateMediumNotDuplicate]
         public async Task<IActionResult> Post([FromBody] KeyedMediumDto model)
         {
-            var savedModel = await _service.AddAsync(model);
+            var savedModel = await _service.AddAsync(model, _force);
             return Ok(savedModel);
         }
         [HttpPut]

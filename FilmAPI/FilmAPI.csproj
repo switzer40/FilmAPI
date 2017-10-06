@@ -17,25 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Attributes\" />
     <Folder Include="Controllers\FilmPerson\" />
-    <Folder Include="Controllers\Person\" />
-    <Folder Include="DTOs\FilmPerson\" />
-    <Folder Include="DTOs\Person\" />
     <Folder Include="Filters\FilmPerson\" />
-    <Folder Include="Filters\Person\" />
-    <Folder Include="Interfaces\FilmPerson\" />
-    <Folder Include="Interfaces\Person\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="Services\FilmPerson\" />
-    <Folder Include="Services\Person\" />
     <Folder Include="Specifictions\" />
-    <Folder Include="Validators\FilmPerson\" />
-    <Folder Include="Validators\Medium\" />
-    <Folder Include="Validators\Person\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="6.1.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="7.1.1" />
     
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />

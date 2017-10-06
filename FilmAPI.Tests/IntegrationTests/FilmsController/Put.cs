@@ -18,21 +18,21 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         }
 
         [Fact]
-        public async Task ReturnsOkHivenValidFilmDataAsync()
+        public async Task ReturnsOkGivenValidFilmDataAsync()
         {
             // Arrange
-            // Start with a film knowen to be in the DB.
+            // Start with a film known to be in the DB.
             var title = "Pretty Woman";
             var year = (short)1990;
-            var newLength = (short)110;
-            var filmToUpdate = new KeyedFilmDto(title, year, newLength);
-            filmToUpdate.SurrogateKey = $"{title}*{year}";
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToUpdate), Encoding.UTF8, "application/json");
+            var newLength = (short)110;            
+            var filmToUpdate = new BaseFilmDto(title, year, newLength);
+            var key = _keyService.ConstructFilmSurrogateKey(title, year);
+             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToUpdate), Encoding.UTF8, "application/json");
 
             // Act
             var response = await _client.PutAsync($"api/films", jsonContent);
             response.EnsureSuccessStatusCode();
-            var response1 = await _client.GetAsync($"api/films/{filmToUpdate.SurrogateKey}");
+            var response1 = await _client.GetAsync($"api/films/{key}");
 
             // Assert
             response1.EnsureSuccessStatusCode();

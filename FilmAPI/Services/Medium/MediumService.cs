@@ -15,33 +15,33 @@ namespace FilmAPI.Services.Medium
     {
         private readonly IMediumRepository _repository;
         private readonly IFilmRepository _filmRepository;
-        private readonly IMapper _mapper;
+        private readonly IMediumMapper _mapper;
         private readonly IKeyService _keyService;
-        public MediumService(IMediumRepository repo, IFilmRepository frepo, IMapper mapper)
+        public MediumService(IMediumRepository repo, IFilmRepository frepo, IMediumMapper mapper)
         {
             _repository = repo;
             _filmRepository = frepo;
             _mapper = mapper;
             _keyService = new KeyService();
         }
-        public KeyedMediumDto Add(BaseMediumDto m)
-        {
-            var mediumToAdd = _mapper.Map<Core.Entities.Medium>(m);
+        public KeyedMediumDto Add(DTOs.Medium.BaseMediumDto m, bool force = false)
+        {           
+            var mediumToAdd = (force) ? _mapper.MapBackForce(m) :  _mapper.MapBack(m);
             var savedMedium = _repository.Add(mediumToAdd);
-            var result = _mapper.Map<KeyedMediumDto>(savedMedium);
-            result.SurrogateKey = _keyService.ConstructMediumSurrogateKey(result.Title, result.Year, result.MediumType);
+            var key = _keyService.ConstructMediumSurrogateKey(m.Title, m.Year, m.MediumType);
+            var result = new KeyedMediumDto(m.Title, m.Year, m.MediumType, key, m.Location);                      
             return result;
         }
 
-        public async Task<KeyedMediumDto> AddAsync(BaseMediumDto m)
+        public async Task<KeyedMediumDto> AddAsync(DTOs.Medium.BaseMediumDto m, bool force)
         {
-            return await Task.Run(() => Add(m));
+            return await Task.Run(() => Add(m, force));
         }
 
         public void Delete(string key)
         {
             var modelToDelete = GetBySurrogateKey(key);
-            var mediumToDelete = _mapper.Map<Core.Entities.Medium>(modelToDelete);
+            var mediumToDelete = _mapper.MapBack(modelToDelete);
             // If this is theonly medium transporting the given film, then we might
             // as well delete the film as well.
             CascadefSensible(modelToDelete);
@@ -66,14 +66,16 @@ namespace FilmAPI.Services.Medium
 
         public List<KeyedMediumDto> GetAll()
         {
+            var result = new List<KeyedMediumDto>();
             var media = _repository.List();
-            var modelList = _mapper.Map<List<KeyedMediumDto>>(media);
-            foreach (var item in modelList)
+            var baseList = _mapper.MapList(media);
+            foreach (var item in baseList)
             {
-                item.SurrogateKey =
-                    _keyService.ConstructMediumSurrogateKey(item.Title, item.Year, item.MediumType);
+                var key = _keyService.ConstructMediumSurrogateKey(item.Title, item.Year, item.MediumType);
+                var keyedItem = new KeyedMediumDto(item.Title, item.Year, item.MediumType,  key, item.Location);                                   
+                result.Add(keyedItem);
             }
-            return modelList;
+            return result;
         }
 
         public async Task<List<KeyedMediumDto>> GetAllAsync()
@@ -86,18 +88,17 @@ namespace FilmAPI.Services.Medium
             var data = _keyService.DeconstructMediumSurrogateKey(key);
             var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
             var m = _repository.GetByFilmIdAndMediumType(f.Id, data.mediumType);
-            var keyedMedium = new KeyedMediumDto(data.title, data.year, data.mediumType, m.Location);
-            keyedMedium.SurrogateKey = key;
+            var keyedMedium = new KeyedMediumDto(data.title, data.year, data.mediumType, key,  m.Location);            
             return keyedMedium;
         }
 
-        public void Update(KeyedMediumDto m)
+        public void Update(BaseMediumDto m)
         {
-            var mediumToUpdate = _mapper.Map<Core.Entities.Medium>(m);
+            var mediumToUpdate = _mapper.MapBack(m);
             _repository.Update(mediumToUpdate);
         }
 
-        public async Task UpdateAsync(KeyedMediumDto m)
+        public async Task UpdateAsync(BaseMediumDto m)
         {
             await Task.Run(() => Update(m));
         }
@@ -106,6 +107,5 @@ namespace FilmAPI.Services.Medium
         {
             return await Task.Run(() => GetBySurrogateKey(key));
         }
-        
     }
 }

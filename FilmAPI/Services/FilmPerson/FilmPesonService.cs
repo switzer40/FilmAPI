@@ -1,0 +1,101 @@
+﻿using FilmAPI.Interfaces.FilmPerson;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FilmAPI.DTOs.FilmPerson;
+using FilmAPI.Core.Interfaces;
+using FilmAPI.Interfaces;
+
+namespace FilmAPI.Services.FilmPerson
+{
+    public class FilmPesonService : IFilmPersonService
+    {
+        private readonly IFilmPersonRepository _repository;
+        private readonly IFilmRepository _filmRepository;
+        private readonly IPersonRepository _personRepository;
+        private readonly IFilmPersonMapper _mapper;
+        private readonly IKeyService _keyService;
+        public FilmPesonService(IFilmPersonRepository repo,
+                                IFilmRepository frepo,
+                                IPersonRepository prepo,
+                                IFilmPersonMapper mapper,
+                                IKeyService keyService)
+        {
+            _repository = repo;
+            _filmRepository = frepo;
+            _personRepository = prepo;
+            _mapper = mapper;
+            _keyService = keyService;
+        }
+        public KeyedFilmPersonDto Add(BaseFilmPersonDto b)
+        {
+               var fpToAdd = _mapper.MapBack(b);
+               var savedFP = _repository.Add(fpToAdd);
+               var key = _keyService.ConstructFilmPersonSurrogateKey(b.Title, b.Year, b.LastName, b.Birthdate, b.Role);
+               var result = new KeyedFilmPersonDto(b.Title, b.Year, b.LastName, b.Birthdate, b.Role, key);               
+               return result;
+        }
+
+        public async Task<KeyedFilmPersonDto> AddAsync(BaseFilmPersonDto b)
+        {
+            return await Task.Run(() => Add(b));
+        }
+
+        public void Delete(string key)
+        {
+            var modelToDelete = GetBySurrogateKey(key);
+            var filmToDelete = _mapper.MapBack(modelToDelete);
+            _repository.Delete(filmToDelete);
+        }
+
+        public async Task DeleteAsync(string key)
+        {
+            await Task.Run(() => Delete(key));
+        }
+
+        public List<KeyedFilmPersonDto> GetAll()
+        {
+            var filmPeople = _repository.List();
+            var baseList = _mapper.MapList(filmPeople);
+            var result = new List<KeyedFilmPersonDto>();
+            foreach (var item in baseList)
+            {
+                var key = _keyService.ConstructFilmPersonSurrogateKey(item.Title, item.Year, item.LastName, item.Birthdate, item.Role);
+                var keyedItem = new KeyedFilmPersonDto(item.Title, item.Year, item.LastName, item.Birthdate, item.Role, key);                              
+                result.Add(keyedItem);
+            }
+            return result;
+        }
+
+        public async Task<List<KeyedFilmPersonDto>> GetAllAsync()
+        {
+            return await Task.Run(() => GetAll());
+        }
+
+        public KeyedFilmPersonDto GetBySurrogateKey(string key)
+        {
+            var data = _keyService.DeconstructFilmPersonSurrogateKey(key);
+            var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+            var p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);            
+            var result = new KeyedFilmPersonDto(f.Title, f.Year, p.LastName, p.BirthdateString, data.role, key);
+            return result;
+        }
+
+        public async Task<KeyedFilmPersonDto> GetBySurrogateKeyAsync(string key)
+        {
+            return await Task.Run(() => GetBySurrogateKey(key));
+        }
+
+        public void Update(BaseFilmPersonDto m)
+        {
+            var filmPersonToUpdate = _mapper.MapBack(m);
+            _repository.Update(filmPersonToUpdate);
+        }
+
+        public async Task UpdateAsync(BaseFilmPersonDto m)
+        {
+            await Task.Run(() => Update(m));
+        }
+    }
+}

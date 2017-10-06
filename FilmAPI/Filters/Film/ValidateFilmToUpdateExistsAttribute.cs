@@ -18,6 +18,21 @@ namespace FilmAPI.Filters
             {
                 _repoitory = repo;
             }
+            public async Task OnActionExecutingAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+            {
+                if (context.ActionArguments.ContainsKey("model"))
+                {
+                    var model = (KeyedFilmDto)context.ActionArguments["model"];
+                    var f = _repoitory.GetByTitleAndYear(model.Title, model.Year);
+                    if (f == null)
+                    {
+                        context.Result = new NotFoundObjectResult(model.Title);
+                        return;
+                    }
+                }
+                await next();
+            }
+
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
                 if (context.ActionArguments.ContainsKey("model"))

@@ -13,12 +13,10 @@ namespace FilmAPI.Controllers
     public class FilmsController : Controller
     {
         
-        private readonly IFilmService _service;
-        private readonly IKeyService _keyService;
-        public FilmsController(IFilmService service, IKeyService keyService)
+        private readonly IFilmService _service;        
+        public FilmsController(IFilmService service)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
-            _keyService = keyService;
+            _service = service ?? throw new ArgumentNullException(nameof(service));            
         }
         [HttpGet]
         public async Task<IActionResult> Get()

@@ -26,6 +26,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             string title = "BadMax";
             short year = 2017;
             short length = 123;
+            var key = $"{title}*{year}";
             var filmToPost = new BaseFilmDto(title, year, length);
             var jsonString = JsonConvert.SerializeObject(filmToPost);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
@@ -44,7 +45,8 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             var title = "Gone with the Wind";
             short year = 1849;
-            var filmToPost = new KeyedFilmDto(title, year);            
+            var key = _keyService.ConstructFilmSurrogateKey(title, year);
+            var filmToPost = new KeyedFilmDto(title, year, key);            
             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
             var response = await _client.PostAsync("api/films", jsonContent);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);

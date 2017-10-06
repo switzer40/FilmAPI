@@ -1,0 +1,54 @@
+﻿About the design of FilmAPI
+This WebAPI will be used to catalog, organize and query my large collection of films.
+It supports the 4 CRUD operations and maintains 4 entity types: 
+		Film (Title,Year,Length)
+		Medium(FilmId,MediumType,Location)
+		Person(FirstMidName,LastName,Birthdate)
+		FilmPerson(FilmId,PersonId,Role)
+
+The 'MediumType' propeerty of Medium can have one of two possible values: BD (Blu-Ray) or DVD.
+At some future time other media types may be introduced on the market. If I still owned any films
+on the old-fashioned tape cassette, I could have provided a third MediumType: Tape.
+
+The 'Location' property of Medium has nothing to do with the geographical place where the
+film was shot, but rather it should specify where in my apartment the medium (disk) can be found.
+This is one of the most important functions of this API: helping me to locate a given disk in
+one of the 14 different storage locations in my apartment.
+
+The people stored here all contributed to the making of one or more of the films in the DB
+actors, directors, composers, screenwriters. The entities of type FilmPerson serve to link a person to a film
+and additionally specify which role he played in that film.
+EXAMPLE;
+In the film "Million Dollar Baby" Clint Eastwood was leading male role, director and composer, so 
+there will be 3 entities of type FilmPerson connecting Clint to that film.
+
+The API is structured in 4 vertical slices - one for each of the 4 entities;
+each such slice comprises a controller, a service, a repository and several filters
+that implement cross-cutting concerns such as guaranteeing that a given film exists.
+At first glance one could get the impression that the controllers are "dumb" pass-throgh classes
+that leave the heavy liftig to the services. However, the controllers provide two things
+the services could not provide: routing and model binding.
+
+My single business rule states that each of the 4 entity types is uniquely defined by two or three of its properties:
+	Film by (Title, Year)
+	Person by (LastName, Birthdate)
+	Medium by (FilmId, MediumType)
+	FilmPerson by all 3 properties.
+This means for the practice that in the DB there will never be two films with identical title and year,
+and there will never be two people with the same last name and birth date.
+
+A client of the API will not have direct access to the 4 entities; instead the client and API communicate via
+Data Transfer Objects (DTOs). Here each of the 4 entitz tzpes XZZ is represented bz two DTO tzpes: Basei; instead the client and API communicate via
+Data Transfer Objects (DTOs). Here each of the 4 entity tzpes XYZ is represented by 2 DTO types: BaseXYZDto and KeyedXYZDto. The base type has
+properties that uniquely specify its corresponding entity type XYZ (excluding the primary key Id, which is not exposed to the client)
+BaseFilmDto (Title, Year, Length)
+BaseMediumDto (Title, Year, MediumType, Location)
+BasPersonDto (FirstMidName, LastName, Birthdate)
+BaseFilmPersonDto (Title, Year, LastName, Birthdate, Role)
+
+And the keyed type adds one additional proprty SurrogateKey,
+which is so designed that it will uniquely specify one entity in the DB.
+
+The base DTOs are used as parameters for the Create and Update operations; the return types are always keyed DTOs.
+When a Read operation takes a parameter, that parameter will be a surrogate key identifying the entity to be fetched.
+The Delete operation takes a surrogate key as parameter specifying which entity to remove from the DB.

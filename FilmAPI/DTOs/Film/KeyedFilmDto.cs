@@ -10,12 +10,10 @@ namespace FilmAPI.DTOs.Film
     public class KeyedFilmDto : BaseFilmDto, IFilmDto
     {
 
-        public KeyedFilmDto()
-        {
-        }
 
-        public KeyedFilmDto(string title, short year, short length = 0) : base(title, year, length)
-        {          
+        public KeyedFilmDto(string title, short year, string key, short length = 0) : base(title, year, length)
+        {
+            SurrogateKey = key;
         }
         public string SurrogateKey { get; set; }
 

@@ -40,6 +40,10 @@ namespace FilmAPI.Infrastructure.Repositories
         public Medium GetByTitleYearAndMediumType(string title, short year, string mediumType)
         {
             var f = _filmRepository.GetByTitleAndYear(title, year);
+            if (f == null)
+            {
+                return null;
+            }
             return GetByFilmIdAndMediumType(f.Id, mediumType);
         }
 

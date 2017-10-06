@@ -7,7 +7,7 @@ namespace FilmAPI.Core.SharedKernel
     public class FilmConstants
     {
         // Media Types
-
+        public static bool Force = false;
         public const string MediumType_DVD = "DVD";
         public const string MediumType_BD = "BD";
 

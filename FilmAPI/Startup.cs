@@ -92,17 +92,9 @@ namespace FilmAPI
         // This m ethod gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(setup => {
-
-            }).AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<IFilmValidator>());
-                
-            
-            var config = new MapperConfiguration(cfg => { cfg.AddProfile(new AutoMapperProfile()); });
-            var mapper = config.CreateMapper();
-            services.AddScoped<MapperConfiguration>(_ => config);
-            services.AddScoped<IMapper>(_ => mapper);
+            services.AddMvc();
+                                        
             return ConfigureIoC(services);
-
         }
 
         private IServiceProvider ConfigureIoC(IServiceCollection services)

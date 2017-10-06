@@ -6,11 +6,8 @@
 
   <ItemGroup>
     <Compile Remove="IntegrationTests\MediaController\**" />
-    <Compile Remove="IntegrationTests\PeopleController\**" />
     <EmbeddedResource Remove="IntegrationTests\MediaController\**" />
-    <EmbeddedResource Remove="IntegrationTests\PeopleController\**" />
     <None Remove="IntegrationTests\MediaController\**" />
-    <None Remove="IntegrationTests\PeopleController\**" />
   </ItemGroup>
 
   <ItemGroup>

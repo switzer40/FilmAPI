@@ -5,15 +5,16 @@ using FilmAPI.DTOs;
 using FilmAPI.Core.Interfaces;
 using AutoMapper;
 using FilmAPI.DTOs.Film;
+using FilmAPI.Interfaces.Film;
 
 namespace FilmAPI.Services.Film
 {
     public class FilmService : IFilmService
     {
         private readonly IFilmRepository _repository;
-        private readonly IMapper _mapper;
+        private readonly IFilmMapper _mapper;
         private readonly IKeyService _keyService;
-        public FilmService(IFilmRepository repo, IMapper mapper)
+        public FilmService(IFilmRepository repo, IFilmMapper mapper)
         {
             _repository = repo;
             _mapper = mapper;
@@ -21,10 +22,10 @@ namespace FilmAPI.Services.Film
         }
         public KeyedFilmDto Add(BaseFilmDto m)
         {
-            Core.Entities.Film filmToAdd = _mapper.Map<Core.Entities.Film>(m);
+            var filmToAdd = _mapper.MapBack(m);
             var savedFilm = _repository.Add(filmToAdd);
-            var result =_mapper.Map<KeyedFilmDto>(savedFilm);
-            result.SurrogateKey = _keyService.ConstructFilmSurrogateKey(result.Title, result.Year);
+            var key = _keyService.ConstructFilmSurrogateKey(m.Title, m.Year);
+            var result = new KeyedFilmDto(m.Title, m.Year, key, m.Length);            
             return result;
         }
 
@@ -36,7 +37,7 @@ namespace FilmAPI.Services.Film
         public void Delete(string key)
         {
             var modelToDelete = GetBySurrogateKey(key);
-            var filmToDelete = _mapper.Map<Core.Entities.Film>(modelToDelete);
+            var filmToDelete = _mapper.MapBack(modelToDelete);
             _repository.Delete(filmToDelete);
         }
 
@@ -48,11 +49,15 @@ namespace FilmAPI.Services.Film
         public List<KeyedFilmDto> GetAll()
         {
             var films = _repository.List();
-            var modelList = _mapper.Map<List<KeyedFilmDto>>(films);
-            foreach (var item in modelList)
+            var baseList = _mapper.MapList(films);
+            var modelList = new List<KeyedFilmDto>();
+            foreach (var item in baseList)
             {
-                item.SurrogateKey =
+                var key = _keyService.ConstructFilmSurrogateKey(item.Title, item.Year);
+                var keyedItem = new KeyedFilmDto(item.Title, item.Year, key);
+                keyedItem.SurrogateKey =
                     _keyService.ConstructFilmSurrogateKey(item.Title, item.Year);
+                modelList.Add(keyedItem);
             }
             return modelList;
         }
@@ -66,8 +71,7 @@ namespace FilmAPI.Services.Film
         {
             var data =_keyService.DeconstructFilmSurrogateKey(key);
             var f = _repository.GetByTitleAndYear(data.title, data.year);
-            var keyedFilm = new KeyedFilmDto(data.title, data.year, f.Length);
-            keyedFilm.SurrogateKey = key;
+            var keyedFilm = new KeyedFilmDto(data.title, data.year,key, f.Length);            
             return keyedFilm;
         }
 
@@ -76,13 +80,13 @@ namespace FilmAPI.Services.Film
             return await Task.Run(() => GetBySurrogateKey(key));
         }
 
-        public void Update(KeyedFilmDto m)
+        public void Update(BaseFilmDto m)
         {
-            var filmToUpdate = _mapper.Map<Core.Entities.Film>(m);
+            var filmToUpdate = _mapper.MapBack(m);
             _repository.Update(filmToUpdate);
         }
 
-        public async Task UpdateAsync(KeyedFilmDto m)
+        public async Task UpdateAsync(BaseFilmDto m)
         {
             await Task.Run(() => Update(m));
         }

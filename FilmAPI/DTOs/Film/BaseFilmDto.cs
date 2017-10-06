@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmAPI.DTOs.Film
 {
-    public partial class BaseFilmDto
+    public class BaseFilmDto
     {
-        public BaseFilmDto()
+        private BaseFilmDto()
         {
 
         }
@@ -17,8 +18,10 @@ namespace FilmAPI.DTOs.Film
             Year = year;
             Length = length;
         }
-
+        [Required]
         public string Title { get; set; }
+        [Required]
+        [Range(1850, 2050)]
         public short Year { get; set; }
         public short Length { get; set; }
     }
