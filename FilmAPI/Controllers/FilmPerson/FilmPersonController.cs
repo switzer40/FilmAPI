@@ -42,7 +42,7 @@ namespace FilmAPI.Controllers.FilmPerson
             var savedModel = await _service.AddAsync(model, _force);
             return Ok(savedModel);
         }
-        [Obsolete("Try Delete(oldFp) followed by Post)newFp)")]
+        [Obsolete("Try Delete(oldFp) followed by Post(newFp)")]
         [HttpPut]
         [ValidateFilmPersonToUpdateExists]
         public IActionResult Put([FromBody] BaseFilmPersonDto model)

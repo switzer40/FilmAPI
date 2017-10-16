@@ -27,6 +27,7 @@ namespace FilmAPI.DTOs.FilmPerson
         [Required]
         public string Title { get; set; }
         [Required]
+        [Range(1850, 2050)]
         public short Year { get; set; }
         [Required]
         public string LastName { get; set; }

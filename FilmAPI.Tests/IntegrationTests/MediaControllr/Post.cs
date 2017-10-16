@@ -20,8 +20,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
         {
             _client = base.GetClient();
             _route = FilmConstants.MediumUri;            
-        }
-        }
+        }        
         [Fact]
         public async Task ReturnsOkGivenValidMedimDataAsync()
         {
