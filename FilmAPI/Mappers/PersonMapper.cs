@@ -18,7 +18,7 @@ namespace FilmAPI.Mappers
 
         public override Person MapBack(BasePersonDto m)
         {
-            return new Person(m.FirstMidName, m.LastName, m.Birthdate);
+            return new Person(m.LastName, m.Birthdate, m.FirstMidName);
         }
     }
 }

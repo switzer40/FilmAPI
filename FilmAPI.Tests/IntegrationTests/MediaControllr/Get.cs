@@ -15,15 +15,17 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
     public class Get : TestBase
     {
         private readonly HttpClient _client;
+        private string _route;
         public Get()
         {
             _client = base.GetClient();
             _keyService = new KeyService();
+            _route = FilmConstants.MediumUri;
         }
         [Fact]
         public async Task ReturnsListOfMediaAsync()
         {
-            var response = await _client.GetAsync("api/media");
+            var response = await _client.GetAsync(_route);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<KeyedMediumDto>>(stringResponse);
@@ -37,7 +39,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
             var year = (short)1990;
             var type = FilmConstants.MediumType_DVD;
             var key = _keyService.ConstructMediumSurrogateKey(title, year, type);
-            var response = await _client.GetAsync($"api/media/{key}");
+            var response = await _client.GetAsync($"{_route}/{key}");
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -54,7 +56,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
             var year = (short)1990;
             var type = FilmConstants.MediumType_BD;
             var key = _keyService.ConstructMediumSurrogateKey(title, year, type);
-            var response = await _client.GetAsync($"api/media/{key}");
+            var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         [Fact]
@@ -64,7 +66,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
             var year = (short)1990;
             var type = FilmConstants.MediumType_BD;
             var key = _keyService.ConstructMediumSurrogateKey(title, year, type);
-            var response = await _client.GetAsync($"api/media/{key}");
+            var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         [Fact]
@@ -74,18 +76,14 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
             var year = (short)1991;
             var type = FilmConstants.MediumType_DVD;
             var key = _keyService.ConstructMediumSurrogateKey(title, year, type);
-            var response = await _client.GetAsync($"api/media/{key}");
+            var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
         [Fact]
         public async Task ReturnsBadRequestGivenInvalidSurrogateKeyAsync()
-        {
-            var title = "Pretty Woman";
-            var year = (short)1990;
-            var type = FilmConstants.MediumType_DVD;
+        {                       
             var key = "Howdy";
-            var mediumToPost = new BaseMediumDto(title, year, type);
-            var response = await _client.GetAsync($"api/media/{key}");
+            var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }

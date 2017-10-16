@@ -8,13 +8,15 @@ namespace FilmAPI.DTOs.Medium
 {
     public class BaseMediumDto
     {
-        public BaseMediumDto(string title, short year, string mediumType, string location = "")
+        public BaseMediumDto(string title, short year, string mediumType, string location = "", short length =  0)
         {
             Title = title;
             Year = year;
             MediumType = mediumType;
             Location = location;
+            Length = length;
         }
+
         [Required]
         public string Title { get; set; }
         [Required]
@@ -23,5 +25,6 @@ namespace FilmAPI.DTOs.Medium
         [Required]
         public string MediumType { get; set; }
         public string Location { get; set; }
+        public short Length { get; set; }
     }
 }

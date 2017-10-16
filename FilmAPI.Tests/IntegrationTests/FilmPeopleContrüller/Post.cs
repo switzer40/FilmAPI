@@ -1,0 +1,46 @@
+﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.DTOs.FilmPerson;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
+{
+    public class Post : TestBase
+    {
+        private readonly HttpClient _client;
+        private string _route;
+
+        public Post()
+        {
+            _client = base.GetClient();
+            _route = FilmConstants.FilmPersonUri;
+        }
+        [Fact]
+        public async Task ReturnsOkGivenValidFilmPersonData()
+        {
+            var title = "Pretty Woman";
+            var year = (short)1990;
+            var lastName = "Gere";
+            var birthdate = "1949-08-31";
+            var role = FilmConstants.Role_Actor;
+            var filmPersonToPost = new BaseFilmPersonDto(title, year, lastName, birthdate, role);
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmPersonToPost), Encoding.UTF8, "application/json");
+            var response = await _client.PostAsync(_route, jsonContent);
+            response.EnsureSuccessStatusCode();
+
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<KeyedFilmPersonDto>(stringResponse);
+
+            Assert.Equal(title, result.Title);
+            Assert.Equal(year, result.Year);
+            Assert.Equal(lastName, result.LastName);
+            Assert.Equal(birthdate, result.Birthdate);
+            Assert.Equal(role, result.Role);
+        }
+    }
+}

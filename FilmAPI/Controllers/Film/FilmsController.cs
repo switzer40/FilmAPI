@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using FilmAPI.DTOs.Film;
+using FilmAPI.Core.SharedKernel;
 
 namespace FilmAPI.Controllers
 {
-    [Route("api/films")]
+    [Route(FilmConstants.FilmUri)]
     [ValidateModel]
     public class FilmsController : Controller
     {
@@ -33,14 +34,14 @@ namespace FilmAPI.Controllers
         }
         [HttpPost]
         [ValidateFilmNotDuplicate]
-        public async Task<IActionResult> Post([FromBody] KeyedFilmDto model)
+        public async Task<IActionResult> Post([FromBody] BaseFilmDto model)
         {            
             var savedModel = await _service.AddAsync(model);
             return Ok(savedModel);
         }
         [HttpPut]
         [ValidateFilmToUpdateExists]
-        public async Task<IActionResult> Put([FromBody] KeyedFilmDto model)
+        public async Task<IActionResult> Put([FromBody] BaseFilmDto model)
         {            
             await _service.UpdateAsync(model);
             return Ok();

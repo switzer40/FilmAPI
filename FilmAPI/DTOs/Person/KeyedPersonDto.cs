@@ -8,7 +8,7 @@ namespace FilmAPI.DTOs.Person
 {
     public class KeyedPersonDto : BasePersonDto, IPersonDto
     {     
-        public KeyedPersonDto(string lastName, string birthdate, string key, string firstMidName = "") : base(lastName, birthdate, firstMidName)
+        public KeyedPersonDto(string lastName, string birthdate, string key, string firstMidName) : base(lastName, birthdate, firstMidName)
         {
             SurrogateKey = key;
         }

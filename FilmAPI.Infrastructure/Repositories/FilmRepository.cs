@@ -18,6 +18,11 @@ namespace FilmAPI.Infrastructure.Repositories
             return List(f => f.Title == title && f.Year == year).SingleOrDefault();
         }
 
+        public override Film GetStoredEntity(Film t)
+        {
+            return GetByTitleAndYear(t.Title, t.Year);
+        }
+
         public override void Update(Film t)
         {
             var storedFilm = GetByTitleAndYear(t.Title, t.Year);

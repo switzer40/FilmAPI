@@ -37,7 +37,7 @@ namespace FilmAPI.Filters
             {
                 if (context.ActionArguments.ContainsKey("model"))
                 {
-                    var model = (KeyedFilmDto)context.ActionArguments["model"];
+                    var model = (BaseFilmDto)context.ActionArguments["model"];
                     var f = _repoitory.GetByTitleAndYear(model.Title, model.Year);
                     if (f == null)
                     {

@@ -35,26 +35,22 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task<T> AddAsync(T t)
         {
-            await _set.AddAsync(t);
-            await SaveAsync();
-            return t;
-        }
-
-        private async Task SaveAsync()
-        {
-            await _context.SaveChangesAsync();
+            return await Task.Run(() => Add(t));
         }
 
         public void Delete(T t)
         {
-            _set.Remove(t);
+            var storedEntity = GetStoredEntity(t);
+            _set.Remove(storedEntity);
             Save();
         }
 
+        public abstract T GetStoredEntity(T t);
+        
+
         public async Task DeleteAsync(T t)
         {
-            _set.Remove(t);
-            await SaveAsync();
+            await Task.Run(() => Delete(t));
         }
 
         public T GetById(int id)
@@ -64,7 +60,7 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _set.FindAsync(id);
+            return await Task.Run(() => GetById(id));
         }
     
         public List<T> List()
@@ -103,8 +99,7 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task UpdateAsync(T t)
         {
-            _context.Entry(t).State = EntityState.Modified;
-            await SaveAsync();
+            await Task.Run(() => Update(t));
         }
 
         public void Delete(int id)
@@ -115,8 +110,7 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var entityToDelete = await GetByIdAsync(id);
-            await DeleteAsync(entityToDelete);
+            await Task.Run(() => Delete(id));  
         }
     }
 }

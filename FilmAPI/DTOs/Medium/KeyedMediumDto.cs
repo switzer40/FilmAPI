@@ -9,7 +9,12 @@ namespace FilmAPI.DTOs.Medium
     public class KeyedMediumDto : BaseMediumDto, IMediumDto
     {
         
-        public KeyedMediumDto(string title, short year, string mediumType, string key,  string location) : base(title, year, mediumType, location)
+        public KeyedMediumDto(string title,
+                              short year,
+                              string mediumType,
+                              string location,
+                              short length,
+                              string key) : base(title, year, mediumType, location, length)
         {
             SurrogateKey = key;
         }

@@ -28,18 +28,18 @@ namespace FilmAPI.Services.FilmPerson
             _mapper = mapper;
             _keyService = keyService;
         }
-        public KeyedFilmPersonDto Add(BaseFilmPersonDto b)
+        public KeyedFilmPersonDto Add(BaseFilmPersonDto b, bool force = false)
         {
-               var fpToAdd = _mapper.MapBack(b);
+               var fpToAdd = (force) ? _mapper.MapBackForce(b) : _mapper.MapBack(b);
                var savedFP = _repository.Add(fpToAdd);
                var key = _keyService.ConstructFilmPersonSurrogateKey(b.Title, b.Year, b.LastName, b.Birthdate, b.Role);
-               var result = new KeyedFilmPersonDto(b.Title, b.Year, b.LastName, b.Birthdate, b.Role, key);               
+               var result = new KeyedFilmPersonDto(b.Title, b.Year, b.LastName, b.Birthdate, b.Role, b.Length, b.FirstMidName, key);               
                return result;
         }
 
-        public async Task<KeyedFilmPersonDto> AddAsync(BaseFilmPersonDto b)
+        public async Task<KeyedFilmPersonDto> AddAsync(BaseFilmPersonDto b, bool force = false)
         {
-            return await Task.Run(() => Add(b));
+            return await Task.Run(() => Add(b, force));
         }
 
         public void Delete(string key)
@@ -62,7 +62,7 @@ namespace FilmAPI.Services.FilmPerson
             foreach (var item in baseList)
             {
                 var key = _keyService.ConstructFilmPersonSurrogateKey(item.Title, item.Year, item.LastName, item.Birthdate, item.Role);
-                var keyedItem = new KeyedFilmPersonDto(item.Title, item.Year, item.LastName, item.Birthdate, item.Role, key);                              
+                var keyedItem = new KeyedFilmPersonDto(item.Title, item.Year, item.LastName, item.Birthdate, item.Role,item.Length, item.FirstMidName, key);                              
                 result.Add(keyedItem);
             }
             return result;
@@ -78,7 +78,7 @@ namespace FilmAPI.Services.FilmPerson
             var data = _keyService.DeconstructFilmPersonSurrogateKey(key);
             var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
             var p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);            
-            var result = new KeyedFilmPersonDto(f.Title, f.Year, p.LastName, p.BirthdateString, data.role, key);
+            var result = new KeyedFilmPersonDto(f.Title, f.Year, p.LastName, p.BirthdateString, data.role,  f.Length, p.FirstMidName, key);
             return result;
         }
 

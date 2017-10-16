@@ -8,8 +8,8 @@ namespace FilmAPI.Interfaces.FilmPerson
 {
     public interface IFilmPersonService
     {
-        KeyedFilmPersonDto Add(BaseFilmPersonDto b);
-        Task<KeyedFilmPersonDto> AddAsync(BaseFilmPersonDto b);
+        KeyedFilmPersonDto Add(BaseFilmPersonDto b, bool force = false);
+        Task<KeyedFilmPersonDto> AddAsync(BaseFilmPersonDto b, bool force = false);
         void Delete(string key);
         Task DeleteAsync(string key);
         List<KeyedFilmPersonDto> GetAll();

@@ -70,8 +70,7 @@ namespace FilmAPI.Services.Person
         {
             var data = _keyService.DeconstructPesonSurrogateKey(key);
             var p = _repository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
-            var result = new KeyedPersonDto(data.lastName, data.birthdate, p.FirstMidName);
-            result.SurrogateKey = key;
+            var result = new KeyedPersonDto(data.lastName, data.birthdate, key, p.FirstMidName);
             return result;
         }
 

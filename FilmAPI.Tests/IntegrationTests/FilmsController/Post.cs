@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Core.Entities;
+using FilmAPI.Core.SharedKernel;
 using FilmAPI.DTOs;
 using FilmAPI.DTOs.Film;
 using Newtonsoft.Json;
@@ -13,10 +14,12 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
     public class Post : TestBase
     {
         private readonly HttpClient _client;
+        private string _route;
 
         public Post()
         {
             _client = base.GetClient();
+            _route = FilmConstants.FilmUri;
         }
         
                 
@@ -25,12 +28,8 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             string title = "BadMax";
             short year = 2017;
-            short length = 123;
-            var key = $"{title}*{year}";
-            var filmToPost = new BaseFilmDto(title, year, length);
-            var jsonString = JsonConvert.SerializeObject(filmToPost);
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
-            var response = _client.PostAsync("api/films", jsonContent).Result;
+            short length = 123;                                    
+            var response = await PostFilmAsync(title, year, length, _route);
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -45,10 +44,8 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             var title = "Gone with the Wind";
             short year = 1849;
-            var key = _keyService.ConstructFilmSurrogateKey(title, year);
-            var filmToPost = new KeyedFilmDto(title, year, key);            
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("api/films", jsonContent);
+            var length = (short)169;
+            var response = await PostFilmAsync(title, year, length, _route);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
@@ -56,20 +53,18 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             var title = "Gone with the Wind";
             short year = 2051;
-            var filmToPost = new Film(title, year);
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("api/films", jsonContent);
+            var length = (short)169;
+            var response = await PostFilmAsync(title, year, length, _route);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
         public async Task ReturnBadRequestGivenEmptyTitleAsync()
         {
             var title = "";
-            short year = 1957;
-            var filmToPost = new Film(title, year);
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPost), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("api/films", jsonContent);
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            short year = 1957;            
+            var length = (short)134;
+            var response = await PostFilmAsync(title, year, length, _route)
+  ;          Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
 
         }
     }

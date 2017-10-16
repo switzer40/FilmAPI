@@ -47,6 +47,11 @@ namespace FilmAPI.Infrastructure.Repositories
             return GetByFilmIdAndMediumType(f.Id, mediumType);
         }
 
+        public override Medium GetStoredEntity(Medium t)
+        {
+            return GetByFilmIdAndMediumType(t.FilmId, t.MediumType);
+        }
+
         public override void Update(Medium t)
         {
             var storedMedium = GetByFilmIdAndMediumType(t.FilmId, t.MediumType);

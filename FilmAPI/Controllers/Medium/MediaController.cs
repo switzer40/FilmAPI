@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Controllers.Medium
 {
-    [Route("api/media")]
+    [Route(FilmConstants.MediumUri)]
     [ValidateModel]
     public class MediaController : Controller
     {

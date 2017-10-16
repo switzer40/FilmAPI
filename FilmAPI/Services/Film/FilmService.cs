@@ -54,7 +54,7 @@ namespace FilmAPI.Services.Film
             foreach (var item in baseList)
             {
                 var key = _keyService.ConstructFilmSurrogateKey(item.Title, item.Year);
-                var keyedItem = new KeyedFilmDto(item.Title, item.Year, key);
+                var keyedItem = new KeyedFilmDto(item.Title, item.Year, key, item.Length);
                 keyedItem.SurrogateKey =
                     _keyService.ConstructFilmSurrogateKey(item.Title, item.Year);
                 modelList.Add(keyedItem);

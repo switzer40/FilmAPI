@@ -27,7 +27,7 @@ namespace FilmAPI.Filters
             {
                 if (context.ActionArguments.ContainsKey("model"))
                 {
-                    var model = (KeyedFilmDto)context.ActionArguments["model"];
+                    var model = (BaseFilmDto)context.ActionArguments["model"];
                     if (model != null)
                     {                        
                         if ((await _filmRepository.ListAsync()).Any (f => f.Title == model.Title && f.Year == model.Year))

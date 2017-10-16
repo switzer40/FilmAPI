@@ -24,7 +24,7 @@ namespace FilmAPI.Infrastructure.Repositories
                 return new Person(lastName, birthdate);
             }
             var spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
-            return List(spec).Single();
+            return List(spec).SingleOrDefault();
         }
 
         public async Task<Person> GetByLastNameAndBirthdateAsync(string lastName, string birthdate)
@@ -33,6 +33,11 @@ namespace FilmAPI.Infrastructure.Repositories
             var candidates = await ListAsync(spec);
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
+        }
+
+        public override Person GetStoredEntity(Person t)
+        {
+            return GetByLastNameAndBirthdate(t.LastName, t.BirthdateString);
         }
 
         public override void Update(Person t)

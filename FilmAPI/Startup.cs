@@ -17,6 +17,8 @@ using StructureMap;
 using FluentValidation.AspNetCore;
 using FilmAPI.Services.Film;
 using FilmAPI.Interfaces.Film;
+using FilmAPI.Interfaces.FilmPerson;
+using FilmAPI.Services.FilmPerson;
 
 namespace FilmAPI
 {
@@ -105,21 +107,21 @@ namespace FilmAPI
             config.Scan(_ =>
             {
                 _.AssemblyContainingType(typeof(Startup));
-                _.AssemblyContainingType(typeof(IRepository<>));
-                _.AssemblyContainingType(typeof(Repository<>));
+                _.AssemblyContainingType(typeof(Film));
+                _.AssemblyContainingType(typeof(FilmContext));               
                 _.WithDefaultConventions();
 
             });
+                config.For(typeof(IFilmPersonService)).Add(typeof(FilmPesonService));
                 // I had hoped StructureMap´s conventions will take care of configuring
                 // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
                 
-            config.For(typeof(IFilmRepository)).Add(typeof(FilmRepository));
-            config.For(typeof(IPersonRepository)).Add(typeof(PersonRepository));
-            config.For(typeof(IMediumRepository)).Add(typeof(MediumRepository));
-                config.For(typeof(IFilmPersonRepository)).Add(typeof(FilmPersonRepository));
-            config.For(typeof(IFilmService)).Add(typeof(FilmService));                       
-            //config.For(typeof(IEntityService<,>)).Add(typeof(EntityService<,>));
-
+                //config.For(typeof(IFilmRepository)).Add(typeof(FilmRepository));
+                //config.For(typeof(IPersonRepository)).Add(typeof(PersonRepository));
+                //config.For(typeof(IMediumRepository)).Add(typeof(MediumRepository));
+                //config.For(typeof(IFilmPersonRepository)).Add(typeof(FilmPersonRepository));
+                // config.For(typeof(IFilmService)).Add(typeof(FilmService));
+                //config.For(typeof(IFilmPersonService)).Add(typeof((FilmPesonService));            
             // this shoIuld have been done by WithDefaultConventions:
             //config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
                 config.Populate(services);
@@ -149,7 +151,11 @@ namespace FilmAPI
             context.People.Add(hepburn);
             context.SaveChanges();
             var roberts = new Person("Roberts", "1967-10-28", "Julia");
-            context.People.Add(roberts);context.SaveChanges();
+            context.People.Add(roberts);
+            context.SaveChanges();
+            var gere = new Person("Gere", "1949-08-31");
+            context.People.Add(gere);
+            context.SaveChanges();
             var tiffanyHepburn = new FilmPerson(tiffany.Id, hepburn.Id, FilmConstants.Role_Actor);
             context.FilmPeople.Add(tiffanyHepburn);
             context.SaveChanges();

@@ -12,13 +12,17 @@ namespace FilmAPI.DTOs.FilmPerson
                                  short year,
                                  string lastName,
                                  string birthdate,
-                                 string role)
+                                 string role,
+                                 short length = 0,
+                                 string firstMidName = "")
         {
             Title = title;
             Year = year;
             LastName = lastName;
             Birthdate = birthdate;
             Role = role;
+            Length = length;
+            FirstMidName = firstMidName;
         }
         [Required]
         public string Title { get; set; }
@@ -30,5 +34,7 @@ namespace FilmAPI.DTOs.FilmPerson
         public string Birthdate { get; set; }
         [Required]
         public string Role { get; set; }
+        public short Length { get; set; }
+        public string FirstMidName { get; set; }
     }
 }

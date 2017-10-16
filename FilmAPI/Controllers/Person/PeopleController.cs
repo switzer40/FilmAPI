@@ -1,4 +1,5 @@
-﻿using FilmAPI.DTOs.Person;
+﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.DTOs.Person;
 using FilmAPI.Filters;
 using FilmAPI.Filters.Person;
 using FilmAPI.Interfaces;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Controllers.Person
 {
-    [Route("api/people")]
+    [Route(FilmConstants.PersonUri)]
     [ValidateModel]
     public class PeopleController : Controller
     {

@@ -17,7 +17,7 @@ namespace FilmAPI.DTOs.Person
         public string FirstMidName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
+        [Required]       
         public string Birthdate { get; set; }
     }
 }

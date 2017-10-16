@@ -19,7 +19,7 @@ namespace FilmAPI.Mappers
         public override BaseMediumDto Map(Medium e)
         {
             var f = _filmRepository.GetById(e.FilmId);        
-            return new BaseMediumDto(f.Title, f.Year, e.MediumType, e.Location);
+            return new BaseMediumDto(f.Title, f.Year, e.MediumType, e.Location, f.Length);
         }
 
         public override Medium MapBack(BaseMediumDto m)
@@ -34,7 +34,7 @@ namespace FilmAPI.Mappers
             if (f == null)
             {
 
-                f = new Film(b.Title, b.Year);
+                f = new Film(b.Title, b.Year, b.Length);
                 f = _filmRepository.Add(f);
             }
             return new Medium(f.Id, b.MediumType);

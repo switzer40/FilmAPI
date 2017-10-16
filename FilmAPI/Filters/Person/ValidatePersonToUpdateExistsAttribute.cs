@@ -35,9 +35,19 @@ namespace FilmAPI.Filters.Person
                 }
                 await next();
             }
-            public Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+            public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
-                throw new NotImplementedException();
+                if(context.ActionArguments.ContainsKey("model"))
+                {
+                    var model = (KeyedPersonDto)context.ActionArguments["model"];
+                    var p = _repository.GetByLastNameAndBirthdate(model.LastName, model.Birthdate);
+                    if (p == null)
+                    {
+                        context.Result = new NotFoundObjectResult(model);
+                        return;
+                    }
+                }
+                await next();
             }
         }
     }

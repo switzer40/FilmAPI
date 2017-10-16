@@ -12,18 +12,21 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using FilmAPI.DTOs.Film;
+using FilmAPI.Core.SharedKernel;
 
 namespace FilmAPI.Tests.IntegrationTests.FilmsController
 {
     public class Get : TestBase
     {
         private readonly HttpClient _client;
+        private string _route;
         
 
         public Get()
         {
             _client = base.GetClient();
             _keyService = new KeyService();
+            _route = FilmConstants.FilmUri;
             // mock dependencies here
             //_keyService = ;
         }
@@ -31,7 +34,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         [Fact]
         public async Task ReturnsListOfFilms()
         {
-            var response = await _client.GetAsync("/api/films");
+            var response = await _client.GetAsync(_route);
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<List<KeyedFilmDto>>(stringResponse);
@@ -44,16 +47,15 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         public async Task ReturnsBadRequestGivenNonexistentSurrogateKey()
         {
             string badKey = "Howdy";
-            var response = await _client.GetAsync($"/api/films/{badKey}");
+            var response = await _client.GetAsync($"{_route}/{badKey}");
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
         [Fact]
         public async Task ReturnPrettyWomanGivenValidSurrogateKey()
         {
             string title = "Pretty Woman";
-            short year = 1990;
-            string key = _keyService.ConstructFilmSurrogateKey(title, year);
-            var response = await _client.GetAsync($"api/films/{key}");
+            short year = 1990;            
+            var response = await GetFilmAsync(title, year, _route);
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -66,9 +68,8 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         public async Task ReturnNotFoundGivenSurrogateKeyOfUnknownFilm()
         {
             string title = "Star Wars";
-            short year = 2017;
-            string key = _keyService.ConstructFilmSurrogateKey(title, year);
-            var response = await _client.GetAsync($"api/films/{key}");
+            short year = 2017;            
+            var response = await GetFilmAsync(title, year, _route);
             AssemblyTraitAttribute.Equals(HttpStatusCode.NotFound, response.StatusCode);
         }
     }

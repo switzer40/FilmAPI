@@ -18,8 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Attributes\" />
-    <Folder Include="Controllers\FilmPerson\" />
-    <Folder Include="Filters\FilmPerson\" />
     <Folder Include="Specifictions\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>

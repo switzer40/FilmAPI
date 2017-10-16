@@ -29,7 +29,7 @@ namespace FilmAPI.Services.Medium
             var mediumToAdd = (force) ? _mapper.MapBackForce(m) :  _mapper.MapBack(m);
             var savedMedium = _repository.Add(mediumToAdd);
             var key = _keyService.ConstructMediumSurrogateKey(m.Title, m.Year, m.MediumType);
-            var result = new KeyedMediumDto(m.Title, m.Year, m.MediumType, key, m.Location);                      
+            var result = new KeyedMediumDto(m.Title, m.Year, m.MediumType, m.Location, m.Length, key);                      
             return result;
         }
 
@@ -72,7 +72,7 @@ namespace FilmAPI.Services.Medium
             foreach (var item in baseList)
             {
                 var key = _keyService.ConstructMediumSurrogateKey(item.Title, item.Year, item.MediumType);
-                var keyedItem = new KeyedMediumDto(item.Title, item.Year, item.MediumType,  key, item.Location);                                   
+                var keyedItem = new KeyedMediumDto(item.Title, item.Year, item.MediumType,  item.Location, item.Length, key);                                   
                 result.Add(keyedItem);
             }
             return result;
@@ -88,7 +88,7 @@ namespace FilmAPI.Services.Medium
             var data = _keyService.DeconstructMediumSurrogateKey(key);
             var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
             var m = _repository.GetByFilmIdAndMediumType(f.Id, data.mediumType);
-            var keyedMedium = new KeyedMediumDto(data.title, data.year, data.mediumType, key,  m.Location);            
+            var keyedMedium = new KeyedMediumDto(data.title, data.year, data.mediumType, m.Location, f.Length, key);            
             return keyedMedium;
         }
 

@@ -1,4 +1,5 @@
-﻿using FilmAPI.DTOs;
+﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.DTOs;
 using FilmAPI.DTOs.Film;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -11,10 +12,12 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
     public class Put : TestBase
     {
         private readonly HttpClient _client;
+        private string _route;
 
         public Put()
         {
             _client = base.GetClient();
+            _route = FilmConstants.FilmUri;
         }
 
         [Fact]
@@ -30,9 +33,9 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
              var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToUpdate), Encoding.UTF8, "application/json");
 
             // Act
-            var response = await _client.PutAsync($"api/films", jsonContent);
+            var response = await _client.PutAsync(_route, jsonContent);
             response.EnsureSuccessStatusCode();
-            var response1 = await _client.GetAsync($"api/films/{key}");
+            var response1 = await _client.GetAsync($"{_route}/{key}");
 
             // Assert
             response1.EnsureSuccessStatusCode();
