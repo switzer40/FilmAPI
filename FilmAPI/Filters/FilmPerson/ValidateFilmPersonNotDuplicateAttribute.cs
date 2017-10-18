@@ -1,12 +1,9 @@
 ﻿using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
-using FilmAPI.DTOs.FilmPerson;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using FilmAPI.Common.DTOs.FilmPerson;
 
 namespace FilmAPI.Filters.FilmPerson
 {

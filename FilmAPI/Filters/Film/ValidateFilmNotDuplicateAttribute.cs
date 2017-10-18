@@ -1,5 +1,5 @@
-﻿using FilmAPI.Core.Interfaces;
-using FilmAPI.DTOs.Film;
+﻿using FilmAPI.Common.DTOs.Film;
+using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

@@ -1,8 +1,4 @@
-﻿using FilmAPI.DTOs.FilmPerson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FilmAPI.Common.DTOs.FilmPerson;
 
 namespace FilmAPI.Interfaces.FilmPerson
 {

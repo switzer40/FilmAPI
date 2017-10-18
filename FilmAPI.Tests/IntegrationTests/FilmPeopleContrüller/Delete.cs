@@ -1,16 +1,14 @@
-﻿using FilmAPI.Core.SharedKernel;
-using FilmAPI.DTOs.FilmPerson;
+﻿using FilmAPI.Common.DTOs.FilmPerson;
+using FilmAPI.Core.SharedKernel;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
 {
-   public class Delete : TestBase
+    public class Delete : TestBase
     {
         private readonly HttpClient _client;
         private string _route;

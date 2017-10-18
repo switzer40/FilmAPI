@@ -1,7 +1,7 @@
-﻿using FilmAPI.DTOs.Film;
-using FilmAPI.DTOs.FilmPerson;
-using FilmAPI.DTOs.Medium;
-using FilmAPI.DTOs.Person;
+﻿using FilmAPI.Common.DTOs.Film;
+using FilmAPI.Common.DTOs.FilmPerson;
+using FilmAPI.Common.DTOs.Medium;
+using FilmAPI.Common.DTOs.Person;
 using FilmAPI.Interfaces;
 using FilmAPI.Services;
 using Microsoft.AspNetCore.Hosting;

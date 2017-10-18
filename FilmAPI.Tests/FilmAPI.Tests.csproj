@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <Compile Remove="UnitTests\FilmValidatorValidateShould.cs" />
+    <Compile Remove="UnitTests\KeyServiceForClientShould.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FilmAPI.Common\FilmAPI.Common.csproj" />
     <ProjectReference Include="..\FilmAPI.Core\FilmAPI.Core.csproj" />
     <ProjectReference Include="..\FilmAPI.Infrastructure\FilmAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\FilmAPI\FilmAPI.csproj" />

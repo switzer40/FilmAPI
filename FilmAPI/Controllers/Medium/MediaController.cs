@@ -1,13 +1,10 @@
-﻿using FilmAPI.Core.SharedKernel;
-using FilmAPI.DTOs.Medium;
+﻿using FilmAPI.Common.DTOs.Medium;
+using FilmAPI.Core.SharedKernel;
 using FilmAPI.Filters;
 using FilmAPI.Filters.Medium;
 using FilmAPI.Interfaces;
 using FilmAPI.Interfaces.Medium;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmAPI.Controllers.Medium

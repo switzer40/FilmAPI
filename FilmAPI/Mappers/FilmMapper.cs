@@ -1,14 +1,10 @@
-﻿using FilmAPI.DTOs.Film;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using FilmAPI.Common.DTOs.Film;
 using FilmAPI.Core.Entities;
 using FilmAPI.Interfaces.Film;
 
 namespace FilmAPI.Mappers
 {
-    public class FilmMapper : BaseMapper<Core.Entities.Film, BaseFilmDto>, IFilmMapper
+    public class FilmMapper : BaseMapper<Film, BaseFilmDto>, IFilmMapper
     {
         public override BaseFilmDto Map(Film e)
         {

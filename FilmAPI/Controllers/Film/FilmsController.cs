@@ -1,11 +1,10 @@
-﻿using FilmAPI.DTOs;
-using FilmAPI.Filters;
+﻿using FilmAPI.Filters;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
-using FilmAPI.DTOs.Film;
 using FilmAPI.Core.SharedKernel;
+using FilmAPI.Common.DTOs.Film;
 
 namespace FilmAPI.Controllers
 {

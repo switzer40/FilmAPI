@@ -1,8 +1,6 @@
-﻿using FilmAPI.Core.SharedKernel;
-using FilmAPI.DTOs;
-using FilmAPI.DTOs.Film;
+﻿using FilmAPI.Common.DTOs.Film;
+using FilmAPI.Core.SharedKernel;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;

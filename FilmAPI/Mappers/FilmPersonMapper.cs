@@ -1,11 +1,7 @@
-﻿using FilmAPI.Core.Entities;
+﻿using FilmAPI.Common.DTOs.FilmPerson;
+using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
-using FilmAPI.DTOs.FilmPerson;
 using FilmAPI.Interfaces.FilmPerson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FilmAPI.Mappers
 {

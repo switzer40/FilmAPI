@@ -1,10 +1,8 @@
 ﻿using FilmAPI.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FilmAPI.DTOs;
 using FilmAPI.Core.Interfaces;
-using AutoMapper;
-using FilmAPI.DTOs.Film;
+using FilmAPI.Common.DTOs.Film;
 using FilmAPI.Interfaces.Film;
 
 namespace FilmAPI.Services.Film
@@ -25,7 +23,7 @@ namespace FilmAPI.Services.Film
             var filmToAdd = _mapper.MapBack(m);
             var savedFilm = _repository.Add(filmToAdd);
             var key = _keyService.ConstructFilmSurrogateKey(m.Title, m.Year);
-            var result = new KeyedFilmDto(m.Title, m.Year, key, m.Length);            
+            var result = new KeyedFilmDto(m.Title, m.Year, m.Length, key);            
             return result;
         }
 
@@ -54,8 +52,8 @@ namespace FilmAPI.Services.Film
             foreach (var item in baseList)
             {
                 var key = _keyService.ConstructFilmSurrogateKey(item.Title, item.Year);
-                var keyedItem = new KeyedFilmDto(item.Title, item.Year, key, item.Length);
-                keyedItem.SurrogateKey =
+                var keyedItem = new KeyedFilmDto(item.Title, item.Year, item.Length, key);
+                keyedItem.Key =
                     _keyService.ConstructFilmSurrogateKey(item.Title, item.Year);
                 modelList.Add(keyedItem);
             }
@@ -71,7 +69,7 @@ namespace FilmAPI.Services.Film
         {
             var data =_keyService.DeconstructFilmSurrogateKey(key);
             var f = _repository.GetByTitleAndYear(data.title, data.year);
-            var keyedFilm = new KeyedFilmDto(data.title, data.year,key, f.Length);            
+            var keyedFilm = new KeyedFilmDto(data.title, data.year, f.Length, key);            
             return keyedFilm;
         }
 

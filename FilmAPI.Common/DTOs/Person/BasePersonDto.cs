@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace FilmAPI.DTOs.Person
+namespace FilmAPI.Common.DTOs.Person
 {
     public class BasePersonDto
     {
@@ -17,7 +16,7 @@ namespace FilmAPI.DTOs.Person
         public string FirstMidName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]       
+        [Required]
         public string Birthdate { get; set; }
     }
 }

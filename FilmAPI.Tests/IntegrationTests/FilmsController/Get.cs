@@ -1,18 +1,13 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.Interfaces;
-using FilmAPI.Services;
-using FilmAPI.DTOs;
+﻿using FilmAPI.Services;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using FilmAPI.DTOs.Film;
 using FilmAPI.Core.SharedKernel;
+using FilmAPI.Common.DTOs.Film;
 
 namespace FilmAPI.Tests.IntegrationTests.FilmsController
 {

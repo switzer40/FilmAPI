@@ -1,13 +1,9 @@
 ﻿using FilmAPI.Interfaces.Medium;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using FilmAPI.DTOs.Film;
-using FilmAPI.DTOs.Medium;
 using FilmAPI.Core.Interfaces;
-using AutoMapper;
 using FilmAPI.Interfaces;
+using FilmAPI.Common.DTOs.Medium;
 
 namespace FilmAPI.Services.Medium
 {
@@ -24,7 +20,7 @@ namespace FilmAPI.Services.Medium
             _mapper = mapper;
             _keyService = new KeyService();
         }
-        public KeyedMediumDto Add(DTOs.Medium.BaseMediumDto m, bool force = false)
+        public KeyedMediumDto Add(BaseMediumDto m, bool force = false)
         {           
             var mediumToAdd = (force) ? _mapper.MapBackForce(m) :  _mapper.MapBack(m);
             var savedMedium = _repository.Add(mediumToAdd);
@@ -33,7 +29,7 @@ namespace FilmAPI.Services.Medium
             return result;
         }
 
-        public async Task<KeyedMediumDto> AddAsync(DTOs.Medium.BaseMediumDto m, bool force)
+        public async Task<KeyedMediumDto> AddAsync(BaseMediumDto m, bool force)
         {
             return await Task.Run(() => Add(m, force));
         }

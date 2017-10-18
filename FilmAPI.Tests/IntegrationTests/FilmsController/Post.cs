@@ -1,11 +1,8 @@
-﻿using FilmAPI.Core.Entities;
+﻿using FilmAPI.Common.DTOs.Film;
 using FilmAPI.Core.SharedKernel;
-using FilmAPI.DTOs;
-using FilmAPI.DTOs.Film;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
