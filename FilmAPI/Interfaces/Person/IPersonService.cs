@@ -12,7 +12,7 @@ namespace FilmAPI.Interfaces.Person
         Task DeeteAsync(string key);
         List<KeyedPersonDto> GetAll();
         Task<List<KeyedPersonDto>> GetAllAsync();
-        KeyedPersonDto GetBySurrogateKey(string key);
+        KeyedPersonDto GetByKey(string key);
         Task<KeyedPersonDto> GetBySurrogateKeyAsync(string key);
         void Update(BasePersonDto m);
         Task UpdateAsync(BasePersonDto m);

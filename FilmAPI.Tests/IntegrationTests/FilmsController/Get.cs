@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Xunit;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Common.DTOs.Film;
+using FilmAPI.Common.Services;
 
 namespace FilmAPI.Tests.IntegrationTests.FilmsController
 {

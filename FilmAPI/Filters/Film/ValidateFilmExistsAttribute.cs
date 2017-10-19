@@ -1,4 +1,5 @@
-﻿using FilmAPI.Core.Entities;
+﻿using FilmAPI.Common.Interfaces;
+using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
@@ -32,7 +33,7 @@ namespace FilmAPI.Filters
                     var key = (string)context.ActionArguments["key"];
                     if (key != "")
                     {
-                        var data =  _keyService.DeconstructFilmSurrogateKey(key);
+                        var data =  _keyService.DeconstructFilmKey(key);
                         string title = data.Item1;
                         short year = data.Item2;
                         if (title == FilmConstants.BADKEY)

@@ -33,7 +33,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
             var role = FilmConstants.Role_Actor;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.DeleteAsync($"{_route}/{key}");
             response.EnsureSuccessStatusCode();
             var after = await FilmPersonCount();

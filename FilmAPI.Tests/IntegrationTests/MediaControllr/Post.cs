@@ -26,7 +26,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
             var length = (short)109;
             var type = FilmConstants.MediumType_BD;
             var location = FilmConstants.Location_Left;
-            var key = _keyService.ConstructMediumSurrogateKey(title, year, type);
+            var key = _keyService.ConstructMediumKey(title, year, type);
             var mediumToPost = new BaseMediumDto(title, year, type, location, length);
             var jsonString = JsonConvert.SerializeObject(mediumToPost);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");

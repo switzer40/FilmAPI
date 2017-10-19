@@ -12,8 +12,8 @@ namespace FilmAPI.Tests.UnitTests
     {
         var dogTitle = "Lassie";
         var dogYear = (short)1954;
-        var key = _keyService.ConstructFilmSurrogateKey(dogTitle, dogYear);
-        var data = _keyService.DeconstructFilmSurrogateKey(key);
+        var key = _keyService.ConstructFilmKey(dogTitle, dogYear);
+        var data = _keyService.DeconstructFilmKey(key);
         Assert.Equal(dogTitle, data.title);
         Assert.Equal(dogYear, data.year);
     }

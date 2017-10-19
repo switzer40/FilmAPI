@@ -2,6 +2,8 @@
 using FilmAPI.Common.DTOs.FilmPerson;
 using FilmAPI.Common.DTOs.Medium;
 using FilmAPI.Common.DTOs.Person;
+using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.Services;
 using FilmAPI.Interfaces;
 using FilmAPI.Services;
 using Microsoft.AspNetCore.Hosting;
@@ -45,7 +47,7 @@ namespace FilmAPI.Tests.IntegrationTests
         // Access vertical slice Film
         protected async Task<HttpResponseMessage> GetFilmAsync(string title, short year, string route)
         {
-            var key = _keyService.ConstructFilmSurrogateKey(title, year);
+            var key = _keyService.ConstructFilmKey(title, year);
             return await GetClient().GetAsync($"{route}/{key}");
         }
         protected async Task<HttpResponseMessage> PostFilmAsync(string title, short year, short length, string route)
@@ -62,13 +64,13 @@ namespace FilmAPI.Tests.IntegrationTests
         }
         protected async Task<HttpResponseMessage> DeleteFilmAsync(string title, short year, string route)
         {
-            var key = _keyService.ConstructFilmSurrogateKey(title, year);
+            var key = _keyService.ConstructFilmKey(title, year);
             return await GetClient().DeleteAsync($"{route}/{key}");
         }
         // Access vertical slice FilmPerso
         protected async Task<HttpResponseMessage> GetFilmPersonAsync(string title, short year, string lastName, string birthdate, string role, string route)
         {
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             return await GetClient().GetAsync($"{route}/{key}");
         }
         protected async Task<HttpResponseMessage> PostFilmPersonAsync(string title, short year, string lastName, string birthdate, string role, string route)
@@ -85,13 +87,13 @@ namespace FilmAPI.Tests.IntegrationTests
         }
         protected async Task<HttpResponseMessage> DeleteFilmPersonAsync(string title, short year, string lastName, string birthdate,string role, string route)
         {
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             return await GetClient().DeleteAsync($"{route}/{key}");
         }
         // Access vertical slice Medium
         protected async Task<HttpResponseMessage> GetMediumAsync(string title, short year, string mediumType, string route)
         {
-            var key = _keyService.ConstructMediumSurrogateKey(title, year, mediumType);
+            var key = _keyService.ConstructMediumKey(title, year, mediumType);
             return await GetClient().GetAsync($"{route}/{key}");
         }
         protected async Task<HttpResponseMessage> PostMediumAsync(string title, short year, string mediumType, string location, short length, string route)
@@ -109,13 +111,13 @@ namespace FilmAPI.Tests.IntegrationTests
         }
         protected async Task<HttpResponseMessage> DeleteMediumAsync(string title, short year, string mediumType, string route)
         {
-            var key = _keyService.ConstructMediumSurrogateKey(title, year, mediumType);
+            var key = _keyService.ConstructMediumKey(title, year, mediumType);
             return await GetClient().DeleteAsync($"{route}/{key}");
         }
         // Access vertical slice Person
         protected async Task<HttpResponseMessage> GetPersonAsync(string lastName, string birthdate, string route)
         {
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             return await GetClient().GetAsync($"{route}/{key}");
         }
         protected async Task<HttpResponseMessage> PostPersonAsync(string lastName, string birthdate, string firstMidName, string route)
@@ -132,7 +134,7 @@ namespace FilmAPI.Tests.IntegrationTests
         }
         protected async Task<HttpResponseMessage> DeletePersonAsync(string lastName, string birthdate, string route)
         {
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             return await GetClient().DeleteAsync($"{route}/{key}");
         }
     }

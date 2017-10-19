@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Common.DTOs.Person;
+using FilmAPI.Common.Services;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Services;
 using Newtonsoft.Json;
@@ -26,7 +27,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             var firstName = "Juliet";
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             var personToUpdate = new BasePersonDto(lastName, birthdate, firstName);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(personToUpdate), Encoding.UTF8, "application/json");
             var response = await _client.PutAsync(_route, jsonContent);

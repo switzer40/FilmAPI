@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Common.DTOs.FilmPerson;
+using FilmAPI.Common.Services;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Services;
 using Newtonsoft.Json;
@@ -43,7 +44,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
             var role = FilmConstants.Role_Actor;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.GetAsync($"{_route}/{key}");
             response.EnsureSuccessStatusCode();
 
@@ -60,7 +61,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
             var role = FilmConstants.Role_Actor;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.GetAsync($"{_route}/{key}");
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -84,7 +85,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
             var role = FilmConstants.Role_Actor;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -98,7 +99,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
             var role = FilmConstants.Role_Actor;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -112,7 +113,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Robins";
             var birthdate = "1967-10-28";
             var role = FilmConstants.Role_Actor;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -126,7 +127,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Roberts";
             var birthdate = "1968-10-28";
             var role = FilmConstants.Role_Actor;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -140,7 +141,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPeopleContrüller
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
             var role = FilmConstants.Role_Composer;
-            var key = _keyService.ConstructFilmPersonSurrogateKey(title, year, lastName, birthdate, role);
+            var key = _keyService.ConstructFilmPersonKey(title, year, lastName, birthdate, role);
             var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             var stringResponse = await response.Content.ReadAsStringAsync();

@@ -1,4 +1,5 @@
-﻿using FilmAPI.Core.Interfaces;
+﻿using FilmAPI.Common.Interfaces;
+using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace FilmAPI.Filters.FilmPerson
                 {
                     var msg = "The following data may be incorrect: ";
                     var key = (string)context.ActionArguments["key"];
-                    var data = _keyService.DeconstructFilmPersonSurrogateKey(key);
+                    var data = _keyService.DeconstructFilmPersonKey(key);
                     if (data.title == FilmConstants.BADKEY)
                     {
                         context.Result = new BadRequestObjectResult(key);

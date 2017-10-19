@@ -1,4 +1,5 @@
-﻿using FilmAPI.Core.Interfaces;
+﻿using FilmAPI.Common.Interfaces;
+using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ namespace FilmAPI.Filters.Medium
                     var key = (string)context.ActionArguments["key"];
                     if (key != "")
                     {
-                        var data = _keyService.DeconstructMediumSurrogateKey(key);
+                        var data = _keyService.DeconstructMediumKey(key);
                         if (data.title == FilmConstants.BADKEY)
                         {
                             context.Result = new BadRequestObjectResult(key);

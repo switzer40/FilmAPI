@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Common.DTOs.Person;
+using FilmAPI.Common.Services;
 using FilmAPI.Core.SharedKernel;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         public Delete()
         {
             _client = base.GetClient();
-            _keyService = new Services.KeyService();
+            _keyService = new KeyService();
             _route = FilmConstants.PersonUri;
         }
         private async Task<int> PersonCountAsync()
@@ -39,7 +40,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         {
             var lastName = "Robins";
             var birthdate = "1967-10-28";
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             var response = await _client.DeleteAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -48,7 +49,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         {
             var lastName = "Roberts";
             var birthdate = "1968-10-28";
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             var response = await _client.DeleteAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -59,7 +60,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
             var before = await PersonCountAsync();
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             var response = await _client.DeleteAsync($"{_route}/{key}");
             response.EnsureSuccessStatusCode();
             var after = await PersonCountAsync();

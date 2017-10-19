@@ -1,4 +1,6 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.Services;
+using FilmAPI.Interfaces;
 using FilmAPI.Services;
 using System;
 using System.Collections.Generic;

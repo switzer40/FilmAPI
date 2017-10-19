@@ -28,7 +28,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             var year = (short)1990;
             var newLength = (short)110;            
             var filmToUpdate = new BaseFilmDto(title, year, newLength);
-            var key = _keyService.ConstructFilmSurrogateKey(title, year);
+            var key = _keyService.ConstructFilmKey(title, year);
              var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToUpdate), Encoding.UTF8, "application/json");
 
             // Act

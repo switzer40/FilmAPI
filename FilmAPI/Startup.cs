@@ -11,6 +11,7 @@ using FilmAPI.Core.SharedKernel;
 using StructureMap;
 using FilmAPI.Interfaces.FilmPerson;
 using FilmAPI.Services.FilmPerson;
+using FilmAPI.Common.Services;
 
 namespace FilmAPI
 {
@@ -99,6 +100,7 @@ namespace FilmAPI
             config.Scan(_ =>
             {
                 _.AssemblyContainingType(typeof(Startup));
+                _.AssemblyContainingType(typeof(KeyService));
                 _.AssemblyContainingType(typeof(Film));
                 _.AssemblyContainingType(typeof(FilmContext));               
                 _.WithDefaultConventions();

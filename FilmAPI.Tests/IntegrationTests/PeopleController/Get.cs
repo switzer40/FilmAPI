@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Common.DTOs.Person;
+using FilmAPI.Common.Services;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Services;
 using Newtonsoft.Json;
@@ -36,7 +37,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
             var firstName = "Julia";
             var lastName = "Roberts";
             var birthdate = "1967-10-28";
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             var response = await _client.GetAsync($"{_route}/{key}");
             response.EnsureSuccessStatusCode();
             var stringResponse = await response.Content.ReadAsStringAsync();
@@ -51,7 +52,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         {            
             var lastName = "Robertson";
             var birthdate = "1967-10-28";
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -60,7 +61,7 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
         {            
             var lastName = "Roberts";
             var birthdate = "1968-10-28";
-            var key = _keyService.ConstructPersonSurrogateKey(lastName, birthdate);
+            var key = _keyService.ConstructPersonKey(lastName, birthdate);
             var response = await _client.GetAsync($"{_route}/{key}");
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

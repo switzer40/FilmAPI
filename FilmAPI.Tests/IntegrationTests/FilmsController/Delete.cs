@@ -31,7 +31,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             var rightTitel = "Pretty Woman";
             var wrongYear = (short)1991;
-            string key = _keyService.ConstructFilmSurrogateKey(rightTitel, wrongYear);
+            string key = _keyService.ConstructFilmKey(rightTitel, wrongYear);
             var response = await _client.DeleteAsync($"{_route}/{key}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -54,7 +54,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
         {
             var wrongTitel = "Ugly Woman";
             var rightYear = (short)1990;
-            string key = _keyService.ConstructFilmSurrogateKey(wrongTitel, rightYear);
+            string key = _keyService.ConstructFilmKey(wrongTitel, rightYear);
             var response = await _client.DeleteAsync($"{_route}/{key}");
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -67,7 +67,7 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
             var title = "Pretty Woman";
             var year = (short)1990;
             var before = await FilmCountAsync();
-            var key = _keyService.ConstructFilmSurrogateKey(title, year);
+            var key = _keyService.ConstructFilmKey(title, year);
             var response = await _client.DeleteAsync($"{_route}/{key}");
             var after = await FilmCountAsync();
             Assert.Equal(before - 1, after);

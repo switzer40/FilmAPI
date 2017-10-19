@@ -1,4 +1,5 @@
-﻿using FilmAPI.Core.Interfaces;
+﻿using FilmAPI.Common.Interfaces;
+using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,7 @@ namespace FilmAPI.Filters.Person
                 if (context.ActionArguments.ContainsKey("key"))
                 {
                     var key = (string)context.ActionArguments["key"];
-                    var data = _keyService.DeconstructPesonSurrogateKey(key);
+                    var data = _keyService.DeconstructPersonKey(key);
                     if (data.lastName == FilmConstants.BADKEY)
                     {
                         context.Result = new BadRequestObjectResult(key);

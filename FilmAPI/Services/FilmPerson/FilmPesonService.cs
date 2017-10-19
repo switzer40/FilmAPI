@@ -5,6 +5,7 @@ using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces;
 using FilmAPI.Common.DTOs;
 using FilmAPI.Common.DTOs.FilmPerson;
+using FilmAPI.Common.Interfaces;
 
 namespace FilmAPI.Services.FilmPerson
 {
@@ -31,7 +32,7 @@ namespace FilmAPI.Services.FilmPerson
         {
                var fpToAdd = (force) ? _mapper.MapBackForce(b) : _mapper.MapBack(b);
                var savedFP = _repository.Add(fpToAdd);
-               var key = _keyService.ConstructFilmPersonSurrogateKey(b.Title, b.Year, b.LastName, b.Birthdate, b.Role);
+               var key = _keyService.ConstructFilmPersonKey(b.Title, b.Year, b.LastName, b.Birthdate, b.Role);
                var result = new KeyedFilmPersonDto(b.Title, b.Year, b.LastName, b.Birthdate, b.Role, b.Length, b.FirstMidName, key);               
                return result;
         }
@@ -60,7 +61,7 @@ namespace FilmAPI.Services.FilmPerson
             var result = new List<KeyedFilmPersonDto>();
             foreach (var item in baseList)
             {
-                var key = _keyService.ConstructFilmPersonSurrogateKey(item.Title, item.Year, item.LastName, item.Birthdate, item.Role);
+                var key = _keyService.ConstructFilmPersonKey(item.Title, item.Year, item.LastName, item.Birthdate, item.Role);
                 var keyedItem = new KeyedFilmPersonDto(item.Title, item.Year, item.LastName, item.Birthdate, item.Role,item.Length, item.FirstMidName, key);                              
                 result.Add(keyedItem);
             }
@@ -74,7 +75,7 @@ namespace FilmAPI.Services.FilmPerson
 
         public KeyedFilmPersonDto GetBySurrogateKey(string key)
         {
-            var data = _keyService.DeconstructFilmPersonSurrogateKey(key);
+            var data = _keyService.DeconstructFilmPersonKey(key);
             var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
             var p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);            
             var result = new KeyedFilmPersonDto(f.Title, f.Year, p.LastName, p.BirthdateString, data.role,  f.Length, p.FirstMidName, key);

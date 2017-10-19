@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Common.DTOs.Medium;
+using FilmAPI.Common.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Filters;
 using FilmAPI.Filters.Medium;

@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces;
 using FilmAPI.Common.DTOs.Person;
+using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.Services;
 
 namespace FilmAPI.Services.Person
 {
@@ -23,7 +25,7 @@ namespace FilmAPI.Services.Person
         {
             var personToAdd = _mapper.MapBack(m);
             var savedPerson = _repository.Add(personToAdd);
-            var key = _keyService.ConstructPersonSurrogateKey(m.LastName, m.Birthdate);
+            var key = _keyService.ConstructPersonKey(m.LastName, m.Birthdate);
             return new KeyedPersonDto(m.LastName, m.Birthdate, key, m.FirstMidName);
         }
 
@@ -39,7 +41,7 @@ namespace FilmAPI.Services.Person
 
         public void Delete(string key)
         {
-            var modelToDelete = GetBySurrogateKey(key);
+            var modelToDelete = GetByKey(key);
             var personToDelete = _mapper.MapBack(modelToDelete);
             _repository.Delete(personToDelete);
         }
@@ -51,7 +53,7 @@ namespace FilmAPI.Services.Person
             var result = new List<KeyedPersonDto>();
             foreach (var item in baseList)
             {
-                var key  = _keyService.ConstructPersonSurrogateKey(item.LastName, item.Birthdate);
+                var key  = _keyService.ConstructPersonKey(item.LastName, item.Birthdate);
                 var keyedItem = new KeyedPersonDto(item.LastName, item.Birthdate, key, item.FirstMidName);                
                 result.Add(keyedItem);
             }
@@ -64,9 +66,9 @@ namespace FilmAPI.Services.Person
             
         }
 
-        public KeyedPersonDto GetBySurrogateKey(string key)
+        public KeyedPersonDto GetByKey(string key)
         {
-            var data = _keyService.DeconstructPesonSurrogateKey(key);
+            var data = _keyService.DeconstructPersonKey(key);
             var p = _repository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
             var result = new KeyedPersonDto(data.lastName, data.birthdate, key, p.FirstMidName);
             return result;
@@ -74,7 +76,7 @@ namespace FilmAPI.Services.Person
 
         public async Task<KeyedPersonDto> GetBySurrogateKeyAsync(string key)
         {
-            return await Task.Run(() => GetBySurrogateKey(key));
+            return await Task.Run(() => GetByKey(key));
         }
 
         public async Task UpdateAsync(BasePersonDto m)

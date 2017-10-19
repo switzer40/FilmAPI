@@ -29,7 +29,7 @@ namespace FilmAPI.Tests.IntegrationTests.MediaControllr
             var type = FilmConstants.MediumType_DVD;
             var newLocation = FilmConstants.Location_Right;
             var mediumToUpdate = new BaseMediumDto(title, year, type, newLocation, length);
-            var key = _keyService.ConstructMediumSurrogateKey(title, year, type);
+            var key = _keyService.ConstructMediumKey(title, year, type);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToUpdate), Encoding.UTF8, "application/json");
 
             // Act
