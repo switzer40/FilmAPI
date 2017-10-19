@@ -54,7 +54,7 @@ namespace FilmAPI.Services.Person
             foreach (var item in baseList)
             {
                 var key  = _keyService.ConstructPersonKey(item.LastName, item.Birthdate);
-                var keyedItem = new KeyedPersonDto(item.LastName, item.Birthdate, key, item.FirstMidName);                
+                var keyedItem = new KeyedPersonDto(item.LastName, item.Birthdate, item.FirstMidName, key);                
                 result.Add(keyedItem);
             }
             return result;

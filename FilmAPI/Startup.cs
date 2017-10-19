@@ -74,6 +74,14 @@ namespace FilmAPI
 
 
         }
+        public IServiceProvider ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<FilmContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+            });
+            return ConfigureServices(services);
+        }
 
         public IServiceProvider ConfigureTestingServices(IServiceCollection services)
         {
@@ -147,7 +155,7 @@ namespace FilmAPI
             var roberts = new Person("Roberts", "1967-10-28", "Julia");
             context.People.Add(roberts);
             context.SaveChanges();
-            var gere = new Person("Gere", "1949-08-31");
+            var gere = new Person("Gere", "1949-08-31", "Richard");
             context.People.Add(gere);
             context.SaveChanges();
             var tiffanyHepburn = new FilmPerson(tiffany.Id, hepburn.Id, FilmConstants.Role_Actor);

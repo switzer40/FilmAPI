@@ -48,5 +48,7 @@ namespace FilmAPI.Core.SharedKernel
         public const string FORTYTWO = "42";
         public const string ImprobableDateString = "1615-06-23";
         public const bool Force = false; // The original idea was a bad mistake; remove this some day.
+
+        public static string ConnectionString { get; set; }
     }
 }
