@@ -26,7 +26,7 @@ namespace FilmAPI.Services.Person
             var personToAdd = _mapper.MapBack(m);
             var savedPerson = _repository.Add(personToAdd);
             var key = _keyService.ConstructPersonKey(m.LastName, m.Birthdate);
-            return new KeyedPersonDto(m.LastName, m.Birthdate, key, m.FirstMidName);
+            return new KeyedPersonDto(m.LastName, m.Birthdate, m.FirstMidName, key);
         }
 
         public async Task<KeyedPersonDto> AddAsync(BasePersonDto m)
@@ -70,7 +70,7 @@ namespace FilmAPI.Services.Person
         {
             var data = _keyService.DeconstructPersonKey(key);
             var p = _repository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
-            var result = new KeyedPersonDto(data.lastName, data.birthdate, key, p.FirstMidName);
+            var result = new KeyedPersonDto(data.lastName, data.birthdate, p.FirstMidName, key);
             return result;
         }
 

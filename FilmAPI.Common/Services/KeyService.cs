@@ -32,27 +32,43 @@ namespace FilmAPI.Common.Services
 
         public (string title, short year) DeconstructFilmKey(string key)
         {
+            short year = 1800;
             string[] parts = ParseKey(key, 2);
             var title = parts[0];
-            var year = short.Parse(parts[1]);
+            if (parts[1] != FilmConstants.BADKEY)
+            {
+                year = short.Parse(parts[1]);
+            }            
             return (title, year);
         }
 
         private string[] ParseKey(string key, int expectedLength)
         {
+            string[] result = new string[expectedLength];
             var parts = key.Split(separators);
-            if (parts.Length != expectedLength)
+            if (parts.Length == expectedLength)
             {
-                parts[0] = FilmConstants.BADKEY;
+                result = parts;
             }
-            return parts;
+            else
+            {
+                for (int i = 0; i < expectedLength; i++)
+                {
+                    result[i] = FilmConstants.BADKEY;
+                }
+            }
+            return result;
         }
 
         public (string title, short year, string lastName, string birthdate, string role) DeconstructFilmPersonKey(string key)
         {
+            short year = 1800;
             string[] parts = ParseKey(key, 5);
             var title = parts[0];
-            var year = short.Parse(parts[1]);
+            if (parts[1] != FilmConstants.BADKEY)
+            {
+                year = short.Parse(parts[1]);
+            }            
             var lastName = parts[2];
             var birthdate = parts[3];
             var role = parts[4];
@@ -61,9 +77,13 @@ namespace FilmAPI.Common.Services
 
         public (string title, short year, string mediumType) DeconstructMediumKey(string key)
         {
+            short year = 1800;
             string[] parts = ParseKey(key, 3);
             var title = parts[0];
-            var year = short.Parse(parts[1]);
+            if (parts[1] != FilmConstants.BADKEY)
+            {
+                year = short.Parse(parts[1]);
+            }            
             var mediumType = parts[2];
             return (title, year, mediumType);
         }
