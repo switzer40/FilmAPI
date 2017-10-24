@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using FilmAPI.Infrastructure.Data;
 using System.Linq;
 using FilmAPI.Core.Specifications;
+using FilmAPI.Core.SharedKernel;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
@@ -18,8 +19,12 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public Person GetByLastNameAndBirthdate(string lastName, string birthdate)
         {
+            if (lastName == FilmConstants.BADKEY)
+            {
+                return new Person(lastName, birthdate);
+            }
             var spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
-            return List(spec).Single();
+            return List(spec).SingleOrDefault();
         }
 
         public async Task<Person> GetByLastNameAndBirthdateAsync(string lastName, string birthdate)
@@ -28,6 +33,18 @@ namespace FilmAPI.Infrastructure.Repositories
             var candidates = await ListAsync(spec);
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
+        }
+
+        public override Person GetStoredEntity(Person t)
+        {
+            return GetByLastNameAndBirthdate(t.LastName, t.BirthdateString);
+        }
+
+        public override void Update(Person t)
+        {
+            var storedPerson = GetByLastNameAndBirthdate(t.LastName, t.BirthdateString);
+            storedPerson.Copy(t);
+            Save();
         }
     }
 }

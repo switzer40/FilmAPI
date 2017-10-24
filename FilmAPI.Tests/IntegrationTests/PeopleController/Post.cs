@@ -1,9 +1,8 @@
-﻿using FilmAPI.Core.Entities;
-using FilmAPI.ViewModels;
+﻿using FilmAPI.Common.DTOs.Person;
+using FilmAPI.Common.Services;
+using FilmAPI.Core.SharedKernel;
+using FilmAPI.Services;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,34 +13,30 @@ namespace FilmAPI.Tests.IntegrationTests.PeopleController
     public class Post : TestBase
     {
         private readonly HttpClient _client;
+        private string _route;
         public Post()
         {
             _client = base.GetClient();
+            _keyService = new KeyService();
+            _route = FilmConstants.PersonUri;
         }
         [Fact]
-        public async Task ReturnsBadRequestGivenNoLastName()
+        public async Task ReturnOkGivenValidPersonData()
         {
-            
-            var personToPost = new Person("", "2017-08-25");
+            var firstName = "Rowan";
+            var lastName = "Miller";
+            var birthdate = "1950-4-19";
+            var personToPost = new BasePersonDto(lastName, birthdate, firstName);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("api/people", jsonContent);
-            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        }
-        [Fact]
-        public async Task ReturnsOkGivenValidPersonData()
-        {
-            string lastName = "Gere";
-            string birthdate = "1949-08-30";
-            var personToPost = new Person(lastName, birthdate , "Richard");
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF8, "application/json");
-            var response = await _client.PostAsync("api/people", jsonContent);
+            var response = await _client.PostAsync(_route, jsonContent);
             response.EnsureSuccessStatusCode();
 
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var model = JsonConvert.DeserializeObject<PersonViewModel>(stringResponse);
+            var result = JsonConvert.DeserializeObject<KeyedPersonDto>(stringResponse);
 
-            Assert.Equal(lastName, model.LastName);
-            Assert.Equal(birthdate, model.BirthdateString);
+            Assert.Equal(firstName, result.FirstMidName);
+            Assert.Equal(lastName, result.LastName);
+            Assert.Equal(birthdate, result.Birthdate);
         }
     }
 }

@@ -12,14 +12,21 @@ namespace FilmAPI.Infrastructure.Repositories
 {
     public class MediumRepository : Repository<Medium>, IMediumRepository
     {
-        public MediumRepository(FilmContext context) : base(context)
+        private readonly IFilmRepository _filmRepository;
+        public MediumRepository(FilmContext context, IFilmRepository frepo) : base(context)
         {
+            _filmRepository = frepo;
+        }
+
+        public int CountMediaByFilmId(int id)
+        {
+            return List(m => m.FilmId == id).Count;
         }
 
         public Medium GetByFilmIdAndMediumType(int filmId, string mediumType)
         {
             var spec = new MediumByFilmIdAndMediumType(filmId, mediumType);
-            return List(spec).Single();
+            return List(spec).SingleOrDefault();
         }
 
         public async Task<Medium> GetByFilmIdAndMediumTypeAsync(int filmId, string mediumType)
@@ -28,6 +35,28 @@ namespace FilmAPI.Infrastructure.Repositories
             var candidates = await ListAsync(spec);
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
+        }
+
+        public Medium GetByTitleYearAndMediumType(string title, short year, string mediumType)
+        {
+            var f = _filmRepository.GetByTitleAndYear(title, year);
+            if (f == null)
+            {
+                return null;
+            }
+            return GetByFilmIdAndMediumType(f.Id, mediumType);
+        }
+
+        public override Medium GetStoredEntity(Medium t)
+        {
+            return GetByFilmIdAndMediumType(t.FilmId, t.MediumType);
+        }
+
+        public override void Update(Medium t)
+        {
+            var storedMedium = GetByFilmIdAndMediumType(t.FilmId, t.MediumType);
+            storedMedium.Copy(t);
+            Save();
         }
     }
 }

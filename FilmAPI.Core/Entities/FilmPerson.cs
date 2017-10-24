@@ -24,5 +24,12 @@ namespace FilmAPI.Core.Entities
         public int PersonId { get; set; }
         [Required]
         public string Role { get; set; }
+
+        public void Copy(FilmPerson t)
+        {
+            FilmId = t.FilmId;
+            PersonId = t.PersonId;
+            Role = t.Role;
+        }
     }
 }

@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public abstract class Repository<T> : IRepository<T> where T : BaseEntity
     {
         protected readonly FilmContext _context;
         protected readonly DbSet<T> _set;
@@ -28,33 +28,29 @@ namespace FilmAPI.Infrastructure.Repositories
             return t;
         }
 
-        private void Save()
+        protected void Save()
         {
             _context.SaveChanges();
         }
 
         public async Task<T> AddAsync(T t)
         {
-            await _set.AddAsync(t);
-            await SaveAsync();
-            return t;
-        }
-
-        private async Task SaveAsync()
-        {
-            await _context.SaveChangesAsync();
+            return await Task.Run(() => Add(t));
         }
 
         public void Delete(T t)
         {
-            _set.Remove(t);
+            var storedEntity = GetStoredEntity(t);
+            _set.Remove(storedEntity);
             Save();
         }
 
+        public abstract T GetStoredEntity(T t);
+        
+
         public async Task DeleteAsync(T t)
         {
-            _set.Remove(t);
-            await SaveAsync();
+            await Task.Run(() => Delete(t));
         }
 
         public T GetById(int id)
@@ -64,7 +60,7 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task<T> GetByIdAsync(int id)
         {
-            return await _set.FindAsync(id);
+            return await Task.Run(() => GetById(id));
         }
     
         public List<T> List()
@@ -98,15 +94,12 @@ namespace FilmAPI.Infrastructure.Repositories
             return await ListAsync(specification.Predicate);
         }
 
-        public void Update(T t)
-        {
-            Save();
-        }
+        public abstract void Update(T t);
+        
 
         public async Task UpdateAsync(T t)
         {
-            _context.Entry(t).State = EntityState.Modified;
-            await SaveAsync();
+            await Task.Run(() => Update(t));
         }
 
         public void Delete(int id)
@@ -117,8 +110,7 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task DeleteAsync(int id)
         {
-            var entityToDelete = await GetByIdAsync(id);
-            await DeleteAsync(entityToDelete);
+            await Task.Run(() => Delete(id));  
         }
     }
 }

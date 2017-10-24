@@ -31,9 +31,24 @@ namespace FilmAPI.Core.SharedKernel
         public const string Location_Top = "Commode top drawer";
         public const string Location_Middle = "Commode middle drawer";
         public const string Location_Bottom = "Commode bottom drawer";
+        public const string Location_BD1 = "BD Rack Level1";
+        public const string Location_BD2 = "BD Rack Level2";
+        public const string Location_BD3 = "BD Rack Level3";
+        public const string Location_BD4 = "BD Rack Level4";
         public const string Location_Shelf1 = "Bedroom bookshelf1";
 
+        // Routes
+        public const string FilmUri = "api/films";
+        public const string FilmPersonUri = "api/filmpeople";
+        public const string MediumUri = "api/media";
+        public const string PersonUri = "api/people";
 
+        // Miscellaneous
+        public const string BADKEY = "Bad Key";
+        public const string FORTYTWO = "42";
+        public const string ImprobableDateString = "1615-06-23";
+        public const bool Force = false; // The original idea was a bad mistake; remove this some day.
 
+        public static string ConnectionString { get; set; }
     }
 }

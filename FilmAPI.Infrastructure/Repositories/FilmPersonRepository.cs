@@ -19,7 +19,7 @@ namespace FilmAPI.Infrastructure.Repositories
         public FilmPerson GetByFilmIdPersonIdAndRole(int filmId, int personId, string role)
         {
             var spec = new FilmPersonByFilmIdPersonIdAndRole(filmId, personId, role);
-            return List(spec).Single();
+            return List(spec).SingleOrDefault();
         }
 
         public async Task<FilmPerson> GetByFilmIdPersonIdAndRoleAsync(int filmId, int personId, string role)
@@ -28,6 +28,18 @@ namespace FilmAPI.Infrastructure.Repositories
             var candidates = await ListAsync(spec);
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
+        }
+
+        public override FilmPerson GetStoredEntity(FilmPerson t)
+        {
+            return GetByFilmIdPersonIdAndRole(t.FilmId, t.PersonId, t.Role);
+        }
+
+        public override void Update(FilmPerson t)
+        {
+            var storedFilmPerson = GetByFilmIdPersonIdAndRole(t.FilmId, t.PersonId, t.Role);
+            storedFilmPerson.Copy(t);
+            Save();
         }
     }
 }
