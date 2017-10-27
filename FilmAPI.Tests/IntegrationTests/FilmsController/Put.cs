@@ -1,8 +1,6 @@
-﻿using FilmAPI.ViewModels;
+﻿using FilmAPI.Common.DTOs.Film;
+using FilmAPI.Core.SharedKernel;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,25 +11,38 @@ namespace FilmAPI.Tests.IntegrationTests.FilmsController
     public class Put : TestBase
     {
         private readonly HttpClient _client;
+        private string _route;
 
         public Put()
         {
             _client = base.GetClient();
+            _route = FilmConstants.FilmUri;
         }
 
-
         [Fact]
-        public async Task ReturnsNotFoundGivenNonExistentSurrogateKy()
+        public async Task ReturnsOkGivenValidFilmDataAsync()
         {
-            string key = "Howdy"; // A surrogate key that certainly does not exist.
-            var filmToPut = new FilmViewModel("", 1957, 123);
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToPut), Encoding.UTF8, "application/json");
-            var response = await _client.PutAsync($"api/films/{key}", jsonContent);
+            // Arrange
+            // Start with a film known to be in the DB.
+            var title = "Pretty Woman";
+            var year = (short)1990;
+            var newLength = (short)110;            
+            var filmToUpdate = new BaseFilmDto(title, year, newLength);
+            var key = _keyService.ConstructFilmKey(title, year);
+             var jsonContent = new StringContent(JsonConvert.SerializeObject(filmToUpdate), Encoding.UTF8, "application/json");
 
-            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            // Act
+            var response = await _client.PutAsync(_route, jsonContent);
+            response.EnsureSuccessStatusCode();
+            var response1 = await _client.GetAsync($"{_route}/{key}");
 
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            Assert.Equal("", stringResponse);
+            // Assert
+            response1.EnsureSuccessStatusCode();
+
+            // And now test whether it was properly updated
+            var stringResponse = await response1.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<KeyedFilmDto>(stringResponse);
+            Assert.Equal(newLength, result.Length);
         }
     }
 }

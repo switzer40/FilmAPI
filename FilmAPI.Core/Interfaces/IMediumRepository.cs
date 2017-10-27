@@ -10,5 +10,7 @@ namespace FilmAPI.Core.Interfaces
     {
         Medium GetByFilmIdAndMediumType(int filmId, string mediumType);
         Task<Medium> GetByFilmIdAndMediumTypeAsync(int filmId, string mediumType);
+        Medium GetByTitleYearAndMediumType(string title, short year, string mediumType);
+        int CountMediaByFilmId(int id);
     }
 }

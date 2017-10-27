@@ -25,6 +25,14 @@ namespace FilmAPI.Core.Entities
         [Required]
         [Range(1850, 2100)]
         public short Year { get; set; }
+
+        public void Copy(Film f)
+        {
+            Title = f.Title;
+            Year = f.Year;
+            Length = f.Length;
+        }
+
         [Range(10, 200)]
         public short Length { get; set; }
     }
