@@ -12,6 +12,7 @@ using StructureMap;
 using FilmAPI.Interfaces.FilmPerson;
 using FilmAPI.Services.FilmPerson;
 using FilmAPI.Common.Services;
+using FilmAPI.Mappers;
 
 namespace FilmAPI
 {
@@ -87,7 +88,8 @@ namespace FilmAPI
         {
             services.AddDbContext<FilmContext>(options =>
             {
-                options.UseInMemoryDatabase(System.Guid.NewGuid().ToString());
+                var dbName = Guid.NewGuid().ToString();
+                options.UseInMemoryDatabase(dbName);
             });
             return ConfigureServices(services);
         }
@@ -105,27 +107,28 @@ namespace FilmAPI
             var container = new Container();
             container.Configure(config =>
             {
-            config.Scan(_ =>
-            {
-                _.AssemblyContainingType(typeof(Startup));
-                _.AssemblyContainingType(typeof(KeyService));
-                _.AssemblyContainingType(typeof(Film));
-                _.AssemblyContainingType(typeof(FilmContext));               
-                _.WithDefaultConventions();
+                config.Scan(_ =>
+                {
+                    _.AssemblyContainingType(typeof(Startup));
+                    _.AssemblyContainingType(typeof(KeyService));
+                    _.AssemblyContainingType(typeof(Film));
+                    _.AssemblyContainingType(typeof(FilmContext));               
+                    _.WithDefaultConventions();
 
-            });
-                config.For(typeof(IFilmPersonService)).Add(typeof(FilmPesonService));
+                });
+                config.For(typeof(IFilmPersonMapper)).Add(typeof(FilmPersonMapper));
+                //config.For(typeof(IFilmPersonService)).Add(typeof(FilmPersonService));
                 // I had hoped StructureMap´s conventions will take care of configuring
                 // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
-                
+
                 //config.For(typeof(IFilmRepository)).Add(typeof(FilmRepository));
                 //config.For(typeof(IPersonRepository)).Add(typeof(PersonRepository));
                 //config.For(typeof(IMediumRepository)).Add(typeof(MediumRepository));
                 //config.For(typeof(IFilmPersonRepository)).Add(typeof(FilmPersonRepository));
                 // config.For(typeof(IFilmService)).Add(typeof(FilmService));
                 //config.For(typeof(IFilmPersonService)).Add(typeof((FilmPesonService));            
-            // this shoIuld have been done by WithDefaultConventions:
-            //config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
+                // this shoIuld have been done by WithDefaultConventions:
+                //config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
                 config.Populate(services);
             });
             return container.GetInstance<IServiceProvider>();

@@ -28,7 +28,9 @@ namespace FilmAPI.Tests.IntegrationTests
         {
             var builder = new WebHostBuilder()
                 .UseContentRoot(Directory.GetCurrentDirectory())
+#pragma warning disable CS0436 // Type conflicts with imported type
                 .UseStartup<Startup>()
+
                 .UseEnvironment("Testing");
             var server = new TestServer(builder);
             var client = server.CreateClient();

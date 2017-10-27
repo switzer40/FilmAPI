@@ -1,22 +1,20 @@
-﻿using FilmAPI.Interfaces.FilmPerson;
+﻿using FilmAPI.Common.DTOs.FilmPerson;
+using FilmAPI.Common.Interfaces;
+using FilmAPI.Core.Interfaces;
+using FilmAPI.Interfaces.FilmPerson;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using FilmAPI.Core.Interfaces;
-using FilmAPI.Interfaces;
-using FilmAPI.Common.DTOs;
-using FilmAPI.Common.DTOs.FilmPerson;
-using FilmAPI.Common.Interfaces;
 
 namespace FilmAPI.Services.FilmPerson
 {
-    public class FilmPesonService : IFilmPersonService
+    public class FilmPersonService : IFilmPersonService
     {
         private readonly IFilmPersonRepository _repository;
         private readonly IFilmRepository _filmRepository;
         private readonly IPersonRepository _personRepository;
         private readonly IFilmPersonMapper _mapper;
         private readonly IKeyService _keyService;
-        public FilmPesonService(IFilmPersonRepository repo,
+        public FilmPersonService(IFilmPersonRepository repo,
                                 IFilmRepository frepo,
                                 IPersonRepository prepo,
                                 IFilmPersonMapper mapper,
