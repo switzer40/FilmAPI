@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Common.DTOs.Film;
+using FilmAPI.Interfaces.Film;
 
 namespace FilmAPI.Controllers
 {
@@ -28,7 +29,7 @@ namespace FilmAPI.Controllers
         [ValidateFilmExists]
         public async Task<IActionResult> Get(string key)
         {
-            KeyedFilmDto model = await _service.GetBySurrogateKeyAsync(key);           
+            KeyedFilmDto model = await _service.GetByKeyAsync(key);           
             return Ok(model);
         }
         [HttpPost]
@@ -49,7 +50,7 @@ namespace FilmAPI.Controllers
         [ValidateFilmExists]
         public async Task<IActionResult> Delete(string key)
         {
-            await _service.DeleteAsync(key);                   
+            await _service.RemoveAsync(key);                   
             return Ok();
         }            
     }

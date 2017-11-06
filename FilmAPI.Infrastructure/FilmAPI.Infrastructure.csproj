@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FilmAPI.Common\FilmAPI.Common.csproj" />
     <ProjectReference Include="..\FilmAPI.Core\FilmAPI.Core.csproj" />
   </ItemGroup>
 

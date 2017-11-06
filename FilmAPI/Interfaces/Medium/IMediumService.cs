@@ -1,20 +1,12 @@
 ﻿using FilmAPI.Common.DTOs.Medium;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces.Medium
 {
-    public interface IMediumService
+    public interface IMediumService : IEntityService<Core.Entities.Medium, BaseMediumDto, KeyedMediumDto>
     {
-        KeyedMediumDto Add(BaseMediumDto m , bool force = false);
-        Task<KeyedMediumDto> AddAsync(BaseMediumDto m, bool force = false);
-        void Delete(string key);
-        Task DeleteAsync(string key);
-        List<KeyedMediumDto> GetAll();
-        Task<List<KeyedMediumDto>> GetAllAsync();
-        KeyedMediumDto GetBySurrogateKey(string key);
-        Task<KeyedMediumDto> GetBySurrogateKeyAsync(string key);
-        void Update(BaseMediumDto m);
-        Task UpdateAsync(BaseMediumDto m);
     }
 }

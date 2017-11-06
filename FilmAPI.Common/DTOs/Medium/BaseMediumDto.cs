@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FilmAPI.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FilmAPI.Common.DTOs.Medium
 {
-    public class BaseMediumDto
+    public class BaseMediumDto : IBaseDto
     {
         public BaseMediumDto(string title, short year, string mediumType, string location = "", short length = 0)
         {

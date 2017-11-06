@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FilmAPI.Common.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace FilmAPI.Common.DTOs.FilmPerson
 {
-    public class BaseFilmPersonDto
+    public class BaseFilmPersonDto : IBaseDto
     {
         public BaseFilmPersonDto(string title,
                                  short year,

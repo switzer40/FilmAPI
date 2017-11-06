@@ -30,14 +30,14 @@ namespace FilmAPI.Controllers.FilmPerson
         [ValidateFilmPersonExists]
         public async Task<IActionResult> Get(string key)
         {
-            var model = await _service.GetBySurrogateKeyAsync(key);
+            var model = await _service.GetByKeyAsync(key);
             return Ok(model);
         }
         [HttpPost]
         [ValidateFilmPersonNotDuplicate]
         public async Task<IActionResult> Post([FromBody] BaseFilmPersonDto model)
         {
-            var savedModel = await _service.AddAsync(model, _force);
+            var savedModel = await _service.AddAsync(model);
             return Ok(savedModel);
         }
         [Obsolete("Try Delete(oldFp) followed by Post(newFp)")]
@@ -54,7 +54,7 @@ namespace FilmAPI.Controllers.FilmPerson
         [ValidateFilmPersonExists]
         public async Task<IActionResult> Delete(string key)
         {
-            await _service.DeleteAsync(key);
+            await _service.RemoveAsync(key);
             return Ok();
         }
     }

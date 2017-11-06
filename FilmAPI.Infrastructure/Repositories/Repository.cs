@@ -112,5 +112,13 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             await Task.Run(() => Delete(id));  
         }
+
+        public abstract T GetByKey(string key);
+        
+
+        public async Task<T> GetByKeyAsync(string key)
+        {
+            return await Task.Run(() => GetByKey(key));
+        }
     }
 }

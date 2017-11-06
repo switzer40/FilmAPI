@@ -7,9 +7,12 @@ using FilmAPI.Core.Interfaces;
 using System.Threading.Tasks;
 using System.Linq;
 using FilmAPI.Core.Specifications;
+using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.Services;
+using FilmAPI.Core.Exceptions;
 
 namespace FilmAPI.Infrastructure.Repositories
-{
+{    
     public class MediumRepository : Repository<Medium>, IMediumRepository
     {
         private readonly IFilmRepository _filmRepository;
@@ -35,6 +38,20 @@ namespace FilmAPI.Infrastructure.Repositories
             var candidates = await ListAsync(spec);
             var uniqueCandidate = candidates.Single();
             return uniqueCandidate;
+        }
+
+        public override Medium GetByKey(string key)
+        {
+            IKeyService keyService = new KeyService();
+            (string title,
+             short year,
+             string mediumType) = keyService.DeconstructMediumKey(key);
+            Film f = _filmRepository.GetByTitleAndYear(title, year);
+            if (f == null)
+            {
+                throw new UnknownFilmException(title, year);
+            }
+            return new Medium(f.Id, mediumType);
         }
 
         public Medium GetByTitleYearAndMediumType(string title, short year, string mediumType)
