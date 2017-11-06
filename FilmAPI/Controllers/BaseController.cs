@@ -6,6 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FilmAPI.Interfaces.Film;
+using FilmAPI.Interfaces;
+using FilmAPI.Filters;
 
 namespace FilmAPI.Controllers
 {
@@ -14,13 +17,16 @@ namespace FilmAPI.Controllers
         where InType : IBaseDto
         where OutType : IKeyedDto
     {
-        private readonly EntityService<EntityType, InType, OutType> _service;
-        public BaseController(EntityService<EntityType, InType, OutType> service)
+        private readonly IEntityService<EntityType, InType, OutType> _service;
+               
+        public BaseController(IEntityService<EntityType, InType, OutType> service)
         {
-            _service = service; 
+            _service = service;
         }
+
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody]InType t)
+        [ValidateEntityIsNotDuplicate]
+        public async Task<IActionResult> Post([FromBody]InType t)
         {
             var entity = await _service.AddAsync(t);
             return Ok(entity);
@@ -32,21 +38,24 @@ namespace FilmAPI.Controllers
             return Ok(entities);
         }
         [HttpGet("{key}")]
-        public async Task<IActionResult> GetByKey(string key)
+        [ValidateEntityExists]
+        public async Task<IActionResult> Get(string key)
         {
             var entity = await _service.GetByKeyAsync(key);
             return Ok(entity);
         }
         [HttpDelete("{key}")]
-        public async Task<IActionResult> Remove(string key)
+        [ValidateEntityExists]
+        public async Task<IActionResult> Delete(string key)
         {
             await _service.RemoveAsync(key);
             return Ok();
         }
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody]InType entity)
+        [ValidateEntityToUpdateExists]
+        public async Task<IActionResult> Put([FromBody]InType t)
         {
-            await _service.UpdateAsync(entity);
+            await _service.UpdateAsync(t);
             return Ok();
         }
     }

@@ -8,6 +8,10 @@ namespace FilmAPI.Common.DTOs.Film
 {
     public class BaseFilmDto : IBaseDto
     {
+        public BaseFilmDto()
+        {
+        }
+
         public BaseFilmDto(string title, short year, short length = 0)
         {
             Title = title;
