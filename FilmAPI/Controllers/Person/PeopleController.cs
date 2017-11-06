@@ -24,7 +24,7 @@ namespace FilmAPI.Controllers.Person
         [ValidatePersonExists]
         public async Task<IActionResult> Get(string key)
         {
-            var result = await _service.GetBySurrogateKeyAsync(key);
+            var result = await _service.GetByKeyAsync(key);
             return Ok(result);
         }
         [HttpPost]
@@ -45,7 +45,7 @@ namespace FilmAPI.Controllers.Person
         [ValidatePersonExists]
         public async Task<IActionResult> Delete(string key)
         {
-            await _service.DeeteAsync(key);
+            await _service.RemoveAsync(key);
             return Ok();
         }
     }

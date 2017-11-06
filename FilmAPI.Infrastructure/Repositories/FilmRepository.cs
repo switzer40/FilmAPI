@@ -1,4 +1,6 @@
-﻿using FilmAPI.Core.Entities;
+﻿using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.Services;
+using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Infrastructure.Data;
 using System;
@@ -13,6 +15,15 @@ namespace FilmAPI.Infrastructure.Repositories
         public FilmRepository(FilmContext context) : base(context)
         {
         }
+
+        public override Film GetByKey(string key)
+        {
+            IKeyService keyService = new KeyService();
+            (string title,
+             short year) = keyService.DeconstructFilmKey(key);
+            return GetByTitleAndYear(title, year);
+        }
+
         public Film GetByTitleAndYear(string title, short year)
         {
             return List(f => f.Title == title && f.Year == year).SingleOrDefault();

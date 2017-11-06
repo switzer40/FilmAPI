@@ -33,14 +33,14 @@ namespace FilmAPI.Controllers.Medium
         [ValidateMediumExists]
         public async Task<IActionResult> Get(string key)
         {
-            var model = await _service.GetBySurrogateKeyAsync(key);
+            var model = await _service.GetByKeyAsync(key);
             return Ok(model);
         }
         [HttpPost]
         [ValidateMediumNotDuplicate]
         public async Task<IActionResult> Post([FromBody] KeyedMediumDto model)
         {
-            var savedModel = await _service.AddAsync(model, _force);
+            var savedModel = await _service.AddAsync(model);
             return Ok(savedModel);
         }
         [HttpPut]
@@ -54,7 +54,7 @@ namespace FilmAPI.Controllers.Medium
         [ValidateMediumExists]
         public async Task<IActionResult>Delete(string key)
         {
-            await _service.DeleteAsync(key);
+            await _service.RemoveAsync(key);
             return Ok();
         }
     }

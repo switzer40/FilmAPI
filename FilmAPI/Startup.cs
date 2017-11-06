@@ -10,7 +10,6 @@ using FilmAPI.Core.Entities;
 using FilmAPI.Core.SharedKernel;
 using StructureMap;
 using FilmAPI.Interfaces.FilmPerson;
-using FilmAPI.Services.FilmPerson;
 using FilmAPI.Common.Services;
 using FilmAPI.Mappers;
 
