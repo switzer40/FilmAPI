@@ -1,6 +1,7 @@
 ﻿using FilmAPI.Common.DTOs.Person;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Interfaces.Person;
 using FilmAPI.Mappers;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
-    public class PersonService : EntityService<Person, BasePersonDto, KeyedPersonDto>
+    public class PersonService : EntityService<Person, BasePersonDto, KeyedPersonDto>, IPersonService
     {
-        public PersonService(IPersonRepository repo, BaseMapper<Person, BasePersonDto> mapper) : base(repo, mapper)
+        public PersonService(IPersonRepository repo, IPersonMapper mapper) : base(repo, (BaseMapper<Person, BasePersonDto>)mapper)
         {
         }
         protected override KeyedPersonDto GenerateOutType(Person p)
