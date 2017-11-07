@@ -12,6 +12,8 @@ using StructureMap;
 using FilmAPI.Interfaces.FilmPerson;
 using FilmAPI.Common.Services;
 using FilmAPI.Mappers;
+using FilmAPI.Interfaces.Film;
+using FilmAPI.Services;
 
 namespace FilmAPI
 {
@@ -115,7 +117,8 @@ namespace FilmAPI
                     _.WithDefaultConventions();
 
                 });
-                config.For(typeof(IFilmPersonMapper)).Add(typeof(FilmPersonMapper));
+                //config.For(typeof(IFilmService)).Add(typeof(FilmService));
+                //config.For(typeof(IFilmPersonMapper)).Add(typeof(FilmPersonMapper));
                 //config.For(typeof(IFilmPersonService)).Add(typeof(FilmPersonService));
                 // I had hoped StructureMap´s conventions will take care of configuring
                 // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
@@ -124,7 +127,7 @@ namespace FilmAPI
                 //config.For(typeof(IPersonRepository)).Add(typeof(PersonRepository));
                 //config.For(typeof(IMediumRepository)).Add(typeof(MediumRepository));
                 //config.For(typeof(IFilmPersonRepository)).Add(typeof(FilmPersonRepository));
-                // config.For(typeof(IFilmService)).Add(typeof(FilmService));
+                //config.For(typeof(IFilmService)).Add(typeof(FilmService));
                 //config.For(typeof(IFilmPersonService)).Add(typeof((FilmPesonService));            
                 // this shoIuld have been done by WithDefaultConventions:
                 //config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
