@@ -138,6 +138,7 @@ namespace FilmAPI
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+             app.UseDeveloperExceptionPage();
 
             app.UseMvc();
             PopulateData(context);

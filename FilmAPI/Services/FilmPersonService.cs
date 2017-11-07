@@ -3,6 +3,7 @@ using FilmAPI.Common.DTOs.Medium;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Exceptions;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Interfaces.FilmPerson;
 using FilmAPI.Mappers;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
-    public class FilmPersonService : EntityService<FilmPerson, BaseFilmPersonDto, KeyedFilmPersonDto>
+    public class FilmPersonService : EntityService<FilmPerson, BaseFilmPersonDto, KeyedFilmPersonDto>, IFilmPersonService
     {
         private readonly IFilmRepository _filmRepository;
         private readonly IPersonRepository _personRepository;
         public FilmPersonService(IFilmPersonRepository repo,
-                                 BaseMapper<FilmPerson, BaseFilmPersonDto> mapper,
+                                 IFilmPersonMapper mapper,
                                  IFilmRepository frepo,
-                                 IPersonRepository prepo) : base(repo, mapper)
+                                 IPersonRepository prepo) : base(repo, (BaseMapper<FilmPerson, BaseFilmPersonDto>)mapper)
         {
             _filmRepository = frepo;
             _personRepository = prepo;
