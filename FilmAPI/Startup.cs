@@ -12,6 +12,7 @@ using StructureMap;
 using FilmAPI.Interfaces.FilmPerson;
 using FilmAPI.Common.Services;
 using FilmAPI.Mappers;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace FilmAPI
 {
@@ -97,7 +98,10 @@ namespace FilmAPI
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-                                        
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "FilmAPI", Version = "v1" });
+            });                         
             return ConfigureIoC(services);
         }
 
@@ -139,7 +143,11 @@ namespace FilmAPI
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
              app.UseDeveloperExceptionPage();
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FilmAPI V1");
+            });
             app.UseMvc();
             PopulateData(context);
         }
