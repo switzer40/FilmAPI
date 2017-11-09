@@ -46,12 +46,7 @@ namespace FilmAPI.Infrastructure.Repositories
             (string title,
              short year,
              string mediumType) = keyService.DeconstructMediumKey(key);
-            Film f = _filmRepository.GetByTitleAndYear(title, year);
-            if (f == null)
-            {
-                throw new UnknownFilmException(title, year);
-            }
-            return new Medium(f.Id, mediumType);
+            return GetByTitleYearAndMediumType(title, year, mediumType);
         }
 
         public Medium GetByTitleYearAndMediumType(string title, short year, string mediumType)
