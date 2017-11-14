@@ -46,12 +46,16 @@ namespace FilmAPI.Core.Entities
                 return $"{FirstMidName} {LastName}";
             }
         }
-
-        public void Copy(Person t)
+        
+        public override void Copy(BaseEntity e)
         {
-            FirstMidName = t.FirstMidName;
-            LastName = t.LastName;
-            BirthdateString = t.BirthdateString;
+            if (e.GetType() == typeof(Person))
+            {
+                var t = (Person)e;
+                FirstMidName = t.FirstMidName;
+                LastName = t.LastName;
+                BirthdateString = t.BirthdateString;
+            }
         }
     }
 }

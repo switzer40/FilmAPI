@@ -94,7 +94,12 @@ namespace FilmAPI.Infrastructure.Repositories
             return await ListAsync(specification.Predicate);
         }
 
-        public abstract void Update(T t);
+        public void Update(T t)
+        {
+            var entityToUpdate = GetStoredEntity(t);
+            entityToUpdate.Copy(t);
+            Save();
+        }
         
 
         public async Task UpdateAsync(T t)

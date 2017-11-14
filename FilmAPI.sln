@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI", "FilmAPI\FilmAPI.csproj", "{FD2EA5EC-04A0-4B76-9505-9E5CA06F70E0}"
 EndProject
@@ -14,7 +14,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Infrastructure", "F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Tests", "FilmAPI.Tests\FilmAPI.Tests.csproj", "{0A3C4420-79AA-499D-BCF2-B208A5704FAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmAPI.Common", "FilmAPI.Common\FilmAPI.Common.csproj", "{3B9B7263-0775-44CD-91D3-D6CBF22575EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Common", "FilmAPI.Common\FilmAPI.Common.csproj", "{3B9B7263-0775-44CD-91D3-D6CBF22575EF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6FF97013-BA94-42B8-95F0-FE4A43BFEE9C} = {6FF97013-BA94-42B8-95F0-FE4A43BFEE9C}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
