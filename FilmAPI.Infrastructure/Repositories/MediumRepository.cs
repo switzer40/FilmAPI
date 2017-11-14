@@ -63,12 +63,5 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             return GetByFilmIdAndMediumType(t.FilmId, t.MediumType);
         }
-
-        public override void Update(Medium t)
-        {
-            var storedMedium = GetByFilmIdAndMediumType(t.FilmId, t.MediumType);
-            storedMedium.Copy(t);
-            Save();
-        }
     }
 }

@@ -26,11 +26,21 @@ namespace FilmAPI.Core.Entities
         [Range(1850, 2100)]
         public short Year { get; set; }
 
-        public void Copy(Film f)
+        
+
+        public override void Copy(BaseEntity e)
         {
-            Title = f.Title;
-            Year = f.Year;
-            Length = f.Length;
+            if (e.GetType() ==typeof(Film))
+            {
+                var f = (Film)e;
+                Title = f.Title;
+                Year = f.Year;
+                Length = f.Length;
+            }
+            else
+            {
+                throw new Exception($"Bad argument type: {e.GetType()}");
+            }
         }
 
         [Range(10, 200)]

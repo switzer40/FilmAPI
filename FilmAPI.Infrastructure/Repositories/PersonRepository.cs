@@ -49,12 +49,5 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             return GetByLastNameAndBirthdate(t.LastName, t.BirthdateString);
         }
-
-        public override void Update(Person t)
-        {
-            var storedPerson = GetByLastNameAndBirthdate(t.LastName, t.BirthdateString);
-            storedPerson.Copy(t);
-            Save();
-        }
     }
 }

@@ -24,12 +24,20 @@ namespace FilmAPI.Core.Entities
         [Required]
         public string MediumType { get; set; }
         public string Location { get; set; }
-
-        public void Copy(Medium t)
+        
+        public override void Copy(BaseEntity e)
         {
-            FilmId = t.FilmId;
-            MediumType = t.MediumType;
-            Location = t.Location;
+            if (e.GetType() == typeof(Medium))
+            {
+                var t = (Medium)e;
+                FilmId = t.FilmId;
+                MediumType = t.MediumType;
+                Location = t.Location;
+            }
+            else
+            {
+                throw new Exception($"Bad argument type: {e.GetType()}");
+            }
         }
     }
 }

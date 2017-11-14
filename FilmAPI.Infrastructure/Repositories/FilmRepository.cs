@@ -33,12 +33,5 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             return GetByTitleAndYear(t.Title, t.Year);
         }
-
-        public override void Update(Film t)
-        {
-            var storedFilm = GetByTitleAndYear(t.Title, t.Year);
-            storedFilm.Copy(t);
-            Save();
-        }
     }
 }

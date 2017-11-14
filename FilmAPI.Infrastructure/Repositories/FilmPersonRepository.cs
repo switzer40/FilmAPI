@@ -65,12 +65,5 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             return GetByFilmIdPersonIdAndRole(t.FilmId, t.PersonId, t.Role);
         }
-
-        public override void Update(FilmPerson t)
-        {
-            var storedFilmPerson = GetByFilmIdPersonIdAndRole(t.FilmId, t.PersonId, t.Role);
-            storedFilmPerson.Copy(t);
-            Save();
-        }
     }
 }

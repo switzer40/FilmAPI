@@ -4,8 +4,9 @@ using System.Text;
 
 namespace FilmAPI.Core.SharedKernel
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
         public int Id { get; set; }
+        public abstract void Copy(BaseEntity e);
     }
 }

@@ -31,5 +31,20 @@ namespace FilmAPI.Core.Entities
             PersonId = t.PersonId;
             Role = t.Role;
         }
+
+        public override void Copy(BaseEntity e)
+        {
+            if (e.GetType() == typeof(FilmPerson))
+            {
+                var t = (FilmPerson)e;
+                FilmId = t.FilmId;
+                PersonId = t.PersonId;
+                Role = t.Role;
+            }
+            else
+            {
+                throw new Exception($"Bad argument type: {e.GetType()}");
+            }
+        }
     }
 }

@@ -143,6 +143,7 @@ namespace FilmAPI
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
              app.UseDeveloperExceptionPage();
+            
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
