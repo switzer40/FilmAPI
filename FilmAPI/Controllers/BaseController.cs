@@ -1,53 +1,39 @@
-﻿using FilmAPI.Common.Interfaces;
-using FilmAPI.Core.SharedKernel;
-using FilmAPI.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.Interfaces.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FilmAPI.Common.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using FilmAPI.Interfaces.Services;
 
 namespace FilmAPI.Controllers
 {
-    public class BaseController<EntityType, InType, OutType> : Controller
-        where EntityType : BaseEntity
-        where InType : IBaseDto
-        where OutType : IKeyedDto
+    public abstract class BaseController<T> : Controller,  IController<T> where T : BaseEntity
     {
-        private readonly EntityService<EntityType, InType, OutType> _service;
-        public BaseController(EntityService<EntityType, InType, OutType> service)
+        protected IService<T> _service;
+        public BaseController(IService<T> service)
         {
-            _service = service; 
-        }
-        [HttpPost]
-        public async Task<IActionResult> Add([FromBody]InType t)
-        {
-            var entity = await _service.AddAsync(t);
-            return Ok(entity);
-        }
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var entities = await _service.GetAllAsync();
-            return Ok(entities);
-        }
-        [HttpGet("{key}")]
-        public async Task<IActionResult> GetByKey(string key)
-        {
-            var entity = await _service.GetByKeyAsync(key);
-            return Ok(entity);
+            _service = service;
         }
         [HttpDelete("{key}")]
-        public async Task<IActionResult> Remove(string key)
-        {
-            await _service.RemoveAsync(key);
-            return Ok();
-        }
+        public abstract Task<IActionResult> DeleteAsync(string key);
+
+        [HttpGet]
+        public abstract Task<IActionResult> GetAsync();
+
+
+        [HttpGet("{key}")]
+        public abstract Task<IActionResult> GetByKeyAsync(string key);
+
+
+
+        [HttpPost]
+        public abstract Task<IActionResult> PostAsync([FromBody]IBaseDto<T> b);
+
         [HttpPut]
-        public async Task<IActionResult> Update([FromBody]InType entity)
-        {
-            await _service.UpdateAsync(entity);
-            return Ok();
-        }
+        public abstract Task<IActionResult> PutAsync([FromBody]IBaseDto<T> b);
+        
     }
 }

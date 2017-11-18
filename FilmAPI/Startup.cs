@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.SharedKernel;
 using StructureMap;
-using FilmAPI.Interfaces.FilmPerson;
 using FilmAPI.Common.Services;
 using FilmAPI.Mappers;
 using Swashbuckle.AspNetCore.Swagger;
+using FilmAPI.Interfaces.Mappers;
 
 namespace FilmAPI
 {

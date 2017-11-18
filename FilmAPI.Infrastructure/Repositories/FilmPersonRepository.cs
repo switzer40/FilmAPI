@@ -58,7 +58,22 @@ namespace FilmAPI.Infrastructure.Repositories
             {
                 throw new UnknownPersonException(lastName, birthdate);
             }
-            return new FilmPerson(f.Id, p.Id, role);
+            return GetByFilmIdPersonIdAndRole(f.Id, p.Id, role);
+        }
+
+        public FilmPerson GetByTitleYearLastNameBirtdateAndRole(string title, short year, string lastName, string birthdate, string role)
+        {
+            var f = _filmRepository.GetByTitleAndYear(title, year);
+            var p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
+            if (f == null)
+            {
+                throw new UnknownFilmException(title, year);
+            }
+            if (p == null)
+            {
+                throw new UnknownPersonException(lastName, birthdate);
+            }
+            return GetByFilmIdPersonIdAndRole(f.Id, p.Id, role);
         }
 
         public override FilmPerson GetStoredEntity(FilmPerson t)

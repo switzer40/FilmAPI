@@ -10,5 +10,10 @@ namespace FilmAPI.Core.Interfaces
     {
         FilmPerson GetByFilmIdPersonIdAndRole(int filmId, int personId, string role);
         Task<FilmPerson> GetByFilmIdPersonIdAndRoleAsync(int filmId, int personId, string role);
+        FilmPerson GetByTitleYearLastNameBirtdateAndRole(string title,
+                                                         short year,
+                                                         string lastName,
+                                                         string birthdate,
+                                                         string role);
     }
 }

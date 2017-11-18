@@ -1,7 +1,4 @@
-﻿using FilmAPI.Common.DTOs.Film;
-using FilmAPI.Common.DTOs.FilmPerson;
-using FilmAPI.Common.DTOs.Medium;
-using FilmAPI.Common.DTOs.Person;
+﻿using FilmAPI.Common.DTOs;
 using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Services;
 using FilmAPI.Interfaces;
@@ -101,7 +98,7 @@ namespace FilmAPI.Tests.IntegrationTests
         protected async Task<HttpResponseMessage> PostMediumAsync(string title, short year, string mediumType, string location, short length, string route)
         {
             
-            var mediumToPost = new BaseMediumDto(title, year, mediumType, location, length);
+            var mediumToPost = new BaseMediumDto(title, year, mediumType, location);
             var jsonContent = new StringContent(JsonConvert.SerializeObject(mediumToPost), Encoding.UTF8, "application/json");
             return await GetClient().PostAsync(route, jsonContent);
         }

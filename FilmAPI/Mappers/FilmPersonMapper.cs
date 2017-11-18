@@ -1,52 +1,40 @@
-﻿using FilmAPI.Common.DTOs.FilmPerson;
-using FilmAPI.Core.Entities;
+﻿using FilmAPI.Core.Entities;
+using FilmAPI.Interfaces.Mappers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.DTOs;
 using FilmAPI.Core.Interfaces;
-using FilmAPI.Interfaces.FilmPerson;
 
 namespace FilmAPI.Mappers
 {
-    public class FilmPersonMapper : BaseMapper<FilmPerson, BaseFilmPersonDto>, IFilmPersonMapper
+    public class FilmPersonMapper : BaseMapper<FilmPerson>, IFilmPersonMapper
     {
         private readonly IFilmRepository _filmRepository;
         private readonly IPersonRepository _personRepository;
-        public FilmPersonMapper(IFilmRepository frepo, IPersonRepository prepo)
+        public FilmPersonMapper(IFilmRepository frepo,
+                                IPersonRepository prepo)
         {
             _filmRepository = frepo;
             _personRepository = prepo;
         }
-        public override BaseFilmPersonDto Map(FilmPerson e)
+        public override IBaseDto<FilmPerson> Map(FilmPerson t)
         {
-            var f = _filmRepository.GetById(e.FilmId);
-            var p = _personRepository.GetById(e.PersonId);
-            var result = new BaseFilmPersonDto(f.Title, f.Year, p.LastName, p.BirthdateString, e.Role, f.Length, p.FirstMidName);           
-            return result;
+            var f = _filmRepository.GetById(t.FilmId);
+            var p = _personRepository.GetById(t.PersonId);
+            var result = new BaseFilmPersonDto(f.Title,
+                                               f.Year,
+                                               p.LastName,
+                                               p.BirthdateString,
+                                               t.Role);
+            return (IBaseDto<FilmPerson>)result;
         }
 
-        public override FilmPerson MapBack(BaseFilmPersonDto m)
+        public override FilmPerson MapBack(IBaseDto<FilmPerson> b)
         {
-            var f = _filmRepository.GetByTitleAndYear(m.Title, m.Year);
-            f.Length = m.Length; 
-            var p = _personRepository.GetByLastNameAndBirthdate(m.LastName, m.Birthdate);
-            p.FirstMidName = m.FirstMidName;
-            var result = new FilmPerson(f.Id, p.Id, m.Role);
-            return result;
-        }
-
-        public FilmPerson MapBackForce(BaseFilmPersonDto b)
-        {
-            var f = _filmRepository.GetByTitleAndYear(b.Title, b.Year);
-            if (f == null)
-            {
-                f = new Film(b.Title, b.Year, b.Length);
-                f = _filmRepository.Add(f);
-            }
-            var p = _personRepository.GetByLastNameAndBirthdate(b.LastName, b.Birthdate);
-            if (p == null)
-            {
-                p = new Person(b.LastName, b.Birthdate, b.FirstMidName);
-                p = _personRepository.Add(p);
-            }
-            return new FilmPerson(f.Id, p.Id, b.Role);
+            throw new NotImplementedException();
         }
     }
 }
