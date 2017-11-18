@@ -1,32 +1,37 @@
-﻿using FilmAPI.Interfaces;
+﻿using FilmAPI.Core.SharedKernel;
+using FilmAPI.Interfaces.Mappers;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FilmAPI.Common.Interfaces;
 
 namespace FilmAPI.Mappers
 {
-    public abstract class BaseMapper<EntityType, ModelType> : IHomebrewMapper<EntityType, ModelType>
+    public abstract class BaseMapper<T> : IMapper<T> where T : BaseEntity
     {
-        public abstract ModelType Map(EntityType e);
+        public abstract IBaseDto<T> Map(T t);
 
 
-        public abstract EntityType MapBack(ModelType m);
-      
+        public abstract T MapBack(IBaseDto<T> b);
+        
 
-        public List<EntityType> MapBackList(List<ModelType> list)
+        public List<T> MapBackList(List<IBaseDto<T>> list)
         {
-            List<EntityType> result = new List<EntityType>();
-            foreach (var item in list)
+            var result = new List<T>();
+            foreach (var b in list)
             {
-                result.Add(MapBack(item));
+                result.Add(MapBack(b));
             }
             return result;
         }
 
-        public List<ModelType> MapList(List<EntityType> list)
+        public List<IBaseDto<T>> MapList(List<T> list)
         {
-            List<ModelType> result = new List<ModelType>();
-            foreach (var item in list)
+            var result = new List<IBaseDto<T>>();
+            foreach (var t in list)
             {
-                result.Add(Map(item));
+                result.Add(Map(t));
             }
             return result;
         }

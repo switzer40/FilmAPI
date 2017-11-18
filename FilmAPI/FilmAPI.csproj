@@ -17,6 +17,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Services\FilmService.cs~RF7895ef2.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Attributes\" />
     <Folder Include="Specifictions\" />
     <Folder Include="wwwroot\" />

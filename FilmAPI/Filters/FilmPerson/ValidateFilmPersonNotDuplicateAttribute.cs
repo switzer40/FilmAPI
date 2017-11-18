@@ -3,7 +3,7 @@ using FilmAPI.Core.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Threading.Tasks;
-using FilmAPI.Common.DTOs.FilmPerson;
+using FilmAPI.Common.DTOs;
 
 namespace FilmAPI.Filters.FilmPerson
 {

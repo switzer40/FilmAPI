@@ -1,4 +1,4 @@
-﻿using FilmAPI.Common.DTOs.FilmPerson;
+﻿using FilmAPI.Common.DTOs;
 using FilmAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
