@@ -11,7 +11,7 @@ namespace FilmAPI.Common.DTOs
     {
         public BasePersonDto(string lastName, string birthdate, string firstMidName = "")
         {
-            LastName = LastName;
+            LastName = lastName;
             Birthdate = birthdate;
             FirstMidName = firstMidName;
         }

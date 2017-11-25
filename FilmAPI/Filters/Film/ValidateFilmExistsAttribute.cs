@@ -33,9 +33,9 @@ namespace FilmAPI.Filters
                     var key = (string)context.ActionArguments["key"];
                     if (key != "")
                     {
-                        var data =  _keyService.DeconstructFilmKey(key);
-                        string title = data.Item1;
-                        short year = data.Item2;
+                        (string title, short year) data =  _keyService.DeconstructFilmKey(key);
+                        string title = data.title;
+                        short year = data.year;
                         if (title == FilmConstants.BADKEY)
                         {
                             context.Result = new BadRequestObjectResult(key);

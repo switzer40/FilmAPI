@@ -13,6 +13,8 @@ using FilmAPI.Common.Services;
 using FilmAPI.Mappers;
 using Swashbuckle.AspNetCore.Swagger;
 using FilmAPI.Interfaces.Mappers;
+using FilmAPI.Common.DTOs;
+using FilmAPI.Common.Interfaces;
 
 namespace FilmAPI
 {
@@ -121,6 +123,10 @@ namespace FilmAPI
                 });
                 config.For(typeof(IFilmPersonMapper)).Add(typeof(FilmPersonMapper));
                 //config.For(typeof(IFilmPersonService)).Add(typeof(FilmPersonService));
+                config.For(typeof(IKeyedDto<Film>)).Add(typeof(KeyedFilmDto));
+                config.For(typeof(IKeyedDto<Person>)).Add(typeof(KeyedPersonDto));
+                config.For(typeof(IKeyedDto<Medium>)).Add(typeof(KeyedMediumDto));
+                config.For(typeof(IKeyedDto<FilmPerson>)).Add(typeof(KeyedFilmPersonDto));
                 // I had hoped StructureMap´s conventions will take care of configuring
                 // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
 

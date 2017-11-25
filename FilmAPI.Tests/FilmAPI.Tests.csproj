@@ -19,6 +19,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="IntegrationTests\TestBase.cs~RF822a9ae.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="IntegrationTests\MediaController\Get.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="appsettings.Development.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

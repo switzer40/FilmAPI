@@ -18,6 +18,7 @@ namespace FilmAPI.Common.DTOs
         [Required]
         public string Title { get; set; }
         [Required]
+        [Range(1850, 2050)]
         public short Year { get; set; }
         public short Length { get; set; }
     }
