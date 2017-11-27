@@ -8,5 +8,6 @@ namespace FilmAPI.Interfaces.Services
 {
     public interface IFilmService : IService<Film>
     {
+        object Result();
     }
 }

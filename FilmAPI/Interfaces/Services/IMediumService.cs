@@ -8,5 +8,6 @@ namespace FilmAPI.Interfaces.Services
 {
     public interface IMediumService : IService<Medium>
     {
+        object Result();
     }
 }

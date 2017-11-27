@@ -15,6 +15,9 @@ using Swashbuckle.AspNetCore.Swagger;
 using FilmAPI.Interfaces.Mappers;
 using FilmAPI.Common.DTOs;
 using FilmAPI.Common.Interfaces;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using FilmAPI.Common.Validators;
 
 namespace FilmAPI
 {
@@ -99,7 +102,11 @@ namespace FilmAPI
         // This m ethod gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddFluentValidation();
+            services.AddTransient<IValidator<BaseFilmDto>, FilmValidator>();
+            services.AddTransient<IValidator<BaseFilmPersonDto>, FilmPersonValidator>();
+            services.AddTransient<IValidator<BaseMediumDto>, MediumValidator>();
+            services.AddTransient<IValidator<BasePersonDto>, PersonValidator>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "FilmAPI", Version = "v1" });

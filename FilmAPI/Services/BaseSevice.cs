@@ -8,6 +8,7 @@ using FilmAPI.Common.Interfaces;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces.Mappers;
 using FilmAPI.Common.Services;
+using FluentValidation.Results;
 
 namespace FilmAPI.Services
 {
@@ -16,25 +17,29 @@ namespace FilmAPI.Services
         protected readonly IRepository<T> _repository;
         protected readonly IMapper<T> _mapper;        
         protected readonly IKeyService _keyService;
+        protected IKeyedDto<T> result;
+        private bool _isValid;
+        private List<ValidationFailure> _failures;
+
+        public bool IsValid { get => _isValid; set => _isValid = value; }
+        public List<ValidationFailure> Failures { get => _failures; }
+
         public BaseSevice(IRepository<T> repo,
                           IMapper<T> mapper)
         {
             _repository = repo;
             _mapper = mapper;            
             _keyService = new KeyService();
+            _isValid = false;
+            _failures = new List<ValidationFailure>();
         }
-        public IKeyedDto<T> Add(IBaseDto<T> b)
-        {
-            var entityToAdd = _mapper.MapBack(b);
-            var savedEntity = _repository.Add(entityToAdd);
-            var savedModel = _mapper.Map(savedEntity);
-            return ExtractKeyedDto(savedModel);
-        }
+        public abstract OperationStatus Add(IBaseDto<T> b);
+        
 
         protected abstract IKeyedDto<T> ExtractKeyedDto(IBaseDto<T> b);
         
 
-        public async Task<IKeyedDto<T>> AddAsync(IBaseDto<T> b)
+        public async Task<OperationStatus> AddAsync(IBaseDto<T> b)
         {
             return await Task.Run(() => Add(b));
         }

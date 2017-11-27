@@ -19,6 +19,11 @@ namespace FilmAPI.Services
         {
         }
 
+        public override OperationStatus Add(IBaseDto<FilmPerson> b)
+        {
+            throw new NotImplementedException();
+        }
+
         public override OperationStatus Delete(string key)
         {
             var result = OperationStatus.OK;

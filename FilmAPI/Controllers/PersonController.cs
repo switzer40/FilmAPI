@@ -11,6 +11,7 @@ using FilmAPI.Common.Constants;
 using FilmAPI.Common.DTOs;
 using FilmAPI.Filters;
 using FilmAPI.Filters.Person;
+using FilmAPI.Common.Validators;
 
 namespace FilmAPI.Controllers
 {
@@ -60,10 +61,21 @@ namespace FilmAPI.Controllers
         }
         [HttpPost]
         [ValidatePersonNotDuplicate]
-        public async Task<IActionResult> PostAsync([FromBody]BasePersonDto b)
+        public async Task<IActionResult> PostAsync([FromBody]BasePersonDto model)
         {
-            var savedPerson = await _service.AddAsync(b);
-            return Ok(savedPerson);
+            var status = await _service.AddAsync(model);
+            switch (status)
+            {
+                case OperationStatus.OK:
+                    KeyedPersonDto savedPerson = (KeyedPersonDto)_service.Result();
+                    return Ok(savedPerson);
+                case OperationStatus.BadRequest:
+                    return BadRequest();
+                case OperationStatus.NotFound:
+                    return NotFound();
+                default:
+                    throw new Exception("Unknown status");
+            }
         }
         [HttpPut]
         [ValidatePersonToUpdateExists]

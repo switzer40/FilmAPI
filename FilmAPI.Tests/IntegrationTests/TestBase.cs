@@ -192,6 +192,14 @@ namespace FilmAPI.Tests.IntegrationTests
             var jsonContent = new StringContent(JsonConvert.SerializeObject(personToPost), Encoding.UTF8, "application/json");
             return await GetClient().PostAsync(route, jsonContent);
         }
+        protected async Task<Person> CompletePostPersonAsync(string lastName, string birthdate, string firstMidName, string route)
+        {
+            var response = await PostPersonAsync(lastName, birthdate, firstMidName, route);
+            //response.EnsureSuccessStatusCode();
+            var stringResponse = await response.Content.ReadAsStringAsync();
+            var k = JsonConvert.DeserializeObject<KeyedPersonDto>(stringResponse);
+            return new Person(k.LastName, k.Birthdate, k.FirstMidName);
+        }
         protected async Task<HttpResponseMessage> PutPersonAsync(string lastName, string birthdate, string route)
         {
             var personToUpdate = new BasePersonDto(lastName, birthdate);

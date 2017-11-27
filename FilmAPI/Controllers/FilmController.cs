@@ -61,8 +61,19 @@ namespace FilmAPI.Controllers
         [ValidateFilmNotDuplicate]
         public async Task<IActionResult> PostAsync([FromBody]BaseFilmDto model)
         {
-            var savedFilm = await _service.AddAsync(model);
-            return Ok(savedFilm);
+            var status = await _service.AddAsync(model);
+            switch (status)
+            {
+                case OperationStatus.OK:
+                    KeyedFilmDto savedFilm = (KeyedFilmDto)_service.Result();
+                    return Ok(savedFilm);
+                case OperationStatus.BadRequest:
+                    return BadRequest();
+                case OperationStatus.NotFound:
+                    return NotFound();
+                default:
+                    throw new Exception("Unknown status");
+            }            
         }
         [HttpPut]
         [ValidateFilmToUpdateExists]

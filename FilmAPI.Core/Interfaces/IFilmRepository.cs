@@ -1,8 +1,4 @@
 ﻿using FilmAPI.Core.Entities;
-using FilmAPI.Core.Interfaces.Create;
-using FilmAPI.Core.Interfaces.Delete;
-using FilmAPI.Core.Interfaces.Read;
-using FilmAPI.Core.Interfaces.Update;
 using System;
 using System.Collections.Generic;
 using System.Text;

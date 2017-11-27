@@ -19,11 +19,11 @@ namespace FilmAPI.Common.DTOs
             MediumType = mediumType;
             Location = location;
         }
-        [Required]
+        
         public string Title { get; set; }
-        [Required]
+        
         public short Year { get; set; }
-        [Required]
+        
         public string MediumType { get; set; }
         public string Location { get; set; }
     }
