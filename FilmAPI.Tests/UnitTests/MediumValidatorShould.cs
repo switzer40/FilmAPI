@@ -54,5 +54,15 @@ namespace FilmAPI.Tests.UnitTests
             Assert.False(results.IsValid);
             Assert.True(results.Errors.Any(e => e.ErrorMessage.Contains("Medium")));
         }
+        [Fact]
+        public void HaveNoErrorWhenInputIsValid()
+        {
+            var dto = new BaseMediumDto("StarTrek",
+                                        GoodYear,
+                                        FilmConstants.MediumType_BD,
+                                        FilmConstants.Location_Left);
+            var results = MediumValidator.Validate(dto);
+            Assert.True(results.IsValid);
+        }
     }
 }

@@ -14,11 +14,10 @@ namespace FilmAPI.Tests.IntegrationTests.FilmController
 {
      public class Get : TestBase
     {
-        private HttpClient _client;
+        
         private string _route = "";
         public Get()
-        {
-            _client = base.GetClient();
+        {            
             _route += FilmConstants.FilmUri;
         }
         [Fact]

@@ -16,12 +16,10 @@ using System.Net;
 namespace FilmAPI.Tests.IntegrationTests.PersonController
 {
     public class Get : TestBase
-    {
-        private readonly HttpClient _client;
+    {        
         private string _route;
         public Get() 
-        {
-            _client = base.GetClient();
+        {            
             _route = "/" + FilmConstants.PersonUri;
         }
         [Fact]
@@ -64,7 +62,7 @@ namespace FilmAPI.Tests.IntegrationTests.PersonController
         public async Task ReturnsBadQuestGivenInvalidKeyAsync()
         {
             var key = "Howdy";
-            var response = await GetPersonWithKeyAsync(key, _route);
+            var response = await SimpleGetPersonWithKeyAsync(key, _route);
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
     }

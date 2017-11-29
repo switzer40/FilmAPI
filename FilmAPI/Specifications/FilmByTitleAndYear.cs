@@ -2,10 +2,11 @@
 using FilmAPI.Core.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Linq.Expressions;
 
-namespace FilmAPI.Core.Specifications
+namespace FilmAPI.Specifications
 {
     public class FilmByTitleAndYear : ISpecification<Film>
     {

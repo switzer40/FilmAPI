@@ -2,6 +2,7 @@
 using FilmAPI.Common.Services;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.Specifications;
 using FilmAPI.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,8 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public Film GetByTitleAndYear(string title, short year)
         {
-            return List(f => f.Title == title && f.Year == year).SingleOrDefault();
+            var spec = new FilmByTitleAndYear(title, year);
+            return List(spec).SingleOrDefault();
         }
 
         public override Film GetStoredEntity(Film t)

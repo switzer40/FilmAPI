@@ -25,5 +25,12 @@ namespace FilmAPI.Tests.UnitTests
             Assert.False(results.IsValid);
             Assert.True(results.Errors.Any(e => e.ErrorMessage.Contains("Birthdate")));
         }
+        [Fact]
+        public void HaveNoErrorWhenInputIsValid()
+        {
+            var dto = new BasePersonDto("McElroy", "1940-01-28", "Leon");
+            var results = PersonValidator.Validate(dto);
+            Assert.True(results.IsValid);
+        }
     }
 }

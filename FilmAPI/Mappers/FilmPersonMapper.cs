@@ -32,9 +32,12 @@ namespace FilmAPI.Mappers
             return (IBaseDto<FilmPerson>)result;
         }
 
-        public override FilmPerson MapBack(IBaseDto<FilmPerson> b)
+        public override FilmPerson MapBack(IBaseDto<FilmPerson> dto)
         {
-            throw new NotImplementedException();
+            var b = (BaseFilmPersonDto)dto;
+            var f = _filmRepository.GetByTitleAndYear(b.Title, b.Year);
+            var p = _personRepository.GetByLastNameAndBirthdate(b.LastName, b.Birthdate);
+            return new FilmPerson(f.Id, p.Id, b.Role);
         }
     }
 }

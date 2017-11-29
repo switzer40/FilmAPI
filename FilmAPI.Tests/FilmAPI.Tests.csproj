@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Compile Include="IntegrationTests\MediaController\Get.cs" />
+    <Compile Include="IntegrationTests\MediaController\Put.cs" />
   </ItemGroup>
 
   <ItemGroup>

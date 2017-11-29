@@ -13,17 +13,12 @@ using Xunit;
 namespace FilmAPI.Tests.IntegrationTests.FilmPersonController
 {
     public class Get : TestBase
-    {
-        private readonly HttpClient _client;
+    {        
         private string _route;
-        private readonly IFilmRepository _filmRepository;
-        private readonly IPersonRepository _personRepository;
-        public Get(IFilmRepository frepo, IPersonRepository prepo)
-        {
-            _client = GetClient();
-            _route = "/" + FilmConstants.FilmPersonUri;
-            _filmRepository = frepo;
-            _personRepository = prepo;
+        
+        public Get()
+        {            
+            _route = "/" + FilmConstants.FilmPersonUri;     
         }
         [Fact]
         public async Task ReturnsTwoFilmPeopleAsync()
@@ -34,13 +29,9 @@ namespace FilmAPI.Tests.IntegrationTests.FilmPersonController
             Assert.Equal(2, list.Count);
 
             foreach (var k in list)
-            {
-                var f = _filmRepository.GetByTitleAndYear(k.Title, k.Year);
-                Assert.NotNull(f);
-                Assert.True(f.Title.Contains("Woman") || f.Title.Contains("Tiffany"));
-                var p = _personRepository.GetByLastNameAndBirthdate(k.LastName, k.Birthdate);
-                Assert.NotNull(p);
-                Assert.True(p.LastName.Contains("Roberts") || p.LastName.Contains("Hepburn"));
+            {                
+                Assert.True(k.Title.Contains("Woman") || k.Title.Contains("Tiffany"));                
+                Assert.True(k.LastName.Contains("Roberts") || k.LastName.Contains("Hepburn"));
             }           
         }
     }

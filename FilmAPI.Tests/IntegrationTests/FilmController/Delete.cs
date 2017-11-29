@@ -10,12 +10,10 @@ using Xunit;
 namespace FilmAPI.Tests.IntegrationTests.FilmController
 {
     public class Delete : TestBase
-    {
-        private readonly HttpClient _client;
+    {        
         private readonly string _route;
         public Delete()
-        {
-            _client = base.GetClient();
+        {            
             _route = "/" + FilmConstants.FilmUri;
         }
         [Fact]

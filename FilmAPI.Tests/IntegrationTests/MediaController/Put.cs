@@ -1,47 +1,42 @@
-﻿using FilmAPI.Core.SharedKernel;
-using FilmAPI.DTOs;
-using Newtonsoft.Json;
-using System.Net.Http;
+﻿using FilmAPI.Common.Constants;
+using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using FilmAPI.Common.DTOs;
 using Xunit;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace FilmAPI.Tests.IntegrationTests.MediaController
 {
     public class Put : TestBase
     {
-          private readonly HttpClient _client;
-
-    public Put()
-    {
-        _client = base.GetClient();
-    }
-
-    [Fact]
-    public async Task ReturnsOkGivenValidMediumData()
+        private string _route;
+        public Put()
         {
-            // Arrange
+            _route = "/" + FilmConstants.MediumUri;
+        }
+        [Fact]
+        public async Task UpdatesLocationCorrectly()
+        {
             var title = "Pretty Woman";
             var year = (short)1990;
-            var type = FilmConstants.MediumType_DVD;
-            var newLocation = FilmConstants.Location_Right;
-            var model = new MediumDto(title, year, type, newLocation);
-            var key = model.SurrogateKey;
-            var jsonContent = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-
-            // Act
-            var response = await _client.PutAsync($"api/media", jsonContent);
+            var mediumType = FilmConstants.MediumType_DVD;
+            var location = FilmConstants.Location_Right;
+            var dto = new BaseMediumDto(title, year, mediumType, location);
+            var key = _keyService.ConstructMediumKey(title, year, mediumType);
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(dto), Encoding.UTF8, "application/json");
+            var response = await _client.PutAsync(_route, jsonContent);
             response.EnsureSuccessStatusCode();
-
-            var response1 = await _client.GetAsync($"api/nedia/{key}");
-
-            // Assert
+            var response1 = await _client.GetAsync($"{_route}/{key}");
             response1.EnsureSuccessStatusCode();
-
-             // And now test whether it was properly updated
             var stringResponse = await response1.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<MediumDto>(stringResponse);
-            Assert.Equal(newLocation, result.Location);
-        }
-}
+            var k = JsonConvert.DeserializeObject<KeyedMediumDto>(stringResponse);
+            Assert.Equal(title, k.Title);
+            Assert.Equal(year, k.Year);
+            Assert.Equal(mediumType, k.MediumType);
+            Assert.Equal(location, k.Location);
+        }        
+    }
 }

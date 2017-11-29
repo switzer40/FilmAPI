@@ -9,19 +9,40 @@ using FilmAPI.Common.DTOs;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces.Mappers;
 using FilmAPI.Common.Constants;
+using FluentValidation;
 
 namespace FilmAPI.Services
 {
     public class FilmPersonService : BaseSevice<FilmPerson>, IFilmPersonService
     {
+        private readonly IValidator<BaseFilmPersonDto> _validator;
         public FilmPersonService(IFilmPersonRepository repo,
-                                 IFilmPersonMapper mapper) : base(repo, mapper)
+                                 IFilmPersonMapper mapper,
+                                 IValidator<BaseFilmPersonDto> validator) : base(repo, mapper)
         {
+            _validator = validator;
         }
-
-        public override OperationStatus Add(IBaseDto<FilmPerson> b)
+        
+        public override OperationStatus Add(IBaseDto<FilmPerson> dto)
         {
-            throw new NotImplementedException();
+            var retVal = OperationStatus.OK;
+            var b = (BaseFilmPersonDto)dto;
+            var results = _validator.Validate(b);
+            IsValid = results.IsValid;
+            Failures.AddRange(results.Errors);
+            var filmPersonToAdd = _mapper.MapBack(b);
+            var storedFilmPerson = _repository.Add(filmPersonToAdd);
+            if (IsValid)
+            {
+                result = ExtractKeyedDto(b);
+                retVal = OperationStatus.OK;
+            }
+            else
+            {
+                result = null;
+                retVal = OperationStatus.BadRequest;
+            }
+            return retVal;
         }
 
         public override OperationStatus Delete(string key)
@@ -49,6 +70,11 @@ namespace FilmAPI.Services
             {
                 _repository.Delete(filmPersonToDelete);
             }
+            return result;
+        }
+
+        public object Result()
+        {
             return result;
         }
 

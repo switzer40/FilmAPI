@@ -51,5 +51,12 @@ namespace FilmAPI.Tests.UnitTests
             Assert.False(results.IsValid);
             Assert.True(results.Errors.Any(e => e.ErrorMessage.Contains("Length")));
         }
+        [Fact]
+        public void HaveNoErrorWhenInputIsValid()
+        {
+            var dto = new BaseFilmDto("StarTrek", (short)1994, (short)156);
+            var results = FilmValidator.Validate(dto);
+            Assert.True(results.IsValid);
+        }
     }
 }

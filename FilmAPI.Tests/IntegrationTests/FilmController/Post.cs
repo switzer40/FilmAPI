@@ -10,12 +10,10 @@ using Xunit;
 namespace FilmAPI.Tests.IntegrationTests.FilmController
 {
     public class Post : TestBase
-    {
-        private readonly HttpClient _client;
+    {        
         private string _route;
         public Post()
-        {
-            _client = base.GetClient();
+        {            
             _route = "/" + FilmConstants.FilmUri;
         }
         [Fact]

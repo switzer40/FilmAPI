@@ -34,10 +34,7 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task<Medium> GetByFilmIdAndMediumTypeAsync(int filmId, string mediumType)
         {
-            var spec = new MediumByFilmIdAndMediumType(filmId, mediumType);
-            var candidates = await ListAsync(spec);
-            var uniqueCandidate = candidates.Single();
-            return uniqueCandidate;
+            return await Task.Run(() => GetByFilmIdAndMediumType(filmId, mediumType));
         }
 
         public override Medium GetByKey(string key)

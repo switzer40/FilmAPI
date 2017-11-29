@@ -13,6 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Specifictions\**" />
+    <Content Remove="Specifictions\**" />
+    <EmbeddedResource Remove="Specifictions\**" />
+    <None Remove="Specifictions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Mappers\HomebrewMapper.cs" />
   </ItemGroup>
 
@@ -22,7 +29,6 @@
 
   <ItemGroup>
     <Folder Include="Attributes\" />
-    <Folder Include="Specifictions\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>

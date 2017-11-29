@@ -1,5 +1,7 @@
 ﻿using FilmAPI.Common.Constants;
+using FilmAPI.Common.DTOs;
 using FilmAPI.Core.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -11,12 +13,10 @@ using Xunit;
 namespace FilmAPI.Tests.IntegrationTests.FilmController
 {
     public class Put : TestBase
-    {
-        private readonly HttpClient _client;
+    {        
         private string _route;
         public Put()
-        {
-            _client = base.GetClient();
+        {            
             _route = "/" + FilmConstants.FilmUri;
         }
         [Fact]
@@ -34,10 +34,11 @@ namespace FilmAPI.Tests.IntegrationTests.FilmController
             var title = "Pretty Woman";
             var year = (short)1990;
             var length = (short)111;
+            var key = _keyService.ConstructFilmKey(title, year);
             var response = await PutFilmAsync(title, year, length, _route);
             response.EnsureSuccessStatusCode();
 
-            var f = await CompleteGetFilmAsync(title, year, _route);
+            var f = await GetFilmWithKeyAsync(key, _route);
             Assert.Equal(title, f.Title);
             Assert.Equal(year, f.Year);
             Assert.Equal(length, f.Length);
