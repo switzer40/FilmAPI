@@ -14,23 +14,20 @@ namespace FilmAPI.Tests.IntegrationTests.FilmController
 {
      public class Get : TestBase
     {
-        private HttpClient _client;
+        
         private string _route = "";
         public Get()
-        {
-            _client = base.GetClient();
+        {            
             _route += FilmConstants.FilmUri;
         }
         [Fact]
-        public async Task ReturnsListOfFilmsAsync()
+        public async Task ReturnsTiffanyAndPrettyAsync()
         {
-            var response = await _client.GetAsync(_route);
-            response.EnsureSuccessStatusCode();
-            var stringReponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<List<KeyedFilmDto>>(stringReponse);
+            var l = await GetFilmAsync(_route);
 
-            Assert.Equal(2, result.Count);
-            Assert.True(result.Any(f => f.Title.Contains("Tiffany")));
+            Assert.Equal(2,l.Count);
+            Assert.True(l.Any(f => f.Title.Contains("Tiffany")));
+            Assert.True(l.Any(f => f.Title.Contains("Pretty")));
         }
         [Fact]
         public async Task ReturnsPrettyWomanGivenValidInputAsync()

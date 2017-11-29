@@ -13,8 +13,9 @@ namespace FilmAPI.Core.Specifications
         private short _year;
         public FilmByTitleAndYear(string title, short year)
         {
-            _title = title;_year = year;
+            _title = title;
+            _year = year;
         }
-        public Expression<Func<Film, bool>> Predicate => (f) => (f.Title == _title && f.Year == _year);
+        public Expression<Func<Film, bool>> Predicate => ((f) =>(f.Title == _title && f.Year == _year));
     }
 }

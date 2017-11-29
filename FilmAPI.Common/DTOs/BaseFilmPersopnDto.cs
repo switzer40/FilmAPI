@@ -21,15 +21,15 @@ namespace FilmAPI.Common.DTOs
             Birthdate = birthdate;
             Role = role;
         }
-        [Required]
+        
         public string Title { get; set; }
-        [Required]
+        
         public short Year { get; set; }
-        [Required]
+        
         public string LastName { get; set; }
-        [Required]
+        
         public string Birthdate { get; set; }
-        [Required]
+        
         public string Role { get; set; }
     }
 }

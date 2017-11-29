@@ -39,10 +39,7 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public async Task<Person> GetByLastNameAndBirthdateAsync(string lastName, string birthdate)
         {
-            var spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
-            var candidates = await ListAsync(spec);
-            var uniqueCandidate = candidates.Single();
-            return uniqueCandidate;
+            return await Task.Run(() => GetByLastNameAndBirthdate(lastName, birthdate));
         }
 
         public override Person GetStoredEntity(Person t)

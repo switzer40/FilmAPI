@@ -2,6 +2,7 @@
 using FilmAPI.Core.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace FilmAPI.Core.Specifications
@@ -15,6 +16,6 @@ namespace FilmAPI.Core.Specifications
             _lastName = lastName;
             _birthdate = birthdate;
         }
-        public System.Linq.Expressions.Expression<Func<Person, bool>> Predicate => (p) => (p.LastName == _lastName && p.BirthdateString == _birthdate);
+        public Expression<Func<Person, bool>> Predicate => (p) => (p.LastName == _lastName && p.BirthdateString == _birthdate);
     }
 }

@@ -8,46 +8,48 @@ using FilmAPI.Common.Interfaces;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces.Mappers;
 using FilmAPI.Common.Services;
+using FluentValidation.Results;
 
 namespace FilmAPI.Services
 {
     public abstract class BaseSevice<T> : IService<T> where T : BaseEntity
     {
         protected readonly IRepository<T> _repository;
-        protected readonly IMapper<T> _mapper;
+        protected readonly IMapper<T> _mapper;        
         protected readonly IKeyService _keyService;
+        protected IKeyedDto<T> result;
+        private bool _isValid;
+        private List<ValidationFailure> _failures;
+
+        public bool IsValid { get => _isValid; set => _isValid = value; }
+        public List<ValidationFailure> Failures { get => _failures; }
+
         public BaseSevice(IRepository<T> repo,
                           IMapper<T> mapper)
         {
             _repository = repo;
-            _mapper = mapper;
+            _mapper = mapper;            
             _keyService = new KeyService();
+            _isValid = false;
+            _failures = new List<ValidationFailure>();
         }
-        public IKeyedDto<T> Add(IBaseDto<T> b)
-        {
-            var entityToAdd = _mapper.MapBack(b);
-            var savedEntity = _repository.Add(entityToAdd);
-            var savedModel = _mapper.Map(savedEntity);
-            return ExtractKeyedDto(savedModel);
-        }
+        public abstract OperationStatus Add(IBaseDto<T> b);
+        
 
         protected abstract IKeyedDto<T> ExtractKeyedDto(IBaseDto<T> b);
         
 
-        public async Task<IKeyedDto<T>> AddAsync(IBaseDto<T> b)
+        public async Task<OperationStatus> AddAsync(IBaseDto<T> b)
         {
             return await Task.Run(() => Add(b));
         }
 
-        public void Delete(string key)
-        {
-            var entityToDelete = _repository.GetByKey(key);
-            _repository.Delete(entityToDelete);
-        }
+        public abstract OperationStatus Delete(string key);
+        
 
-        public async Task DeleteAsync(string key)
+        public async Task<OperationStatus> DeleteAsync(string key)
         {
-            await Task.Run(() => Delete(key));
+            return await Task.Run(() => Delete(key));
         }
 
         public List<IKeyedDto<T>> GetAll()
@@ -79,18 +81,14 @@ namespace FilmAPI.Services
             return await Task.Run(() => GetByKey(key));
         }
 
-        public void Update(IBaseDto<T> b)
-        {
-            var entityToUpdate = _mapper.MapBack(b);
-            var storedEntity = RetrieveStoredEntity(b);
-            storedEntity.Copy(entityToUpdate);
-        }
+        public abstract OperationStatus Update(IBaseDto<T> b);
+        
 
         protected abstract T RetrieveStoredEntity(IBaseDto<T> b);
 
-        public async Task UpdateAsync(IBaseDto<T> b)
+        public async Task<OperationStatus> UpdateAsync(IBaseDto<T> b)
         {
-            await Task.Run(() => Update(b));
-        }
+            return await Task.Run(() => Update(b));
+        }        
     }
 }

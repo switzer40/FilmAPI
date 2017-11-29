@@ -13,6 +13,11 @@ using FilmAPI.Common.Services;
 using FilmAPI.Mappers;
 using Swashbuckle.AspNetCore.Swagger;
 using FilmAPI.Interfaces.Mappers;
+using FilmAPI.Common.DTOs;
+using FilmAPI.Common.Interfaces;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using FilmAPI.Common.Validators;
 
 namespace FilmAPI
 {
@@ -97,7 +102,11 @@ namespace FilmAPI
         // This m ethod gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddFluentValidation();
+            services.AddTransient<IValidator<BaseFilmDto>, FilmValidator>();
+            services.AddTransient<IValidator<BaseFilmPersonDto>, FilmPersonValidator>();
+            services.AddTransient<IValidator<BaseMediumDto>, MediumValidator>();
+            services.AddTransient<IValidator<BasePersonDto>, PersonValidator>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "FilmAPI", Version = "v1" });
@@ -121,6 +130,10 @@ namespace FilmAPI
                 });
                 config.For(typeof(IFilmPersonMapper)).Add(typeof(FilmPersonMapper));
                 //config.For(typeof(IFilmPersonService)).Add(typeof(FilmPersonService));
+                config.For(typeof(IKeyedDto<Film>)).Add(typeof(KeyedFilmDto));
+                config.For(typeof(IKeyedDto<Person>)).Add(typeof(KeyedPersonDto));
+                config.For(typeof(IKeyedDto<Medium>)).Add(typeof(KeyedMediumDto));
+                config.For(typeof(IKeyedDto<FilmPerson>)).Add(typeof(KeyedFilmPersonDto));
                 // I had hoped StructureMap´s conventions will take care of configuring
                 // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
 

@@ -15,9 +15,10 @@ namespace FilmAPI.Common.DTOs
             Year = year;
             Length = length;
         }
-        [Required]
+        
         public string Title { get; set; }
-        [Required]
+        
+        
         public short Year { get; set; }
         public short Length { get; set; }
     }

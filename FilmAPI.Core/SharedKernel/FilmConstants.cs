@@ -6,6 +6,10 @@ namespace FilmAPI.Core.SharedKernel
 {
     public class FilmConstants
     {
+        // Key states
+        public const string KeyState_NotFound = "Not Found";
+        public const string KeyState_Invalid = "Invalid key";
+
         // Media Types
 
         public const string MediumType_DVD = "DVD";

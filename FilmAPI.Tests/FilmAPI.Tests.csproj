@@ -19,6 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="IntegrationTests\TestBase.cs~RF822a9ae.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="IntegrationTests\MediaController\Get.cs" />
+    <Compile Include="IntegrationTests\MediaController\Put.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="appsettings.Development.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -30,6 +39,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="7.2.1" />
+    <PackageReference Include="FluentValidation.WebApi" Version="7.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />

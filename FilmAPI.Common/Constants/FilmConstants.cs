@@ -6,6 +6,10 @@ namespace FilmAPI.Common.Constants
 {
     public class FilmConstants
     {
+        // Key States
+        public const string KeyState_NotFound = "Not Found";
+        public const string KeyState_Invalid = "Invalid Key";
+
         // Medium Types
         public const string MediumType_DVD = "DVD";
         public const string MediumType_BD = "BD";
