@@ -28,7 +28,8 @@ namespace FilmAPI.Infrastructure.Repositories
         public Film GetByTitleAndYear(string title, short year)
         {
             var spec = new FilmByTitleAndYear(title, year);
-            return List(spec).SingleOrDefault();
+            var l = List(spec);
+            return l.SingleOrDefault();
         }
 
         public override Film GetStoredEntity(Film t)

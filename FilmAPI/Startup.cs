@@ -23,17 +23,12 @@ namespace FilmAPI
 {
     public class Startup
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public IConfiguration Configuration { get; }
 
         private FilmContext BuildAndPopulateContext(DbContextOptionsBuilder<FilmContext> builder, bool refresh)
         {
@@ -134,17 +129,6 @@ namespace FilmAPI
                 config.For(typeof(IKeyedDto<Person>)).Add(typeof(KeyedPersonDto));
                 config.For(typeof(IKeyedDto<Medium>)).Add(typeof(KeyedMediumDto));
                 config.For(typeof(IKeyedDto<FilmPerson>)).Add(typeof(KeyedFilmPersonDto));
-                // I had hoped StructureMap´s conventions will take care of configuring
-                // the relationship I<Entity>Service -> <Entity>Service for each of the 4 entity types.
-
-                //config.For(typeof(IFilmRepository)).Add(typeof(FilmRepository));
-                //config.For(typeof(IPersonRepository)).Add(typeof(PersonRepository));
-                //config.For(typeof(IMediumRepository)).Add(typeof(MediumRepository));
-                //config.For(typeof(IFilmPersonRepository)).Add(typeof(FilmPersonRepository));
-                // config.For(typeof(IFilmService)).Add(typeof(FilmService));
-                //config.For(typeof(IFilmPersonService)).Add(typeof((FilmPesonService));            
-                // this shoIuld have been done by WithDefaultConventions:
-                //config.For<IFilmPersonService>().ContainerScoped().Use<FilmPersonService>();
                 config.Populate(services);
             });
             return container.GetInstance<IServiceProvider>();
@@ -168,6 +152,7 @@ namespace FilmAPI
 
         private void PopulateData(FilmContext context)
         {
+            RemoveAll(context);
             var tiffany = new Film("Frühstück bei Tiffany", 1961, 110);
             context.Films.Add(tiffany);
             context.SaveChanges();
@@ -196,6 +181,27 @@ namespace FilmAPI
             context.Media.Add(womanDVD);
             context.SaveChanges();
 
+        }
+
+        private void RemoveAll(FilmContext context)
+        {
+            foreach (var f in context.Films)
+            {
+                context.Films.Remove(f);
+            }
+            foreach (var p in context.People)
+            {
+                context.People.Remove(p);
+            }
+            foreach (var m in context.Media)
+            {
+                context.Media.Remove(m);
+            }
+            foreach (var fp in context.FilmPeople)
+            {
+                context.FilmPeople.Remove(fp);
+            }
+            context.SaveChanges();
         }
     }
 }
