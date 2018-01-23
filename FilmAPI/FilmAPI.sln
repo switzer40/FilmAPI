@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI", "FilmAPI.csproj", "{ABE117F6-2C94-447E-9324-90DCEDE16981}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Common", "..\FilmAPI.Common\FilmAPI.Common.csproj", "{D85DD89B-0768-4A9B-A1DD-CE3AED57B47E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Core", "..\FilmAPI.Core\FilmAPI.Core.csproj", "{B0683A7D-A75D-47CD-BA76-56C4A5C4C81F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D85DD89B-0768-4A9B-A1DD-CE3AED57B47E} = {D85DD89B-0768-4A9B-A1DD-CE3AED57B47E}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Infrastructure", "..\FilmAPI.Infrastructure\FilmAPI.Infrastructure.csproj", "{2676C097-B581-43F1-9EF7-B109A7624420}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Validation", "..\FilmAPI.Validation\FilmAPI.Validation.csproj", "{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABE117F6-2C94-447E-9324-90DCEDE16981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABE117F6-2C94-447E-9324-90DCEDE16981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABE117F6-2C94-447E-9324-90DCEDE16981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABE117F6-2C94-447E-9324-90DCEDE16981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D85DD89B-0768-4A9B-A1DD-CE3AED57B47E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D85DD89B-0768-4A9B-A1DD-CE3AED57B47E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D85DD89B-0768-4A9B-A1DD-CE3AED57B47E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D85DD89B-0768-4A9B-A1DD-CE3AED57B47E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0683A7D-A75D-47CD-BA76-56C4A5C4C81F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0683A7D-A75D-47CD-BA76-56C4A5C4C81F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0683A7D-A75D-47CD-BA76-56C4A5C4C81F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0683A7D-A75D-47CD-BA76-56C4A5C4C81F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2676C097-B581-43F1-9EF7-B109A7624420}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2676C097-B581-43F1-9EF7-B109A7624420}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2676C097-B581-43F1-9EF7-B109A7624420}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2676C097-B581-43F1-9EF7-B109A7624420}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F507C378-324B-48F6-85A4-499053BAEEFC}
+	EndGlobalSection
+EndGlobal
