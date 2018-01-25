@@ -37,7 +37,12 @@ namespace FilmAPI
             Options.UseInMemoryDatabase(System.Guid.NewGuid().ToString()));
             ConfigureServices(services);
         }
-
+        public void ConfigureTestingServices(IServiceCollection services)
+        {
+            services.AddDbContext<FilmContext>(Options =>
+            Options.UseInMemoryDatabase(System.Guid.NewGuid().ToString()));
+            ConfigureServices(services);
+        }
         private void ConfigureServices(IServiceCollection services)
         {            
             // Register  application services
@@ -72,12 +77,7 @@ namespace FilmAPI
             services.AddMvc();
         }
 
-        public void ConfigureTestingServices(IServiceCollection services)
-        {
-            services.AddDbContext<FilmContext>(options =>
-            options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
-            ConfigureServices(services);
-        }
+        
         public void ConfigureProductionServices(IServiceCollection services)
         {
             services.AddDbContext<FilmContext>(options =>
