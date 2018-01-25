@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI", "FilmAPI.csproj", "{ABE117F6-2C94-447E-9324-90DCEDE16981}"
 EndProject
@@ -15,6 +15,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Infrastructure", "..\FilmAPI.Infrastructure\FilmAPI.Infrastructure.csproj", "{2676C097-B581-43F1-9EF7-B109A7624420}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilmAPI.Validation", "..\FilmAPI.Validation\FilmAPI.Validation.csproj", "{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilmAPI.Tests", "..\FilmAPI.Tests\FilmAPI.Tests.csproj", "{39AAFB15-274C-43F5-9A1E-C2D2ED92B41A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +44,10 @@ Global
 		{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82CEAB02-0E31-4ECF-A52C-D10D250DAAF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39AAFB15-274C-43F5-9A1E-C2D2ED92B41A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39AAFB15-274C-43F5-9A1E-C2D2ED92B41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39AAFB15-274C-43F5-9A1E-C2D2ED92B41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39AAFB15-274C-43F5-9A1E-C2D2ED92B41A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
