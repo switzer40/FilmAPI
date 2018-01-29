@@ -23,7 +23,7 @@ namespace FilmAPI.Services
         {
             _validator = validator;
         }
-        public override OperationStatus Add(IBaseDto dto)
+        public override OperationResult Add(IBaseDto dto)
         {
             var retVal = OperationStatus.OK;
             var b = (BasePersonDto)dto;
@@ -33,7 +33,7 @@ namespace FilmAPI.Services
             var savedEntity = _repository.Add(entityToAdd);
             if (IsValid)
             {
-                result = ExtractKeyedDto(b);
+                result.Add(ExtractKeyedDto(b));
                 retVal = OperationStatus.OK;
             }
             else
@@ -41,10 +41,16 @@ namespace FilmAPI.Services
                 result = null;
                 retVal = OperationStatus.BadRequest;
             }
-            return retVal;
+            return StandardResult(retVal);
         }
 
-        public override OperationStatus Delete(string key)
+        public override OperationResult ClearAll()
+        {
+            _repository.ClearAll();
+            return new OperationResult(OperationStatus.OK);
+        }
+
+        public override OperationResult Delete(string key)
         {
             var result = OperationStatus.OK;
             var data = _keyService.DeconstructPersonKey(key);
@@ -62,16 +68,16 @@ namespace FilmAPI.Services
             {
                 _repository.Delete(personToDelete);
             }
-            return result;
+            return new OperationResult(result);
         }
 
-        public override OperationStatus GetByKey(string key)
+        public override OperationResult GetByKey(string key)
         {
             var data = _keyService.DeconstructPersonKey(key);
             var dto = new KeyedPersonDto(data.lastName, data.birthdate);
             dto.Key = key;
-            _getResults[key] = dto;
-            return OperationStatus.OK;
+            result.Add(dto);
+            return new OperationResult(OperationStatus.OK, result);
         }
 
         public KeyedPersonDto GetByLastNameAndBirthdate(string lastName, string birthdate)
@@ -81,12 +87,9 @@ namespace FilmAPI.Services
             return new KeyedPersonDto(p.LastName, p.BirthdateString, p.FirstMidName, key);
         }
 
-        public object Result()
-        {
-            return (KeyedPersonDto)result;
-        }
+        
 
-        public override OperationStatus Update(IBaseDto dto)
+        public override OperationResult Update(IBaseDto dto)
         {
             var result = OperationStatus.OK;
             var b = (BasePersonDto)dto;
@@ -104,7 +107,7 @@ namespace FilmAPI.Services
             {
                 _repository.Update(personToUpdate);
             }
-            return result;
+            return new OperationResult(result);
         }
 
         protected override IKeyedDto ExtractKeyedDto(IBaseDto dto)

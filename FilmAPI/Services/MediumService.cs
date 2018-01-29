@@ -23,7 +23,7 @@ namespace FilmAPI.Services
         {
             _validator = validator;
         }
-        public override OperationStatus Add(IBaseDto dto)
+        public override OperationResult Add(IBaseDto dto)
         {
             var retVal = OperationStatus.OK;
             var b = (BaseMediumDto)dto;
@@ -33,7 +33,7 @@ namespace FilmAPI.Services
             var savedEntity = _repository.Add(entityToAdd);
             if (IsValid)
             {
-                result = ExtractKeyedDto(b);
+                result.Add(ExtractKeyedDto(b));
                 retVal = OperationStatus.OK;
             }
             else
@@ -41,10 +41,16 @@ namespace FilmAPI.Services
                 result = null;
                 retVal = OperationStatus.BadRequest;
             }
-            return retVal;
+            return new OperationResult(retVal, result);
         }
 
-        public override OperationStatus Delete(string key)
+        public override OperationResult ClearAll()
+        {
+            _repository.ClearAll();
+            return new OperationResult(OperationStatus.OK);
+        }
+
+        public override OperationResult Delete(string key)
         {
             var result = OperationStatus.OK;
             var data = _keyService.DeconstructMediumKey(key);
@@ -62,24 +68,19 @@ namespace FilmAPI.Services
             {
                 _repository.Delete(mediumToDelete);
             }
-            return result;
+            return new OperationResult(result);
         }
 
-        public override OperationStatus GetByKey(string key)
+        public override OperationResult GetByKey(string key)
         {
             var data = _keyService.DeconstructMediumKey(key);
             var dto = new KeyedMediumDto(data.title, data.year, data.mediumType);
             dto.Key = key;
-            _getResults[key] = dto;
-            return OperationStatus.OK;
+            result.Add(dto);
+            return StandardResult(OperationStatus.OK);
         }
-
-        public object Result()
-        {
-            return (KeyedMediumDto)result;
-        }
-
-        public override OperationStatus Update(IBaseDto dto)
+        
+        public override OperationResult Update(IBaseDto dto)
         {
             var result = OperationStatus.OK;
             var b = (BaseMediumDto)dto;
@@ -97,7 +98,7 @@ namespace FilmAPI.Services
             {
                 _repository.Update(mediumToUpdate);
             }
-            return result;
+            return new OperationResult(result);
         }
 
         protected override IKeyedDto ExtractKeyedDto(IBaseDto dto)

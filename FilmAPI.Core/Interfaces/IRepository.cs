@@ -9,6 +9,7 @@ namespace FilmAPI.Core.Interfaces
 {
     public interface IRepository<T> where T : BaseEntity
     {
+        void ClearAll();
         T Add(T t);
         Task<T> AddAsync(T t);
         void Delete(T t);

@@ -8,6 +8,7 @@ using FilmAPI.Common.Services;
 using FluentValidation.Results;
 using FilmAPI.Common.Utilities;
 using System.Linq;
+using System;
 
 namespace FilmAPI.Services
 {
@@ -16,9 +17,9 @@ namespace FilmAPI.Services
         protected readonly IRepository<T> _repository;
         protected readonly IMapper<T> _mapper;
         protected readonly IKeyService _keyService;
-        protected IKeyedDto result;
+        protected List<IKeyedDto> result;
         private bool _isValid;
-        protected Dictionary<string, IKeyedDto> _getResults;
+        
 
         public bool IsValid { get => _isValid; set => _isValid = value; }
 
@@ -29,78 +30,78 @@ namespace FilmAPI.Services
             _mapper = mapper;
             _keyService = new KeyService();
             _isValid = false;
-            _getResults = new Dictionary<string, IKeyedDto>();
+            result = new List<IKeyedDto>();            
         }
-        public abstract OperationStatus Add(IBaseDto b);
+        public abstract OperationResult Add(IBaseDto b);
 
 
         protected abstract IKeyedDto ExtractKeyedDto(IBaseDto b);
 
 
-        public async Task<OperationStatus> AddAsync(IBaseDto b)
+        public async Task<OperationResult> AddAsync(IBaseDto b)
         {
             return await Task.Run(() => Add(b));
         }
 
-        public abstract OperationStatus Delete(string key);
+        public abstract OperationResult Delete(string key);
 
 
-        public async Task<OperationStatus> DeleteAsync(string key)
+        public async Task<OperationResult> DeleteAsync(string key)
         {
             return await Task.Run(() => Delete(key));
         }
 
-        public List<IKeyedDto> GetAll()
-        {
-            var result = new List<IKeyedDto>();
+        public OperationResult GetAll()
+        {            
             var entities = _repository.List();
             var models = _mapper.MapList(entities.ToList());
             foreach (var m in models)
             {
                 result.Add(ExtractKeyedDto(m));
             }
-            return result;
+            return StandardResult(OperationStatus.OK);
         }
 
-        public async Task<List<IKeyedDto>> GetAllAsync()
+        protected OperationResult StandardResult(OperationStatus s)
+        {
+            return new OperationResult(s, result);
+        }
+
+        public async Task<OperationResult> GetAllAsync()
         {
             return await Task.Run(() => GetAll());
         }
         
-        public abstract OperationStatus Update(IBaseDto b);
+        public abstract OperationResult Update(IBaseDto b);
 
 
         protected abstract T RetrieveStoredEntity(IBaseDto b);
 
-        public async Task<OperationStatus> UpdateAsync(IBaseDto b)
+        public async Task<OperationResult> UpdateAsync(IBaseDto b)
         {
             return await Task.Run(() => Update(b));
         }
 
-        public int Count()
+        public OperationResult  Count()
         {
-            return GetAll().Count;
+            return GetAll();
         }
 
-        public async Task<int> CountAsync()
+        public async Task<OperationResult> CountAsync()
         {
             return await Task.Run(() => Count());
         }
-        public abstract OperationStatus GetByKey(string key);
+        public abstract OperationResult GetByKey(string key);
         
-        public async Task<OperationStatus> GetByKeyAsync(string key)
+        public async Task<OperationResult> GetByKeyAsync(string key)
         {
             return await Task.Run(() => GetByKey(key));
         }
 
-        public IKeyedDto GetByKeyResult(string key)
+        public abstract OperationResult ClearAll();
+        public async Task<OperationResult> ClearAllAsync()
         {
-            IKeyedDto result = null;
-            if (_getResults.ContainsKey(key))
-            {
-                result = _getResults[key];
-            }
-            return result;
+            return await Task.Run(() => ClearAll());
         }
     }
 }

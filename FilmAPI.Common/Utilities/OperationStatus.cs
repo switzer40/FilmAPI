@@ -4,9 +4,9 @@ using System.Text;
 
 namespace FilmAPI.Common.Utilities
 {
-    public class OperationStatus
+    public class OperationStatus : ICopyable
     {
-        public OperationStatus()
+        public OperationStatus() 
         {
         }
         public static OperationStatus OK = new OperationStatus(0, "OK", "");
@@ -22,6 +22,17 @@ namespace FilmAPI.Common.Utilities
         public int Value { get; set; }
         public string Name { get; set; }
         public string ReasonForFailure { get; set; }
+        
 
+        public void Copy(ICopyable arg)
+        {
+            if (arg.GetType() == typeof(OperationStatus))
+            {
+                var that = (OperationStatus)arg;
+                Value = that.Value;
+                Name = that.Name;
+                ReasonForFailure = that.ReasonForFailure;
+            }
+        }
     }
 }

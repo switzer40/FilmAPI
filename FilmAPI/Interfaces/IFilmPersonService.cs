@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace FilmAPI.Interfaces
 {
     public interface IFilmPersonService : IService<FilmPerson>
-    {
-        object Result();               
+    {                      
     }
 }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    interface INewPersonController : INewController
+    interface INewPersonController : IController
     {
     }
 }

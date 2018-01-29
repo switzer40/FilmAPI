@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    public interface INewController 
+    public interface IController 
     {
-        Task<List<IKeyedDto>> GetAsync();
-        Task<OperationStatus> GetAsync(string key);
-        IKeyedDto GetByKeyResult(string key);
-        Task<int> GetAsync(int dummy);
-        IActionResult HandleError(OperationStatus status);
+        Task<IActionResult> GetAsync(int dummy); // Count
+        Task<IActionResult> GetAsync(); // GetAll
+        Task<IActionResult> GetAsync(string key); // GetByKey
+        Task<IActionResult> DeleteAsync(); // ClearAll
+        Task<IActionResult> DeleteAsync(string key); // Delete
 
     }
 }

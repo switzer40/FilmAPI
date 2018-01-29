@@ -22,7 +22,7 @@ namespace FilmAPI.Services
         {
             _validator = validator;
         }
-        public override OperationStatus Add(IBaseDto dto)
+        public override OperationResult Add(IBaseDto dto)
         {
             var retVal = OperationStatus.OK;
             var b = (BaseFilmPersonDto)dto;
@@ -33,7 +33,7 @@ namespace FilmAPI.Services
             var savedEntity = _repository.Add(entityToAdd);
             if (IsValid)
             {
-                result = ExtractKeyedDto(b);
+                result.Add(ExtractKeyedDto(b));
                 retVal = OperationStatus.OK;
             }
             else
@@ -41,10 +41,16 @@ namespace FilmAPI.Services
                 result = null;
                 retVal = OperationStatus.BadRequest;
             }
-            return retVal;
+            return new OperationResult(retVal, result);
         }
 
-        public override OperationStatus Delete(string key)
+        public override OperationResult ClearAll()
+        {
+            _repository.ClearAll();
+            return new OperationResult(OperationStatus.OK);
+        }
+
+        public override OperationResult Delete(string key)
         {
             var result = OperationStatus.OK;
             var filmPersonToDelete = ((IFilmPersonRepository)_repository).GetByKey(key);
@@ -56,23 +62,18 @@ namespace FilmAPI.Services
             {
                 _repository.Delete(filmPersonToDelete);
             }
-            return result;
+            return new OperationResult(result);
         }
 
-        public override OperationStatus GetByKey(string key)
+        public override OperationResult GetByKey(string key)
         {
             var data = _keyService.DeconstructFilmPersonKey(key);
-            _getResults[key] = new KeyedFilmPersonDto(data.title, data.year, data.lastName, data.birthdate, data.role);
-            _getResults[key].Key = key;
-            return OperationStatus.OK;
+            var fp = new KeyedFilmPersonDto(data.title, data.year, data.lastName, data.birthdate, data.role);            
+            result.Add(fp);
+            return new OperationResult(OperationStatus.OK, result);
         }
 
-        public object Result()
-        {
-            return (KeyedFilmPersonDto)result;
-        }
-
-        public override OperationStatus Update(IBaseDto dto)
+        public override OperationResult Update(IBaseDto dto)
         {
             var result = OperationStatus.OK;
             var b = (BaseFilmPersonDto)dto;
@@ -90,7 +91,7 @@ namespace FilmAPI.Services
             {
                 _repository.Update(filmPersonToUpdate);
             }
-            return result;
+            return new OperationResult(result);
         }
 
         protected override IKeyedDto ExtractKeyedDto(IBaseDto dto)

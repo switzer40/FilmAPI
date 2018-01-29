@@ -8,8 +8,7 @@ using System.Threading.Tasks;
 namespace FilmAPI.Interfaces
 {
     public interface IPersonService : IService<Person>
-    {
-        object Result();
+    {        
         KeyedPersonDto GetByLastNameAndBirthdate(string lastName, string birthdate);
     }
 }

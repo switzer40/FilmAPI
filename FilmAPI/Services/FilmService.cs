@@ -25,11 +25,8 @@ namespace FilmAPI.Services
         {
             _validator = validator;
         }
-        public IKeyedDto Result()
-        {
-            return (KeyedFilmDto)result;
-        }
-        public override OperationStatus Add(IBaseDto dto)
+               
+        public override OperationResult Add(IBaseDto dto)
         {
             var retVal = OperationStatus.OK;
             var b = (BaseFilmDto)dto;
@@ -40,7 +37,7 @@ namespace FilmAPI.Services
             var savedEntity = _repository.Add(entityToAdd);
             if (IsValid)
             {
-                result = ExtractKeyedDto(b);
+                result.Add(ExtractKeyedDto(b));
                 retVal = OperationStatus.OK;
             }
             else
@@ -48,10 +45,10 @@ namespace FilmAPI.Services
                 result = null;
                 retVal = OperationStatus.BadRequest;
             }
-            return retVal;
+            return new OperationResult(retVal, result);
         }
 
-        public override OperationStatus Delete(string key)
+        public override OperationResult Delete(string key)
         {
             var result = OperationStatus.OK;
             var filmToDelete = ((IFilmRepository)_repository).GetByKey(key);
@@ -63,10 +60,10 @@ namespace FilmAPI.Services
             {
                 _repository.Delete(filmToDelete);
             }
-            return result;
+            return new OperationResult(result);
         }
 
-        public override OperationStatus Update(IBaseDto dto)
+        public override OperationResult Update(IBaseDto dto)
         {
             var result = OperationStatus.OK;
             var b = (BaseFilmDto)dto;
@@ -84,7 +81,7 @@ namespace FilmAPI.Services
             {
                 _repository.Update(filmToUpdate);
             }
-            return result;
+            return new OperationResult(result);
         }
 
         protected override IKeyedDto ExtractKeyedDto(IBaseDto dto)
@@ -121,12 +118,17 @@ namespace FilmAPI.Services
             return base.ToString();
         }
 
-        public override OperationStatus GetByKey(string key)
+        public override OperationResult GetByKey(string key)
         {
             var data = _keyService.DeconstructFilmKey(key);
-            _getResults[key] = new KeyedFilmDto(data.title, data.year);
-            _getResults[key].Key = key;
-            return OperationStatus.OK;
+            result.Add(new KeyedFilmDto(data.title, data.year));            
+            return StandardResult(OperationStatus.OK);
+        }
+
+        public override OperationResult ClearAll()
+        {
+            _repository.ClearAll();
+            return new OperationResult(OperationStatus.OK);
         }
     }
 }

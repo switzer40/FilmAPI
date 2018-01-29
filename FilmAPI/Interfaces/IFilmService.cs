@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 namespace FilmAPI.Interfaces
 {
     public interface IFilmService : IService<Film>
-    {
-        IKeyedDto Result();
-        OperationStatus GetByKey(string key);
+    {                
     }
 }

@@ -99,5 +99,14 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             await Task.Run(() => Update(t));
         }
+
+        public void ClearAll()
+        {
+            foreach (var entity in _set)
+            {
+                _set.Remove(entity);
+            }
+            Save();
+        }
     }
 }

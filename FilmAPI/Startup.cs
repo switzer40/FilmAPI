@@ -40,7 +40,7 @@ namespace FilmAPI
         public void ConfigureTestingServices(IServiceCollection services)
         {
             services.AddDbContext<FilmContext>(Options =>
-            Options.UseInMemoryDatabase(System.Guid.NewGuid().ToString()));
+            Options.UseInMemoryDatabase("TestDb"));
             ConfigureServices(services);
         }
         private void ConfigureServices(IServiceCollection services)

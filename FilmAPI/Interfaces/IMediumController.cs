@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    interface IMediumController : INewController
+    interface IMediumController : IController
     {
     }
 }
