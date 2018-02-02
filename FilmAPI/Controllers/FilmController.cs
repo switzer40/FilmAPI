@@ -26,7 +26,7 @@ namespace FilmAPI.Controllers
             var res = await _service.AddAsync(model);
             return StandardReturn(res);
         }
-        
+
         [HttpDelete("ClearAll")]
         public async Task<IActionResult> DeleteAsync()
         {
@@ -39,7 +39,7 @@ namespace FilmAPI.Controllers
         {
             var s = await _service.DeleteAsync(key);
             return StandardReturn(s);
-           
+
         }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAsync()
@@ -52,7 +52,7 @@ namespace FilmAPI.Controllers
             }
             return Ok(films);
         }
-        [HttpGet("GetByKey({key}")]
+        [HttpGet("GetByKey/{key}")]
         [ValidateFilmExists]
         public async Task<IActionResult> GetAsync(string key)
         {

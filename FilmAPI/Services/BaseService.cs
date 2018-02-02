@@ -102,6 +102,6 @@ namespace FilmAPI.Services
         public async Task<OperationResult> ClearAllAsync()
         {
             return await Task.Run(() => ClearAll());
-        }
+        }        
     }
 }

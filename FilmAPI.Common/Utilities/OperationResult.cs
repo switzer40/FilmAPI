@@ -7,6 +7,12 @@ namespace FilmAPI.Common.Utilities
 {
     public class OperationResult
     {
+        public OperationResult()
+        {
+            Status = OperationStatus.OK;
+            ResultValue = new List<IKeyedDto>();
+            HasValue = false;
+        }
         public OperationResult(OperationStatus status, List<IKeyedDto> result = null)
         {
             Status = status;

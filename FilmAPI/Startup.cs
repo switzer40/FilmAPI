@@ -88,7 +88,7 @@ namespace FilmAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, FilmContext context)
         {
-            if (env.IsDevelopment())
+            if (!env.IsProduction())
             {
                 loggerFactory.AddConsole(Configuration.GetSection("Logging"));
                 app.UseDeveloperExceptionPage();
@@ -104,7 +104,7 @@ namespace FilmAPI
 
         private void PopulateData(FilmContext context)
         {
-            var tiffany = AddAFilm(context, "Frühstück bei Tiffany", (short)191, (short)110);
+            var tiffany = AddAFilm(context, "Frühstück bei Tiffany", (short)1961, (short)110);
             var pretty =  AddAFilm(context, "Pretty Woman", 1990, 109);
             var hepburn = AddAPerson(context, "Audrey", "Hepburn", "1929-05-04");
             var roberts = AddAPerson(context, "Julia", "Roberts", "1967-10-28");

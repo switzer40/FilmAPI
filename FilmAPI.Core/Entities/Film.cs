@@ -16,12 +16,16 @@ namespace FilmAPI.Core.Entities
             Title = title;
             Year = year;
             Length = length;
+            FilmPeople = new List<FilmPerson>();
+            Media = new List<Medium>();
         }
         [Required]
         public string Title { get; set; }
         [Required]
         public short Year { get; set; }
         public short Length { get; set; }
+        public virtual List<FilmPerson> FilmPeople { get; set; }
+        public virtual List<Medium> Media { get; set; }
 
         public override void Copy(BaseEntity e)
         {

@@ -23,6 +23,8 @@ namespace FilmAPI.Core.Entities
         public int PersonId { get; set; }
         [Required]
         public string Role { get; set; }
+        public virtual Film Film { get; set; }
+        public virtual Person Person { get; set; }
 
         public override void Copy(BaseEntity e)
         {

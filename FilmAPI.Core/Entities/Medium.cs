@@ -25,6 +25,7 @@ namespace FilmAPI.Core.Entities
         public string MediumType { get; set; }
         public string Location { get; set; }
         public bool HasGermanSubtitles { get; set; }
+        public virtual Film Film { get; set; }
 
         public override void Copy(BaseEntity e)
         {

@@ -20,6 +20,7 @@ namespace FilmAPI.Core.Entities
             FirstMidName = firstMidName;
             FullName = $"{FirstMidName} {LastName}";
             Birthdate = DateTime.Parse(birthdate);
+            FilmPeople = new List<FilmPerson>();
         }
         public string FirstMidName { get; set; }
         [Required]
@@ -28,6 +29,7 @@ namespace FilmAPI.Core.Entities
         public string BirthdateString { get; set; }
         public string FullName { get; set; }
         public DateTime Birthdate { get; set; }
+        public virtual List<FilmPerson> FilmPeople { get; set; }
 
         public override void Copy(BaseEntity e)
         {

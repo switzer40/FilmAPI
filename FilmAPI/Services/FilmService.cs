@@ -121,7 +121,8 @@ namespace FilmAPI.Services
         public override OperationResult GetByKey(string key)
         {
             var data = _keyService.DeconstructFilmKey(key);
-            result.Add(new KeyedFilmDto(data.title, data.year));            
+            var f = ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year);
+            result.Add(new KeyedFilmDto(f.Title, f.Year, f.Length, key));            
             return StandardResult(OperationStatus.OK);
         }
 
