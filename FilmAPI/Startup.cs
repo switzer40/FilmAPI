@@ -16,6 +16,8 @@ using FilmAPI.Validation.Validators;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -44,7 +46,10 @@ namespace FilmAPI
             ConfigureServices(services);
         }
         private void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            // Add system services
+            services.AddMvc();
+
             // Register  application services
             services.AddTransient<IFilmService, FilmService>();
             services.AddTransient<IPersonService, PersonService>();
@@ -71,10 +76,7 @@ namespace FilmAPI
 
             // Register error service
             services.AddTransient<IErrorService, ErrorService>();
-            services.AddTransient(typeof(OperationStatus));
-            
-            // Add system services
-            services.AddMvc();
+            services.AddTransient(typeof(OperationStatus));                        
         }
 
         
@@ -82,6 +84,7 @@ namespace FilmAPI
         {
             services.AddDbContext<FilmContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            ConfigureServices(services);
         }
         
 
@@ -104,6 +107,13 @@ namespace FilmAPI
 
         private void PopulateData(FilmContext context)
         {
+            if ((context.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists())
+            {
+                // If the DB exists do nothing
+                return;
+            }
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated(); // This will be mistake, if I later need migrations.
             var tiffany = AddAFilm(context, "Frühstück bei Tiffany", (short)1961, (short)110);
             var pretty =  AddAFilm(context, "Pretty Woman", 1990, 109);
             var hepburn = AddAPerson(context, "Audrey", "Hepburn", "1929-05-04");
@@ -111,7 +121,7 @@ namespace FilmAPI
             var tiffanyDVD = AddAMedium(context, tiffany, FilmConstants.MediumType_DVD, FilmConstants.Location_Left);
             var prettyDVD = AddAMedium(context, pretty, FilmConstants.MediumType_DVD, FilmConstants.Location_Left);
             AddAFilmPerson(context, tiffany, hepburn, FilmConstants.Role_Actor);
-            AddAFilmPerson(context, tiffany, roberts, FilmConstants.Role_Actor);
+            AddAFilmPerson(context, pretty, roberts, FilmConstants.Role_Actor);
         }
 
         private void AddAFilmPerson(FilmContext context, int filmId, int personId, string role)

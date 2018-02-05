@@ -51,6 +51,7 @@ namespace FilmAPI.Services
         public override OperationResult Delete(string key)
         {
             var result = OperationStatus.OK;
+            List<IKeyedDto> remainder = new List<IKeyedDto>();
             var filmToDelete = ((IFilmRepository)_repository).GetByKey(key);
             if (filmToDelete == null)
             {
@@ -59,8 +60,14 @@ namespace FilmAPI.Services
             else
             {
                 _repository.Delete(filmToDelete);
+                var remainingFilms = _repository.List();
+                foreach (var f in remainingFilms)
+                {
+                    var film = new KeyedFilmDto(f.Title, f.Year, f.Length, key);
+                    remainder.Add(film);
+                }
             }
-            return new OperationResult(result);
+            return new OperationResult(result, remainder);
         }
 
         public override OperationResult Update(IBaseDto dto)
