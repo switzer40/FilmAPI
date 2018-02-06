@@ -35,7 +35,7 @@ namespace FilmAPI.Mappers
             {
                 throw new Exception("Unknown film");
             }
-            return new Medium(f.Id, b.MediumType);
+            return new Medium(f.Id, b.MediumType, b.Location, b.HasGermanSubtitles);
         }
     }
 }
