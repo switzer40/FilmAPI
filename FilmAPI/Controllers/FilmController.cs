@@ -42,9 +42,9 @@ namespace FilmAPI.Controllers
 
         }
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAsync()
+        public async Task<IActionResult> GetAsync(int pageIndex = 0, int pageSize = 4)
         {
-            var res = await _service.GetAllAsync();
+            var res = await _service.GetAllAsync(pageIndex, pageSize);
             var films = new List<KeyedFilmDto>();
             foreach (var f in res.ResultValue)
             {
@@ -63,8 +63,8 @@ namespace FilmAPI.Controllers
         [HttpGet("Count")]
         public async Task<IActionResult> GetAsync(int dummy)
         {
-            var res = await _service.GetAllAsync();
-            return CountReturn(res); ;
+            var res = await _service.CountAsync();
+            return StandardReturn(res); ;
         }
         [HttpPut("Edit")]
         [ValidateFilmToUpdateExists]

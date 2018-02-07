@@ -12,8 +12,10 @@ namespace FilmAPI.Interfaces
 {
     public interface IService<T> where T : BaseEntity
     {
-        OperationResult GetAll();
-        Task<OperationResult> GetAllAsync();        
+        OperationResult GetAbsolutelyAll();
+        Task<OperationResult> GetAbsolutelyAllAsync();
+        OperationResult GetAll(int pageIndex, int pageSize);
+        Task<OperationResult> GetAllAsync(int pageIndex, int pageSize);        
         OperationResult Add(IBaseDto b);
         OperationResult Count();
         Task<OperationResult> CountAsync();

@@ -51,9 +51,11 @@ namespace FilmAPI.Services
             return await Task.Run(() => Delete(key));
         }
 
-        public OperationResult GetAll()
+        public OperationResult GetAll(int pageIndex, int pageSize)
         {            
-            var entities = _repository.List();
+            var entities = _repository.List()
+                            .Skip(pageIndex * pageSize)
+                            .Take(pageSize);
             var models = _mapper.MapList(entities.ToList());
             foreach (var m in models)
             {
@@ -67,9 +69,9 @@ namespace FilmAPI.Services
             return new OperationResult(s, result);
         }
 
-        public async Task<OperationResult> GetAllAsync()
+        public async Task<OperationResult> GetAllAsync(int pageIndex, int pageSize)
         {
-            return await Task.Run(() => GetAll());
+            return await Task.Run(() => GetAll(pageIndex, pageSize));
         }
         
         public abstract OperationResult Update(IBaseDto b);
@@ -84,7 +86,7 @@ namespace FilmAPI.Services
 
         public OperationResult  Count()
         {
-            return GetAll();
+            return GetAbsolutelyAll();
         }
 
         public async Task<OperationResult> CountAsync()
@@ -102,6 +104,23 @@ namespace FilmAPI.Services
         public async Task<OperationResult> ClearAllAsync()
         {
             return await Task.Run(() => ClearAll());
-        }        
+        }
+
+        public OperationResult GetAbsolutelyAll()
+        {
+            var entities = _repository.List();
+            var models = _mapper.MapList(entities.ToList());
+            foreach (var m in models)
+            {
+                result.Add(ExtractKeyedDto(m));
+            }
+            return StandardResult(OperationStatus.OK);
+        }
+        
+
+        public async Task<OperationResult> GetAbsolutelyAllAsync()
+        {
+            return await Task.Run(() => GetAbsolutelyAll());
+        }
     }
 }

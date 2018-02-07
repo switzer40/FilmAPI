@@ -11,7 +11,7 @@ namespace FilmAPI.Interfaces
     public interface IController 
     {
         Task<IActionResult> GetAsync(int dummy); // Count
-        Task<IActionResult> GetAsync(); // GetAll
+        Task<IActionResult> GetAsync(int pageIndex, int pageSize); // GetAll
         Task<IActionResult> GetAsync(string key); // GetByKey
         Task<IActionResult> DeleteAsync(); // ClearAll
         Task<IActionResult> DeleteAsync(string key); // Delete
