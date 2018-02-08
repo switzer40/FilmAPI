@@ -1,0 +1,3 @@
+﻿1>------ Build started: Project: FilmAPI, Configuration: Debug Any CPU ------
+1>FilmAPI -> E:\Github\FilmAPI\FilmAPI\bin\Debug\netcoreapp2.0\FilmAPI.dll
+========== Build: 1 succeeded, 0 failed, 4 up-to-date, 0 skipped ==========
