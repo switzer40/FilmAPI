@@ -118,8 +118,8 @@ namespace FilmAPI
             var pretty =  AddAFilm(context, "Pretty Woman", 1990, 109);
             var hepburn = AddAPerson(context, "Audrey", "Hepburn", "1929-05-04");
             var roberts = AddAPerson(context, "Julia", "Roberts", "1967-10-28");
-            var tiffanyDVD = AddAMedium(context, tiffany, FilmConstants.MediumType_DVD, FilmConstants.Location_Left);
-            var prettyDVD = AddAMedium(context, pretty, FilmConstants.MediumType_DVD, FilmConstants.Location_Left);
+            var tiffanyDVD = AddAMedium(context, tiffany, FilmConstants.MediumType_DVD, FilmConstants.Location_Left, true);
+            var prettyDVD = AddAMedium(context, pretty, FilmConstants.MediumType_DVD, FilmConstants.Location_Left, true);
             AddAFilmPerson(context, tiffany, hepburn, FilmConstants.Role_Actor);
             AddAFilmPerson(context, pretty, roberts, FilmConstants.Role_Actor);
         }
@@ -131,9 +131,9 @@ namespace FilmAPI
             context.SaveChanges();
         }
 
-        private int AddAMedium(FilmContext context, int filmId, string mediumType, string location)
+        private int AddAMedium(FilmContext context, int filmId, string mediumType, string location, bool german)
         {
-            var m = new Medium(filmId, mediumType, location, true);
+            var m = new Medium(filmId, mediumType, location, german);
             context.Media.Add(m);
             context.SaveChanges();
             return m.Id;
