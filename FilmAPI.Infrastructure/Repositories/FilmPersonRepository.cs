@@ -81,9 +81,14 @@ namespace FilmAPI.Infrastructure.Repositories
 
         FilmPerson IFilmPersonRepository.GetByTitleYearLastNameBirthdateAndRole(string title, short year, string lastName, string birthdate, string role)
         {
+            FilmPerson result = null;
             var f = _filmRepository.GetByTitleAndYear(title, year);
             var p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
-            return List().Where(fp => fp.FilmId == f.Id && fp.PersonId == p.Id && fp.Role == role).SingleOrDefault();
+            if (f != null && p != null)
+            {
+                result = List().Where(fp => fp.FilmId == f.Id && fp.PersonId == p.Id && fp.Role == role).SingleOrDefault();
+            }
+            return result;
         }
     }
 }

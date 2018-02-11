@@ -30,7 +30,14 @@ namespace FilmAPI.Services
             IsValid = results.IsValid;
 
             var entityToAdd = _mapper.MapBack(b);
-            var savedEntity = _repository.Add(entityToAdd);
+            if (entityToAdd != null)
+            {
+                var savedEntity = _repository.Add(entityToAdd);
+            }
+            else
+            {
+                IsValid = false;
+            }
             if (IsValid)
             {
                 result.Add(ExtractKeyedDto(b));

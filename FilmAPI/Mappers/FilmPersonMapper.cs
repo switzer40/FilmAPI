@@ -36,6 +36,7 @@ namespace FilmAPI.Mappers
 
         public override FilmPerson MapBack(IBaseDto dto)
         {
+            FilmPerson result = null;
             var b = (BaseFilmPersonDto)dto;
             var f = _filmRepository.GetByTitleAndYear(b.Title, b.Year);
             if (f == null)
@@ -43,7 +44,11 @@ namespace FilmAPI.Mappers
                 throw new Exception("Unknown film");
             }
             var p = _personRepository.GetByLastNameAndBirthdate(b.LastName, b.Birthdate);
-            return new FilmPerson(f.Id, p.Id, b.Role);
+            if (f != null && p != null)
+            {
+                result = new FilmPerson(f.Id, p.Id, b.Role);
+            }
+            return result;
         }
     }
 }
