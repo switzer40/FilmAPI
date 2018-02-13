@@ -26,7 +26,7 @@ namespace FilmAPI.Filters
                 if (context.ActionArguments.ContainsKey("model"))
                 {
                     var model = (BaseFilmDto)context.ActionArguments["model"];
-                    var f = _repository.GetByTitleAndYear(model.Title, model.Year);
+                    var f = _repository.GetByTitleAndYear(model.Title, model.Year).value;
                     if (f != null)
                     {
                         context.Result = new BadRequestObjectResult("Duplicate");

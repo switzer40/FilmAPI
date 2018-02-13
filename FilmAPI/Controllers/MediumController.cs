@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace FilmAPI.Controllers
 {
     [Route("/api/Medium/")]
-    public class MediumController : BaseController, IController
+    public class MediumController : BaseController<KeyedMediumDto>
     {
         private readonly IMediumService _service;
         public MediumController(IMediumService service)
@@ -34,14 +34,14 @@ namespace FilmAPI.Controllers
         public async Task<IActionResult> GetAsync(int dummy)
         {
             var res = await _service.CountAsync();
-            return StandardReturn(res);
+            return StandardCountReturn(res.Status, res.Value);
         }
         [HttpGet("GetAll")]
         public async Task<IActionResult> GetAsync(int pageIndex = 0, int pageSize = 4)
         {
             var res = await _service.GetAllAsync(pageIndex, pageSize);
             var media = new List<KeyedMediumDto>();
-            foreach (var m in res.ResultValue)
+            foreach (var m in res.Value)
             {
                 media.Add((KeyedMediumDto)m);
             }
@@ -52,15 +52,16 @@ namespace FilmAPI.Controllers
         public async Task<IActionResult> GetAsync(string key)
         {
             var res = await _service.GetByKeyAsync(key);
-            var mediumToReturn = res.ResultValue.SingleOrDefault();            
-            return StandardReturn(res);
+            var val = (KeyedMediumDto)res.Value;          
+            return StandardReturn(res.Status, val);
         }
         [HttpPost("Add")]
         [ValidateMediumNotDuplicate]
         public async Task<IActionResult> PostAsync([FromBody]BaseMediumDto model)
         {
             var res = await _service.AddAsync(model);
-            return StandardReturn(res);
+            var val = (KeyedMediumDto)res.Value;
+            return StandardReturn(res.Status, val);
         }
         [HttpPut("Edit")]
         [ValidateMediumToUpdateExists]

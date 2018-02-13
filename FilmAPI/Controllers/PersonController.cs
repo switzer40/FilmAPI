@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FilmAPI.Controllers
 {
     [Route("/api/Person")]
-    public class PersonController : BaseController, IController
+    public class PersonController : BaseController<KeyedPersonDto>
     {
         private readonly IPersonService _service;
         public PersonController(IPersonService service)
@@ -36,7 +36,7 @@ namespace FilmAPI.Controllers
             var res = await _service.GetAllAsync(pageIndex, pageSize);
                             
             var people = new List<KeyedPersonDto>();
-            foreach (var p in res.ResultValue)
+            foreach (var p in res.Value)
             {
                 people.Add((KeyedPersonDto)p);
             }
@@ -46,31 +46,29 @@ namespace FilmAPI.Controllers
         public async Task<IActionResult> GetAsync(string key)
         {
             var res = await _service.GetByKeyAsync(key);
-            var result = (res.ResultValue).SingleOrDefault();
-            var newList = new List<IKeyedDto>();
-            newList.Add(result);
-            var newRes = new OperationResult(res.Status, newList);
-            return StandardReturn(newRes);
+            var val = (KeyedPersonDto)res.Value;            
+            return StandardReturn(res.Status, val);
         }
         [HttpGet("Count")]
         public async Task<IActionResult> GetAsync(int dummy)
         {
             var res = await _service.CountAsync();
-            return StandardReturn(res);
+            return StandardCountReturn(res.Status, res.Value);
         }
         [HttpPost("Add")]
         [ValidatePersonNotDuplicate]
         public async Task<IActionResult> PostAsync([FromBody]BasePersonDto model)
         {
             var res = await _service.AddAsync(model);
-            return Ok(res.ResultValue);
+            var val = (KeyedPersonDto)res.Value;
+            return StandardReturn(res.Status, val);
         }
         [HttpPut("Edit")]
         [ValidatePersonToUpdateExists]
         public async Task<IActionResult> PutAsync([FromBody]BasePersonDto model)
         {
-            var res = await _service.UpdateAsync(model);
-            return StandardReturn(res);
+            var s = await _service.UpdateAsync(model);
+            return StandardReturn(s);
         }
 
     }

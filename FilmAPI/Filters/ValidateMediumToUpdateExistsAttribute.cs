@@ -26,7 +26,7 @@ namespace FilmAPI.Filters
                 if (context.ActionArguments.ContainsKey("model"))
                 {
                     var model = (BaseMediumDto)context.ActionArguments["model"];
-                    var m = _repository.GetByTitleYearAndMediumType(model.Title, model.Year, model.MediumType);
+                    var m = _repository.GetByTitleYearAndMediumType(model.Title, model.Year, model.MediumType).value;
                     if (m == null)
                     {
                         context.Result = new NotFoundObjectResult(model);

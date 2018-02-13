@@ -1,60 +1,62 @@
-﻿using FilmAPI.Core.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using FilmAPI.Infrastructure.Data;
+﻿using FilmAPI.Common.Utilities;
+using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
-using System.Threading.Tasks;
-using System.Linq;
 using FilmAPI.Core.Specifications;
-using FilmAPI.Common.Interfaces;
-using FilmAPI.Common.Services;
-
-
+using FilmAPI.Infrastructure.Data;
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
-    public class MediumRepository : Repository<Medium>, IMediumRepository
+    public class MediumRepository: Repository<Medium>, IMediumRepository
     {
         private readonly IFilmRepository _filmRepository;
-        public MediumRepository(FilmContext context, IFilmRepository frepo) : base(context)
+        public MediumRepository(FilmContext context,
+                                IFilmRepository frepo) : base(context)    
         {
             _filmRepository = frepo;
         }
 
-        public int CountMediaByFilmId(int id)
+        public override OperationStatus Delete(string key)
         {
-            return List(m => m.FilmId == id).Count();
+            throw new NotImplementedException();
         }
 
-        public Medium GetByFilmIdAndMediumType(int filmId, string mediumType)
+        public (OperationStatus status, Medium value) GetByFilmIdAndMediumType(int filmId, string mediumType)
         {
-            var spec = new MediumByFilmIdAndMediumType(filmId, mediumType);
-            return List(spec).SingleOrDefault();
+            var val = new Medium(filmId, mediumType);
+            var status = OperationStatus.OK;
+            var data = _filmRepository.GetById(filmId);
+            if (data.status == OperationStatus.OK)
+            {
+                ISpecification<Medium> spec = new MediumByFilmIdAndMediumType(filmId, mediumType);
+                var data1 = List(spec);
+                val = data1.value.SingleOrDefault();                
+            }
+            else
+            {
+                val = null;
+                status = data.status;                
+            }
+            return (status, val);
         }
 
-        public async Task<Medium> GetByFilmIdAndMediumTypeAsync(int filmId, string mediumType)
+        public async System.Threading.Tasks.Task<(OperationStatus status, Medium value)> GetByFilmIdAndMediumTypeAsync(int filmId, string mediumType)
         {
             return await Task.Run(() => GetByFilmIdAndMediumType(filmId, mediumType));
         }
 
-        public Medium GetByKey(string key)
+        public (OperationStatus status, Medium value) GetByKey(string key)
         {
-            IKeyService keyService = new KeyService();
-            (string title,
-             short year,
-             string mediumType) = keyService.DeconstructMediumKey(key);
-            return GetByTitleYearAndMediumType(title, year, mediumType);
+            throw new NotImplementedException();
         }
 
-        public Medium GetByTitleYearAndMediumType(string title, short year, string mediumType)
+        public (OperationStatus status, Medium value) GetByTitleYearAndMediumType(string title, short year, string mediumType)
         {
-            var f = _filmRepository.GetByTitleAndYear(title, year);
-            if (f == null)
-            {
-                return null;
-            }
-            return GetByFilmIdAndMediumType(f.Id, mediumType);
+            throw new NotImplementedException();
         }
     }
 }

@@ -43,14 +43,14 @@ namespace FilmAPI.Filters
                     {
                         var m = ((IMediumRepository)_repository).GetByTitleYearAndMediumType(data.title,
                                                                                              data.year,
-                                                                                             data.mediumType);
+                                                                                             data.mediumType).value;
                         if (m == null)
                         {
                             context.Result = new NotFoundObjectResult(key);
                             return;
                         }
                     }
-                    var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+                    var f = _filmRepository.GetByTitleAndYear(data.title, data.year).value;
                     if (f == null)
                     {
                         context.Result = new BadRequestObjectResult("Missing film");

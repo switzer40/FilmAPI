@@ -1,34 +1,38 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FilmAPI.Common.Utilities;
+using FilmAPI.Core.SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FilmAPI.Controllers
 {
-    public class BaseController : Controller
+    public class BaseController<T> : Controller
     {
-        protected IActionResult StandardReturn(OperationResult res)
+        protected IActionResult StandardReturn(OperationStatus status, T value = default)
         {
-            if (res.HasValue)
+            if (status == OperationStatus.OK) 
             {
-                return Ok(res.ResultValue);
+                return Ok(value);
                 
             }
             else
             {
-                return HandleError(res.Status);
+                return HandleError(status);
             }
         }
-        protected IActionResult CountReturn(OperationResult res)
+        protected IActionResult StandardCountReturn(OperationStatus status, int value = 0)
         {
-            if (res.HasValue)
+            if (status== OperationStatus.OK)
             {
-                return Ok(res.ResultValue.Count);
+                return Ok(value);
             }
             else
             {
-                return HandleError(res.Status);
+                return HandleError(status);
             }
         }
+
+        
         private IActionResult HandleError(OperationStatus status)
         {
             IActionResult result = null;

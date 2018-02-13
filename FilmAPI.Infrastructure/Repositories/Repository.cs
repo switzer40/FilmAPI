@@ -1,4 +1,7 @@
-﻿using FilmAPI.Core.Interfaces;
+﻿using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.Services;
+using FilmAPI.Common.Utilities;
+using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.SharedKernel;
 using FilmAPI.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -11,20 +14,22 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : BaseEntity
+    public abstract class Repository<T> : IRepository<T> where T : BaseEntity
     {
         private readonly FilmContext _context;
         private readonly DbSet<T> _set;
+        protected IKeyService _keyService;
         public Repository(FilmContext context)
         {
             _context = context;
             _set = _context.Set<T>();
+            _keyService = new KeyService();
         }
-        public T Add(T t)
+        public (OperationStatus status, T value) Add(T t)
         {
             _set.Add(t);
             Save();
-            return t;
+            return (OperationStatus.OK, t);
         }
 
         private void Save()
@@ -32,81 +37,107 @@ namespace FilmAPI.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public async Task<T> AddAsync(T t)
+        public Task<(OperationStatus status, T value)> AddAsync(T t)
         {
-            return await Task.Run(() => Add(t));
-        }
-
-        public void Delete(T t)
-        {
-            _set.Remove(t);
-            Save();
-        }
-
-        public async Task DeleteAsync(T t)
-        {
-            await Task.Run(() => Delete(t));
-        }
-
-        public T GetById(int id)
-        {
-            return _set.Find(id);
-        }
-
-        public async Task<T> GetByIdAsync(int id)
-        {
-            return await Task.Run(() => GetById(id));
-        }
-
-        public IEnumerable<T> List()
-        {
-            return _set;
-        }
-
-        public IEnumerable<T> List(Expression<Func<T, bool>> predicate)
-        {
-            return List().Where(predicate.Compile());
-        }
-
-        public IEnumerable<T> List(ISpecification<T> specification)
-        {
-            return List(specification.Predicate);
-        }
-
-        public async Task<IEnumerable<T>> ListAsync()
-        {
-            return await Task.Run(() => List());
-        }
-
-        public async Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> predicate)
-        {
-            return await Task.Run(() => List(predicate));
-        }
-
-        public async Task<IEnumerable<T>> ListAsync(ISpecification<T> specification)
-        {
-            return await Task.Run(() => List(specification));
-        }
-
-        public void Update(T t)
-        {
-            var storedEntity = GetById(t.Id);
-            storedEntity.Copy(t);
-            Save();
-        }
-
-        public async Task UpdateAsync(T t)
-        {
-            await Task.Run(() => Update(t));
+            throw new NotImplementedException();
         }
 
         public void ClearAll()
         {
+            var entitiesToClaar = new List<T>();
             foreach (var entity in _set)
             {
-                _set.Remove(entity);
+                entitiesToClaar.Add(entity);
             }
+            _set.RemoveRange(entitiesToClaar);
             Save();
+        }
+
+        public OperationStatus Delete(T t)
+        {
+            _set.Remove(t);
+            Save();
+            return OperationStatus.OK;
+        }
+
+        public async Task<OperationStatus> DeleteAsync(T t)
+        {
+            return await Task.Run(() => Delete(t));
+        }
+
+        public (OperationStatus status, T value) GetById(int id)
+        {
+            var val = _set.Find(id);
+            var status = OperationStatus.OK;
+            if (val == null)
+            {
+                status = OperationStatus.NotFound;
+                status.ReasonForFailure = $"An entity with id = {id} is not present";
+            }
+            return (status, val);
+        }
+
+        public Task<(OperationStatus status, T value)> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public (OperationStatus status, List<T> value) List()
+        {
+            var val = new List<T>();
+            foreach (var item in _set)
+            {
+                val.Add(item);
+            }
+            return (OperationStatus.OK, val);
+        }
+
+        public (OperationStatus status, List<T> value) List(Expression<Func<T, bool>> predicate)
+        {
+            var val = _set.Where(predicate).ToList();
+            return (OperationStatus.OK, val);
+        }
+
+        public (OperationStatus status, List<T> value) List(ISpecification<T> specification)
+        {
+            var val = _set.Where(specification.Predicate).ToList();
+            return (OperationStatus.OK, val);
+        }
+
+        public async Task<(OperationStatus status, List<T> value)> ListAsync()
+        {
+            return await Task.Run(() => List());
+        }
+
+        public async Task<(OperationStatus status, List<T> value)> ListAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await Task.Run(() => List(predicate));
+        }
+
+        public async Task<(OperationStatus status, List<T> value)> ListAsync(ISpecification<T> specification)
+        {
+            return await Task.Run(() => List(specification));
+        }
+
+        public OperationStatus Update(T t)
+        {
+            var storedEntity = _set.Find(t.Id);
+            storedEntity.Copy(t);
+            Save();
+            return OperationStatus.OK;
+        }
+
+        public async Task<OperationStatus> UpdateAsync(T t)
+        {
+            return await Task.Run(() => Update(t));
+        }
+
+        public abstract OperationStatus Delete(string key);
+       
+
+        public async Task<OperationStatus> DeleteAsync(string key)
+        {
+            return await Task.Run(() => Delete(key));
         }
     }
 }

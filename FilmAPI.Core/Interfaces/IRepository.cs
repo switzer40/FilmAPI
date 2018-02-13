@@ -1,4 +1,5 @@
-﻿using FilmAPI.Core.SharedKernel;
+﻿using FilmAPI.Common.Utilities;
+using FilmAPI.Core.SharedKernel;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -10,19 +11,21 @@ namespace FilmAPI.Core.Interfaces
     public interface IRepository<T> where T : BaseEntity
     {
         void ClearAll();
-        T Add(T t);
-        Task<T> AddAsync(T t);
-        void Delete(T t);
-        Task DeleteAsync(T t);
-        T GetById(int id);
-        Task<T> GetByIdAsync(int id);
-        IEnumerable<T> List();
-        IEnumerable<T> List(Expression<Func<T, bool>> predicate);
-        IEnumerable<T> List(ISpecification<T> specification);
-        Task<IEnumerable<T>> ListAsync();
-        Task<IEnumerable<T>> ListAsync(Expression<Func<T, bool>> predicate);
-        Task<IEnumerable<T>> ListAsync(ISpecification<T> specification);
-        void Update(T t);
-        Task UpdateAsync(T t);        
+        (OperationStatus status, T value) Add(T t);
+        Task<(OperationStatus status, T value)> AddAsync(T t);
+        OperationStatus Delete(T t);
+        OperationStatus Delete(string key);
+        Task<OperationStatus> DeleteAsync(T t);
+        Task<OperationStatus> DeleteAsync(string key);
+        (OperationStatus status, T value) GetById(int id);
+        Task<(OperationStatus status, T value)> GetByIdAsync(int id);
+        (OperationStatus status, List<T> value) List();
+        (OperationStatus status, List<T> value) List(Expression<Func<T, bool>> predicate);
+        (OperationStatus status, List<T> value) List(ISpecification<T> specification);
+        Task<(OperationStatus status, List<T> value)> ListAsync();
+        Task<(OperationStatus status, List<T> value)> ListAsync(Expression<Func<T, bool>> predicate);
+        Task<(OperationStatus status, List<T> value)> ListAsync(ISpecification<T> specification);
+        OperationStatus Update(T t);
+        Task<OperationStatus> UpdateAsync(T t);        
     }
 }

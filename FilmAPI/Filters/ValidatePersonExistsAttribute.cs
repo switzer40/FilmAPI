@@ -38,7 +38,7 @@ namespace FilmAPI.Filters
                     }
                     else
                     {
-                        var p = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+                        var p = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(data.lastName, data.birthdate).value;
                         if (p == null)
                         {
                             context.Result = new NotFoundObjectResult(key);

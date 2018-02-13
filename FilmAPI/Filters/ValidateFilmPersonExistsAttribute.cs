@@ -48,20 +48,20 @@ namespace FilmAPI.Filters
                                                                                                              data.year,
                                                                                                              data.lastName,
                                                                                                              data.birthdate,
-                                                                                                             data.role);
+                                                                                                             data.role).value;
                         if (fp == null)
                         {
                             context.Result = new NotFoundObjectResult(key);
                             return;
                         }
                     }
-                    var f = _filmRepository.GetByTitleAndYear(data.title, data.year);
+                    var f = _filmRepository.GetByTitleAndYear(data.title, data.year).value;
                     if (f == null)
                     {
                         context.Result = new BadRequestObjectResult("Missing film");
                         return;
                     }
-                    var p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate);
+                    var p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate).value;
                     if (p == null)
                     {
                         context.Result = new BadRequestObjectResult("Missing person");

@@ -1,4 +1,4 @@
-﻿using FilmAPI.Common.Services;
+﻿using FilmAPI.Common.Utilities;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
 using FilmAPI.Core.Specifications;
@@ -10,23 +10,30 @@ using System.Text;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
-   public class PersonRepository : Repository<Person>, IPersonRepository
+    public class PersonRepository : Repository<Person>, IPersonRepository
     {
         public PersonRepository(FilmContext context) : base(context)
         {
         }
 
-        public Person GetByKey(string key)
+        public override OperationStatus Delete(string key)
         {
-            var keyService = new KeyService();
-            var data = keyService.DeconstructPersonKey(key);
+            var personToDelete = GetByKey(key).value;
+            return Delete(personToDelete);
+        }
+
+        public (OperationStatus status, Person value) GetByKey(string key)
+        {
+            var data = _keyService.DeconstructPersonKey(key);
             return GetByLastNameAndBirthdate(data.lastName, data.birthdate);
         }
 
-        public Person GetByLastNameAndBirthdate(string lastName, string birthdate)
+        public (OperationStatus status, Person value) GetByLastNameAndBirthdate(string lastName, string birthdate)
         {
-            var spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
-            return List(spec).SingleOrDefault();
+            ISpecification<Person> spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
+            var data = List(spec);
+            var p = data.value.SingleOrDefault();
+            return (data.status, p);
         }
     }
 }

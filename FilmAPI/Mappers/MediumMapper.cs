@@ -19,7 +19,7 @@ namespace FilmAPI.Mappers
         }
         public override IBaseDto Map(Medium t)
         {
-            var f = _filmRepository.GetById(t.FilmId);
+            var f = _filmRepository.GetById(t.FilmId).value;
             if (f == null)
             {
                 throw new Exception("Unknown film");
@@ -30,7 +30,7 @@ namespace FilmAPI.Mappers
         public override Medium MapBack(IBaseDto dto)
         {
             var b = (BaseMediumDto)dto;
-            var f = _filmRepository.GetByTitleAndYear(b.Title, b.Year);
+            var f = _filmRepository.GetByTitleAndYear(b.Title, b.Year).value;
             if (f == null)
             {
                 throw new Exception("Unknown film");

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    public interface IPersonService : IService<Person>
+    public interface IPersonService : IService
     {        
         KeyedPersonDto GetByLastNameAndBirthdate(string lastName, string birthdate);
     }

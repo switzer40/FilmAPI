@@ -1,12 +1,12 @@
-﻿using FilmAPI.Core.Entities;
+﻿using FilmAPI.Common.Utilities;
+using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
-using System;
-using System.Threading.Tasks;
-using FilmAPI.Infrastructure.Data;
-using System.Linq;
-using FilmAPI.Common.Interfaces;
-using FilmAPI.Common.Services;
 using FilmAPI.Core.Specifications;
+using FilmAPI.Infrastructure.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
@@ -14,7 +14,6 @@ namespace FilmAPI.Infrastructure.Repositories
     {
         private readonly IFilmRepository _filmRepository;
         private readonly IPersonRepository _personRepository;
-
         public FilmPersonRepository(FilmContext context,
                                     IFilmRepository frepo,
                                     IPersonRepository prepo) : base(context)
@@ -23,72 +22,56 @@ namespace FilmAPI.Infrastructure.Repositories
             _personRepository = prepo;
         }
 
-        public FilmPerson GetByFilmIdPersonIdAndRole(int filmId, int personId, string role)
+        public override OperationStatus Delete(string key)
         {
-            var spec = new FilmPersonByFilmIdPersonIdAndRole(filmId, personId, role);
-            var candidates = List(spec);
-            var uniqueCandidate = candidates.Single();
-            return uniqueCandidate;
+            throw new NotImplementedException();
         }
 
-        public async Task<FilmPerson> GetByFilmIdPersonIdAndRoleAsync(int filmId, int personId, string role)
+        public (OperationStatus status, FilmPerson value) GetByFilmIdPersonIdAndRole(int filmId, int personId, string role)
         {
-            return await Task.Run(() => GetByFilmIdPersonIdAndRole(filmId, personId, role));
-        }
-
-        public FilmPerson GetByKey(string key)
-        {
-            IKeyService keyService = new KeyService();
-            (string title,
-             short year,
-             string lastName,
-             string birthdate,
-             string role) = keyService.DeconstructFilmPersonKey(key);
-            Film f = _filmRepository.GetByTitleAndYear(title, year);
-            Person p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
-            if (f == null)
+            ISpecification<FilmPerson> spec = new FilmPersonByFilmIdPersonIdAndRole(filmId, personId, role);
+            var data = List(spec);
+            var val = new FilmPerson();
+            var status = data.status;
+            if (status == OperationStatus.OK)
             {
-                throw new Exception("Unknown film");
+                val = data.value.SingleOrDefault();
             }
-            if (p == null)
+            else
             {
-                throw new Exception("Unknown person");
+                val = null;
             }
-            return GetByFilmIdPersonIdAndRole(f.Id, p.Id, role);
+            return (status, val);
         }
 
-        public FilmPerson GetByTitleYearLastNameBirtdateAndRole(string title, short year, string lastName, string birthdate, string role)
+        public (OperationStatus status, FilmPerson value) GetByKey(string key)
         {
-            var f = _filmRepository.GetByTitleAndYear(title, year);
-            var p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
-            if (f == null)
-            {
-                throw new Exception("Unknown film");
-            }
-            if (p == null)
-            {
-                throw new Exception("Unknown person");
-            }
-            return GetByFilmIdPersonIdAndRole(f.Id, p.Id, role);
+            var data = _keyService.DeconstructFilmPersonKey(key);
+            return GetByTitleYearLastNameBirthdateAndRole(data.title, data.year, data.lastName, data.birthdate, data.role);
         }
 
-        public async Task<FilmPerson> GetByTitleYearLastNameBirthdateAndRoleAsync(string title, short year, string lastName, string birthdate, string role)
+        public (OperationStatus status, FilmPerson value) GetByTitleYearLastNameBirthdateAndRole(string title, short year, string lastName, string birthdate, string role)
         {
-            var f = _filmRepository.GetByTitleAndYear(title, year);
-            var p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
-            return await GetByFilmIdPersonIdAndRoleAsync(f.Id, p.Id, role);
-        }
-
-        FilmPerson IFilmPersonRepository.GetByTitleYearLastNameBirthdateAndRole(string title, short year, string lastName, string birthdate, string role)
-        {
-            FilmPerson result = null;
-            var f = _filmRepository.GetByTitleAndYear(title, year);
-            var p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
+            var fdata = _filmRepository.GetByTitleAndYear(title, year);
+            var pdata = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate);
+            Film f = null;
+            Person p = null;
+            FilmPerson fp = null;
+            var status = fdata.status;
+            if (status == OperationStatus.OK)
+            {
+                f = fdata.value;
+                status = pdata.status;
+            }
+            if (status ==OperationStatus.OK && f != null)
+            {
+                p = pdata.value;
+            }
             if (f != null && p != null)
             {
-                result = List().Where(fp => fp.FilmId == f.Id && fp.PersonId == p.Id && fp.Role == role).SingleOrDefault();
+                fp = new FilmPerson(f.Id, p.Id, role);
             }
-            return result;
+            return (status, fp);
         }
     }
 }

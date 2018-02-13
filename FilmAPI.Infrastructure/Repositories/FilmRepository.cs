@@ -1,13 +1,10 @@
-﻿using FilmAPI.Common.Services;
+﻿using FilmAPI.Common.Utilities;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
-using FilmAPI.Core.Specifications;
 using FilmAPI.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FilmAPI.Infrastructure.Repositories
 {
@@ -17,17 +14,19 @@ namespace FilmAPI.Infrastructure.Repositories
         {
         }
 
-        public Film GetByKey(string key)
+        public override OperationStatus Delete(string key)
         {
-            var keyService = new KeyService();
-            var data = keyService.DeconstructFilmKey(key);
-            return GetByTitleAndYear(data.title, data.year);
+            throw new NotImplementedException();
         }
 
-        public Film GetByTitleAndYear(string title, short year)
+        public (OperationStatus status, Film value) GetByKey(string key)
         {
-            var spec = new FilmByTitleAndYear(title, year);
-            return List(spec).SingleOrDefault();
+            throw new NotImplementedException();
         }
+
+        public (OperationStatus status, Film value) GetByTitleAndYear(string title, short year)
+        {
+            throw new NotImplementedException();
+        }        
     }
 }

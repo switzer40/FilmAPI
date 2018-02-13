@@ -1,142 +1,91 @@
-﻿using FilmAPI.Core.Entities;
+﻿using FilmAPI.Common.DTOs;
+using FilmAPI.Common.Interfaces;
+using FilmAPI.Common.Utilities;
+using FilmAPI.Core.Entities;
+using FilmAPI.Core.Interfaces;
 using FilmAPI.Interfaces;
+using FilmAPI.Validation.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FilmAPI.Common.Interfaces;
-using FilmAPI.Core.Interfaces;
-using FilmAPI.Common.DTOs;
-using FilmAPI.Common.Constants;
-using FluentValidation.Results;
-using FluentValidation;
-using FilmAPI.Common.Services;
-using FilmAPI.Validation.Interfaces;
-using FilmAPI.Common.Utilities;
+using System.Text;
 
 namespace FilmAPI.Services
 {
-    public class FilmService : BaseSevice<Film>, IFilmService
+    public class FilmService : BaseService<Film>, IFilmService
     {
         private readonly IFilmValidator _validator;
         public FilmService(IFilmRepository repo,
                            IFilmMapper mapper,
-                           IFilmValidator validator) : base(repo, mapper)
+                           IFilmValidator validator) :base(repo, mapper)
         {
             _validator = validator;
         }
-               
-        public override OperationResult Add(IBaseDto dto)
+
+        public override OperationResult<IKeyedDto> Add(IBaseDto dto)
         {
             var retVal = OperationStatus.OK;
             var b = (BaseFilmDto)dto;
             var results = _validator.Validate(b);
             IsValid = results.IsValid;
-            
-            var entityToAdd = _mapper.MapBack(b);
-            var savedEntity = _repository.Add(entityToAdd);
+
             if (IsValid)
             {
-                result.Add(ExtractKeyedDto(b));
-                retVal = OperationStatus.OK;
+                var filmToAdd = _mapper.MapBack(b);
+                var val = _repository.Add(filmToAdd).value;
+                result = RecoverKeyedEntity(val);
             }
             else
             {
-                result = null;
+                result = default;
                 retVal = OperationStatus.BadRequest;
+                retVal.ReasonForFailure = "Invalid argument";
             }
-            return new OperationResult(retVal, result);
+            return new OperationResult<IKeyedDto>(retVal, result);
         }
 
-        public override OperationResult Delete(string key)
-        {
-            var result = OperationStatus.OK;
-            List<IKeyedDto> remainder = new List<IKeyedDto>();
-            var filmToDelete = ((IFilmRepository)_repository).GetByKey(key);
-            if (filmToDelete == null)
-            {
-                result = OperationStatus.NotFound;
-            }
-            else
-            {
-                _repository.Delete(filmToDelete);
-                var remainingFilms = _repository.List();
-                foreach (var f in remainingFilms)
-                {
-                    var film = new KeyedFilmDto(f.Title, f.Year, f.Length, key);
-                    remainder.Add(film);
-                }
-            }
-            return new OperationResult(result, remainder);
-        }
-
-        public override OperationResult Update(IBaseDto dto)
-        {
-            var result = OperationStatus.OK;
-            var b = (BaseFilmDto)dto;
-            if (b == null)
-            {
-                result = OperationStatus.BadRequest;
-            }
-            var filmToUpdate = _mapper.MapBack(b);
-            var storedFilm = RetrieveStoredEntity(dto);
-            if (storedFilm == null)
-            {
-                result = OperationStatus.NotFound;
-            }
-            else
-            {
-                _repository.Update(filmToUpdate);
-            }
-            return new OperationResult(result);
-        }
-
-        protected override IKeyedDto ExtractKeyedDto(IBaseDto dto)
-        {
-            var b = (BaseFilmDto)dto;
-            var key = _keyService.ConstructFilmKey(b.Title, b.Year);
-            var result = new KeyedFilmDto(b.Title, b.Year, b.Length, key);
-            return (IKeyedDto)result;
-        }
-
-        protected override Film RetrieveStoredEntity(IBaseDto dto)
-        {
-            var b = (BaseFilmDto)dto;
-            return ((IFilmRepository)_repository).GetByTitleAndYear(b.Title, b.Year);
-        }
-
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        private bool LocalEquals(FilmService that)
-        {
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
-
-        public override OperationResult GetByKey(string key)
+        public override OperationStatus Delete(string key)
         {
             var data = _keyService.DeconstructFilmKey(key);
-            var f = ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year);
-            result.Add(new KeyedFilmDto(f.Title, f.Year, f.Length, key));            
-            return StandardResult(OperationStatus.OK);
+            var filmToDelete = ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year).value;
+            return _repository.Delete(filmToDelete);
         }
 
-        public override OperationResult ClearAll()
+        public override OperationResult<List<IKeyedDto>> GetAbsolutelyAll()
         {
-            _repository.ClearAll();
-            return new OperationResult(OperationStatus.OK);
+            var status = OperationStatus.OK;
+            var val = new List<IKeyedDto>();
+            var res = _repository.List();
+            var flist =res.value;
+            status = res.status;
+            var list = _mapper.MapList(flist);
+            foreach (var f in flist)
+            {
+                val.Add(RecoverKeyedEntity(f));
+            }
+            return new OperationResult<List<IKeyedDto>>(status, val);
+        }
+
+        public override OperationResult<IKeyedDto> GetByKey(string key)
+        {
+            var data = _keyService.DeconstructFilmKey(key);
+            var res = ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year);
+            var status = res.status;
+            var val = (IKeyedDto)res.value;
+            return new OperationResult<IKeyedDto>(status, val);
+        }
+
+        public override OperationStatus Update(IBaseDto dto)
+        {
+            var b = (BaseFilmDto)dto;
+            var filmToUpdate = new Film(b.Title, b.Year, b.Length);
+            return _repository.Update(filmToUpdate);
+        }
+                
+        protected override IKeyedDto RecoverKeyedEntity(Film value)
+        {
+            var b = (BaseFilmDto)_mapper.Map(value);
+            var key = _keyService.ConstructFilmKey(b.Title, b.Year);
+            return new KeyedFilmDto(b.Title, b.Year, b.Length, key);
         }
     }
 }

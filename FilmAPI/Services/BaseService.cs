@@ -1,126 +1,104 @@
-﻿using FilmAPI.Core.SharedKernel;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using FilmAPI.Common.Interfaces;
-using FilmAPI.Core.Interfaces;
-using FilmAPI.Interfaces;
-using FilmAPI.Common.Services;
-using FluentValidation.Results;
+﻿using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Utilities;
-using System.Linq;
+using FilmAPI.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using System.Linq;
+using FilmAPI.Core.SharedKernel;
+using FilmAPI.Core.Interfaces;
+using FilmAPI.Common.Services;
 
 namespace FilmAPI.Services
 {
-    public abstract class BaseSevice<T> : IService<T> where T : BaseEntity
+    public abstract class BaseService<T> : IService where T : BaseEntity
     {
         protected readonly IRepository<T> _repository;
         protected readonly IMapper<T> _mapper;
         protected readonly IKeyService _keyService;
-        protected List<IKeyedDto> result;
+        protected IKeyedDto result;
         private bool _isValid;
-        
-
         public bool IsValid { get => _isValid; set => _isValid = value; }
-
-        public BaseSevice(IRepository<T> repo,
-                          IMapper<T> mapper)
+        public BaseService(IRepository<T> repo, IMapper<T> mapper)
         {
             _repository = repo;
             _mapper = mapper;
             _keyService = new KeyService();
-            _isValid = false;
-            result = new List<IKeyedDto>();            
         }
-        public abstract OperationResult Add(IBaseDto b);
 
-
-        protected abstract IKeyedDto ExtractKeyedDto(IBaseDto b);
-
-
-        public async Task<OperationResult> AddAsync(IBaseDto b)
+        public abstract OperationResult<IKeyedDto> Add(IBaseDto dto);
+        
+        protected abstract IKeyedDto RecoverKeyedEntity(T value);
+                        
+        public async Task<OperationResult<IKeyedDto>> AddAsync(IBaseDto b)
         {
             return await Task.Run(() => Add(b));
         }
 
-        public abstract OperationResult Delete(string key);
+        public Task<OperationStatus> ClearAllAsync()
+        {
+            throw new NotImplementedException();
+        }
 
+        public OperationResult<int> Count()
+        {
+            var status = GetAbsolutelyAll().Status;
+            var list = GetAbsolutelyAll().Value;
+            var count = list.Count;
+            return new OperationResult<int>(status, count);
+        }
+        
 
-        public async Task<OperationResult> DeleteAsync(string key)
+        public async Task<OperationResult<int>> CountAsync()
+        {
+            return await Task.Run(() => Count());
+        }
+
+        public abstract OperationStatus Delete(string key);
+        
+
+        public async Task<OperationStatus> DeleteAsync(string key)
         {
             return await Task.Run(() => Delete(key));
         }
 
-        public OperationResult GetAll(int pageIndex, int pageSize)
-        {            
-            var entities = _repository.List()
-                            .Skip(pageIndex * pageSize)
-                            .Take(pageSize);
-            var models = _mapper.MapList(entities.ToList());
-            foreach (var m in models)
-            {
-                result.Add(ExtractKeyedDto(m));
-            }
-            return StandardResult(OperationStatus.OK);
-        }
-
-        protected OperationResult StandardResult(OperationStatus s)
+        public async Task<OperationResult<List<IKeyedDto>>> GetAbsolutelyAllAsync()
         {
-            return new OperationResult(s, result);
+            return await Task.Run(() => GetAbsolutelyAll());
         }
 
-        public async Task<OperationResult> GetAllAsync(int pageIndex, int pageSize)
+        public OperationResult<List<IKeyedDto>> GetAll(int pageIndex, int pageSize)
+        {
+            var status = GetAbsolutelyAll().Status;
+            var list = (GetAbsolutelyAll().Value
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)).ToList();
+            return new OperationResult<List<IKeyedDto>>(status, list);
+        }
+
+        public async Task<OperationResult<List<IKeyedDto>>> GetAllAsync(int pageIndex, int pageSize)
         {
             return await Task.Run(() => GetAll(pageIndex, pageSize));
         }
+
+        public async Task<OperationResult<IKeyedDto>> GetByKeyAsync(string key)
+        {
+            return await Task.Run(() => GetByKey(key));
+        }
         
-        public abstract OperationResult Update(IBaseDto b);
+
+        public abstract OperationResult<List<IKeyedDto>> GetAbsolutelyAll();
 
 
-        protected abstract T RetrieveStoredEntity(IBaseDto b);
+        public abstract OperationStatus Update(IBaseDto b);
+       
 
-        public async Task<OperationResult> UpdateAsync(IBaseDto b)
+        public async Task<OperationStatus> UpdateAsync(IBaseDto b)
         {
             return await Task.Run(() => Update(b));
         }
 
-        public OperationResult  Count()
-        {
-            return GetAbsolutelyAll();
-        }
-
-        public async Task<OperationResult> CountAsync()
-        {
-            return await Task.Run(() => Count());
-        }
-        public abstract OperationResult GetByKey(string key);
-        
-        public async Task<OperationResult> GetByKeyAsync(string key)
-        {
-            return await Task.Run(() => GetByKey(key));
-        }
-
-        public abstract OperationResult ClearAll();
-        public async Task<OperationResult> ClearAllAsync()
-        {
-            return await Task.Run(() => ClearAll());
-        }
-
-        public OperationResult GetAbsolutelyAll()
-        {
-            var entities = _repository.List();
-            var models = _mapper.MapList(entities.ToList());
-            foreach (var m in models)
-            {
-                result.Add(ExtractKeyedDto(m));
-            }
-            return StandardResult(OperationStatus.OK);
-        }
-        
-
-        public async Task<OperationResult> GetAbsolutelyAllAsync()
-        {
-            return await Task.Run(() => GetAbsolutelyAll());
-        }
+        public abstract OperationResult<IKeyedDto> GetByKey(string key);       
     }
 }

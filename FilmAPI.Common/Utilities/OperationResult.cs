@@ -5,22 +5,22 @@ using System.Text;
 
 namespace FilmAPI.Common.Utilities
 {
-    public class OperationResult
+    public class OperationResult<T> 
     {
         public OperationResult()
         {
             Status = OperationStatus.OK;
-            ResultValue = new List<IKeyedDto>();
-            HasValue = false;
+            Value = default;            
         }
-        public OperationResult(OperationStatus status, List<IKeyedDto> result = null)
+        public OperationResult(OperationStatus status, T value = default)
         {
             Status = status;
-            ResultValue = result;
-            HasValue = (result != null);
+            Value = value;
+            HasResult =
+                (status == OperationStatus.OK);
         }
-        public bool HasValue { get; set; }
+        public bool HasResult { get; set; }
         public OperationStatus Status { get; set; }
-        public List<IKeyedDto> ResultValue { get; set; }
+        public T Value { get; set; }
     }
 }

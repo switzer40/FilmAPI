@@ -73,9 +73,7 @@ namespace FilmAPI
             services.AddTransient<IFilmPersonValidator, FilmPersonValidator>();
             services.AddTransient<IMediumValidator, MediumValidator>();
             services.AddTransient<IPersonValidator, PersonValidator>();
-
-            // Register error service
-            services.AddTransient<IErrorService, ErrorService>();
+            
             services.AddTransient(typeof(OperationStatus));                        
         }
 

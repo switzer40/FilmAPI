@@ -35,7 +35,7 @@ namespace FilmAPI.Filters
                     }
                     else
                     {
-                        var f = ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year);
+                        var f = ((IFilmRepository)_repository).GetByTitleAndYear(data.title, data.year).value;
                         if (f == null)
                         {
                             context.Result = new NotFoundObjectResult(key);

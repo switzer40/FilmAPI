@@ -21,12 +21,14 @@ namespace FilmAPI.Mappers
         }
         public override IBaseDto Map(FilmPerson t)
         {
-            var f = _filmRepository.GetById(t.FilmId);
+            var data = _filmRepository.GetById(t.FilmId);
+            var f = data.value;
             if (f == null)
             {
                 throw new Exception("Unknown film");
             }
-            var p = _personRepository.GetById(t.PersonId);
+            var pdata = _personRepository.GetById(t.PersonId);
+            var p = pdata.value;
             if (p == null)
             {
                 throw new Exception("Unknown person");
@@ -38,12 +40,12 @@ namespace FilmAPI.Mappers
         {
             FilmPerson result = null;
             var b = (BaseFilmPersonDto)dto;
-            var f = _filmRepository.GetByTitleAndYear(b.Title, b.Year);
+            var f = _filmRepository.GetByTitleAndYear(b.Title, b.Year).value;
             if (f == null)
             {
                 throw new Exception("Unknown film");
             }
-            var p = _personRepository.GetByLastNameAndBirthdate(b.LastName, b.Birthdate);
+            var p = _personRepository.GetByLastNameAndBirthdate(b.LastName, b.Birthdate).value;
             if (f != null && p != null)
             {
                 result = new FilmPerson(f.Id, p.Id, b.Role);

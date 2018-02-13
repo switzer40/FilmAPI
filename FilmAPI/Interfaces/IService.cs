@@ -10,22 +10,23 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    public interface IService<T> where T : BaseEntity
+    public interface IService
     {
-        OperationResult GetAbsolutelyAll();
-        Task<OperationResult> GetAbsolutelyAllAsync();
-        OperationResult GetAll(int pageIndex, int pageSize);
-        Task<OperationResult> GetAllAsync(int pageIndex, int pageSize);        
-        OperationResult Add(IBaseDto b);
-        OperationResult Count();
-        Task<OperationResult> CountAsync();
-        Task<OperationResult> AddAsync(IBaseDto b);
-        OperationResult Delete(string key);
-        Task<OperationResult> DeleteAsync(string key);
-        Task<OperationResult> GetByKeyAsync(string key);        
-        OperationResult Update(IBaseDto b);
-        Task<OperationResult> UpdateAsync(IBaseDto b);        
-        Task<OperationResult> ClearAllAsync();
+        OperationResult<List<IKeyedDto>> GetAbsolutelyAll();
+        Task<OperationResult<List<IKeyedDto>>> GetAbsolutelyAllAsync();
+        OperationResult<List<IKeyedDto>> GetAll(int pageIndex, int pageSize);
+        Task<OperationResult<List<IKeyedDto>>> GetAllAsync(int pageIndex, int pageSize);        
+        OperationResult<IKeyedDto> Add(IBaseDto b);
+        OperationResult<int> Count();
+        Task<OperationResult<int>> CountAsync();
+        Task<OperationResult<IKeyedDto>> AddAsync(IBaseDto b);
+        OperationStatus Delete(string key);
+        Task<OperationStatus> DeleteAsync(string key);
+        OperationResult<IKeyedDto> GetByKey(string key);
+        Task<OperationResult<IKeyedDto>> GetByKeyAsync(string key);        
+        OperationStatus Update(IBaseDto b);
+        Task<OperationStatus> UpdateAsync(IBaseDto b);        
+        Task<OperationStatus> ClearAllAsync();
         bool IsValid { get; set; }        
     }
 }

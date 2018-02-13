@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FilmAPI.Interfaces
 {
-    public interface IFilmService : IService<Film>
+    public interface IFilmService : IService
     {                
     }
 }

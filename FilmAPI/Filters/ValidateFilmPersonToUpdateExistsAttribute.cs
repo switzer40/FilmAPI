@@ -30,7 +30,7 @@ namespace FilmAPI.Filters
                                                                                 model.Year,
                                                                                 model.LastName,
                                                                                 model.Birthdate,
-                                                                                model.Role);
+                                                                                model.Role).value;
                     if (fp == null)
                     {
                         context.Result = new NotFoundObjectResult(model);

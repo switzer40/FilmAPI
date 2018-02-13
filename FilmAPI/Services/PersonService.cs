@@ -11,109 +11,86 @@ using System.Text;
 
 namespace FilmAPI.Services
 {
-    public class PersonService : BaseSevice<Person>, IPersonService
+    public class PersonService : BaseService<Person>, IPersonService
     {
         private readonly IPersonValidator _validator;
         public PersonService(IPersonRepository repo,
                              IPersonMapper mapper,
-                             IPersonValidator validator) : base(repo, mapper)
+                             IPersonValidator validator) : base(repo,mapper)
         {
             _validator = validator;
         }
-        public override OperationResult Add(IBaseDto dto)
-        {
-            var retVal = OperationStatus.OK;
+        public override OperationResult<IKeyedDto> Add(IBaseDto dto)
+        {            
             var b = (BasePersonDto)dto;
             var results = _validator.Validate(b);
             IsValid = results.IsValid;
+            var personToAdd = _mapper.MapBack(b);
+            var res = _repository.Add(personToAdd);
+            var retVal = res.status;
+            var val = RecoverKeyedEntity(res.value);
 
-            var entityToAdd = _mapper.MapBack(b);
-            var savedEntity = _repository.Add(entityToAdd);
-            if (IsValid)
+            if (!IsValid)
             {
-                result.Add(ExtractKeyedDto(b));
-                retVal = OperationStatus.OK;
-            }
-            else
-            {
-                result = null;
+                val = default;
                 retVal = OperationStatus.BadRequest;
                 retVal.ReasonForFailure = "Invalid input";
             }
-            return new OperationResult(retVal, result);
+            return new OperationResult<IKeyedDto>(retVal, val);
         }
 
-        public override OperationResult ClearAll()
+        public override OperationStatus Delete(string key)
         {
-            _repository.ClearAll();
-            return new OperationResult(OperationStatus.OK);
+            return _repository.Delete(key);
         }
 
-        public override OperationResult Delete(string key)
+        public override OperationResult<List<IKeyedDto>> GetAbsolutelyAll()
         {
-            var result = OperationStatus.OK;
-            var personToDelete = ((IPersonRepository)_repository).GetByKey(key);
-            if (personToDelete == null)
+            var val = new List<IKeyedDto>();
+            var res = _repository.List();
+            foreach (var p in res.value)
             {
-                result = OperationStatus.NotFound;
-                result.ReasonForFailure = "No such person exists";
+                val.Add(RecoverKeyedEntity(p));
             }
-            else
-            {
-                _repository.Delete(personToDelete);
-            }
-            return new OperationResult(result);
+            return new OperationResult<List<IKeyedDto>>(res.status, val);
         }
 
-        public override OperationResult GetByKey(string key)
+        public override OperationResult<IKeyedDto> GetByKey(string key)
         {
-            var data = _keyService.DeconstructPersonKey(key);
-            var p = GetByLastNameAndBirthdate(data.lastName, data.birthdate);
-            result.Add(p);
-            return new OperationResult(OperationStatus.OK, result);
+            var (status, value) = ((IPersonRepository)_repository).GetByKey(key);
+            var val = RecoverKeyedEntity(value);
+            return new OperationResult<IKeyedDto>(status, val);
         }
 
         public KeyedPersonDto GetByLastNameAndBirthdate(string lastName, string birthdate)
         {
-            var p = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(lastName, birthdate);
-            var key = _keyService.ConstructPersonKey(lastName, birthdate);
-            return new KeyedPersonDto(p.LastName, p.BirthdateString, p.FirstMidName, key);
+            var (status, value) = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(lastName, birthdate);
+            return (KeyedPersonDto)RecoverKeyedEntity(value);
         }
 
-        public override OperationResult Update(IBaseDto dto)
+        public override OperationStatus Update(IBaseDto dto)
         {
-            var result = OperationStatus.OK;
             var b = (BasePersonDto)dto;
-            if (b == null)
-            {
-                result = OperationStatus.BadRequest;
-                result.ReasonForFailure = "Wrong input type";
-            }
+            var results = _validator.Validate(b);
+            IsValid = results.IsValid;
             var personToUpdate = _mapper.MapBack(b);
-            var storedperson = RetrieveStoredEntity(dto);
-            if (storedperson == null)
+            var status = OperationStatus.OK;
+            if (!IsValid)
             {
-                result = OperationStatus.NotFound;
-                result.ReasonForFailure = "No such person found";
+                status = OperationStatus.BadRequest;
+                status.ReasonForFailure = "Invalid input";
             }
             else
             {
-                _repository.Update(personToUpdate);
+                status = _repository.Update(personToUpdate);
             }
-            return new OperationResult(result);
-        }
+            return status;
+        } 
 
-        protected override IKeyedDto ExtractKeyedDto(IBaseDto dto)
+        protected override IKeyedDto RecoverKeyedEntity(Person p)
         {
-            var b = (BasePersonDto)dto;
-            var key = _keyService.ConstructPersonKey(b.LastName, b.Birthdate);
-            return new KeyedPersonDto(b.LastName, b.Birthdate, b.FirstMidName, key);
-        }
-
-        protected override Person RetrieveStoredEntity(IBaseDto dto)
-        {
-            var b = (BasePersonDto)dto;
-            return ((IPersonRepository)_repository).GetByLastNameAndBirthdate(b.LastName, b.Birthdate);
+            var key = _keyService.ConstructPersonKey(p.LastName, p.BirthdateString);
+            return new KeyedPersonDto(p.LastName, p.BirthdateString, p.FirstMidName, key);
         }
     }
 }
