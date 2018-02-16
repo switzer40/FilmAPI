@@ -1,67 +1,105 @@
 ﻿using FilmAPI.Common.Interfaces;
-using FilmAPI.Common.Utilities;
-using FilmAPI.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using System.Linq;
-using FilmAPI.Core.SharedKernel;
-using FilmAPI.Core.Interfaces;
 using FilmAPI.Common.Services;
+using FilmAPI.Common.Utilities;
+using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.SharedKernel;
+using FilmAPI.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
-    public abstract class BaseService<T> : IService where T : BaseEntity
+    public abstract class BaseService<T> : IService<T> where T : BaseEntity
     {
         protected readonly IRepository<T> _repository;
         protected readonly IMapper<T> _mapper;
         protected readonly IKeyService _keyService;
-        protected IKeyedDto result;
         private bool _isValid;
-        public bool IsValid { get => _isValid; set => _isValid = value; }
-        public BaseService(IRepository<T> repo, IMapper<T> mapper)
+        public BaseService(IRepository<T> repo,
+                           IMapper<T> mapper)
         {
             _repository = repo;
             _mapper = mapper;
             _keyService = new KeyService();
         }
+        public bool IsValid { get => _isValid; set => _isValid = value; }
 
-        public abstract OperationResult<IKeyedDto> Add(IBaseDto dto);
+        public abstract OperationResult<IKeyedDto> Add(IBaseDto b);
         
-        protected abstract IKeyedDto RecoverKeyedEntity(T value);
-                        
         public async Task<OperationResult<IKeyedDto>> AddAsync(IBaseDto b)
         {
             return await Task.Run(() => Add(b));
         }
 
-        public Task<OperationStatus> ClearAllAsync()
+        public async Task<OperationStatus> ClearAllAsync()
         {
-            throw new NotImplementedException();
+            var (status, value) = await _repository.ListAsync();
+            if (status != OperationStatus.OK)
+            {
+                return status;
+            }
+            foreach (T item in value)
+            {
+                await DeleteAsync(item);
+            }
+            return OperationStatus.OK;
         }
 
         public OperationResult<int> Count()
         {
-            var status = GetAbsolutelyAll().Status;
-            var list = GetAbsolutelyAll().Value;
-            var count = list.Count;
+            var (status, value) = _repository.List();
+            if (status != OperationStatus.OK)
+            {
+                return new OperationResult<int>(status);
+            }
+            var count = value.Count;
             return new OperationResult<int>(status, count);
         }
-        
 
         public async Task<OperationResult<int>> CountAsync()
         {
             return await Task.Run(() => Count());
         }
 
-        public abstract OperationStatus Delete(string key);
-        
+        public OperationStatus Delete(string key)
+        {
+            return _repository.Delete(key);
+        }
+
+        public OperationStatus Delete(T t)
+        {
+            return _repository.Delete(t);
+        }
 
         public async Task<OperationStatus> DeleteAsync(string key)
         {
             return await Task.Run(() => Delete(key));
         }
+
+        public async Task<OperationStatus> DeleteAsync(T t)
+        {
+            return await Task.Run(() => Delete(t));
+        }
+
+        public OperationResult<List<IKeyedDto>> GetAbsolutelyAll()
+        {
+            var (status, value) = _repository.List();
+            if (status != OperationStatus.OK)
+            {
+                return new OperationResult<List<IKeyedDto>>(status);
+            }
+            var val = new List<IKeyedDto>();
+            foreach (T item in value)
+            {
+                IKeyedDto dto = RecoverKeyedEntity(item);
+                val.Add(dto);
+            }
+            return new OperationResult<List<IKeyedDto>>(status, val);
+        }
+
+        protected abstract IKeyedDto RecoverKeyedEntity(T item);
+        
 
         public async Task<OperationResult<List<IKeyedDto>>> GetAbsolutelyAllAsync()
         {
@@ -70,11 +108,21 @@ namespace FilmAPI.Services
 
         public OperationResult<List<IKeyedDto>> GetAll(int pageIndex, int pageSize)
         {
-            var status = GetAbsolutelyAll().Status;
-            var list = (GetAbsolutelyAll().Value
+            var (status, value) = _repository.List();
+            if (status != OperationStatus.OK)
+            {
+                return new OperationResult<List<IKeyedDto>>(status);
+            }
+            var entities = value
                 .Skip(pageIndex * pageSize)
-                .Take(pageSize)).ToList();
-            return new OperationResult<List<IKeyedDto>>(status, list);
+                .Take(pageSize);
+            var val = new List<IKeyedDto>();
+            foreach (T item in entities)
+            {
+                IKeyedDto dto = RecoverKeyedEntity(item);
+                val.Add(dto);
+            }
+            return new OperationResult<List<IKeyedDto>>(status, val);
         }
 
         public async Task<OperationResult<List<IKeyedDto>>> GetAllAsync(int pageIndex, int pageSize)
@@ -82,23 +130,20 @@ namespace FilmAPI.Services
             return await Task.Run(() => GetAll(pageIndex, pageSize));
         }
 
+        public abstract OperationResult<IKeyedDto> GetByKey(string key);
+        
+
         public async Task<OperationResult<IKeyedDto>> GetByKeyAsync(string key)
         {
             return await Task.Run(() => GetByKey(key));
         }
-        
-
-        public abstract OperationResult<List<IKeyedDto>> GetAbsolutelyAll();
-
 
         public abstract OperationStatus Update(IBaseDto b);
-       
+        
 
         public async Task<OperationStatus> UpdateAsync(IBaseDto b)
         {
             return await Task.Run(() => Update(b));
         }
-
-        public abstract OperationResult<IKeyedDto> GetByKey(string key);       
     }
 }

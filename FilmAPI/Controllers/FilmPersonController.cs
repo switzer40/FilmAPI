@@ -1,4 +1,5 @@
 ﻿using FilmAPI.Common.DTOs;
+using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Utilities;
 using FilmAPI.Filters;
 using FilmAPI.Interfaces;
@@ -19,10 +20,9 @@ namespace FilmAPI.Controllers
             _service = service;
         }
         [HttpDelete("ClearAll")]
-        public async Task<IActionResult> DeleteAsync()
+        public async Task<OperationStatus> DeleteAsync()
         {
-            var res = await _service.ClearAllAsync();
-            return StandardReturn(res);
+            return await _service.ClearAllAsync();            
         }
         [HttpDelete("Delete/{key}")]
         public async Task<IActionResult> DeleteAsync(string key)
@@ -31,44 +31,32 @@ namespace FilmAPI.Controllers
             return StandardReturn(res);
         }
         [HttpGet("Count")]
-        public async Task<IActionResult> GetAsync(int dummy)
+        public async Task<OperationResult<int>> GetAsync(int dummy)
         {
-            var res = await _service.CountAsync();
-            return StandardCountReturn(res.Status, res.Value);
+            return await _service.CountAsync();            
         }
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAsync(int pageIndex = 0, int pageSize = 4)
+        public async Task<OperationResult<List<IKeyedDto>>> GetAsync(int pageIndex = 0, int pageSize = 4)
         {
-            var res = await _service.GetAllAsync(pageIndex, pageSize);
-            var filmPeople = new List<KeyedFilmPersonDto>();
-            foreach (var fp in res.Value)
-            {
-                filmPeople.Add((KeyedFilmPersonDto)fp);
-            }
-            return Ok(filmPeople);
+            return await _service.GetAllAsync(pageIndex, pageSize);            
         }
         [HttpGet("GetByKey/{key}")]
         [ValidateFilmPersonExists]
-        public async Task<IActionResult> GetAsync(string key)
+        public async Task<OperationResult<IKeyedDto>> GetAsync(string key)
         {
-            var res = await _service.GetByKeyAsync(key);
-            var val= (KeyedFilmPersonDto)res.Value;            
-            return StandardReturn(res.Status, val);
+            return await _service.GetByKeyAsync(key);           
         }
         [HttpPost("Add")]
         [ValidateFilmPersonNotDuplicate]
-        public async Task<IActionResult> PostAsync([FromBody]BaseFilmPersonDto model)
+        public async Task<OperationResult<IKeyedDto>> PostAsync([FromBody]BaseFilmPersonDto model)
         {
-            var res = await _service.AddAsync(model);
-            var val = (KeyedFilmPersonDto)res.Value;
-            return StandardReturn(res.Status, val);
+            return await _service.AddAsync(model);            
         }
         [HttpPut("Edit")]
         [ValidateFilmPersonToUpdateExists]
-        public async Task<IActionResult> PutAsync([FromBody]BaseFilmPersonDto model)
+        public async Task<OperationStatus> PutAsync([FromBody]BaseFilmPersonDto model)
         {
-            var s = await _service.UpdateAsync(model);            
-            return StandardReturn(s);
+            return await _service.UpdateAsync(model);                        
         }
     }
 }

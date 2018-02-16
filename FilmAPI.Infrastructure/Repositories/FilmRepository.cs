@@ -1,9 +1,11 @@
 ﻿using FilmAPI.Common.Utilities;
 using FilmAPI.Core.Entities;
 using FilmAPI.Core.Interfaces;
+using FilmAPI.Core.Specifications;
 using FilmAPI.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace FilmAPI.Infrastructure.Repositories
@@ -16,17 +18,26 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public override OperationStatus Delete(string key)
         {
-            throw new NotImplementedException();
+            var res = GetByKey(key);
+            if (res.status != OperationStatus.OK)
+            {
+                return res.status;
+            }
+            return Delete(res.value);
         }
 
         public (OperationStatus status, Film value) GetByKey(string key)
         {
-            throw new NotImplementedException();
+            var (title, year) = _keyService.DeconstructFilmKey(key);
+            return GetByTitleAndYear(title, year);            
         }
 
         public (OperationStatus status, Film value) GetByTitleAndYear(string title, short year)
         {
-            throw new NotImplementedException();
+            ISpecification<Film> spec = new FilmByTitleAndYear(title, year);
+            var (status, value) = List(spec);
+            var f = value.SingleOrDefault();
+            return (status, f);
         }        
     }
 }

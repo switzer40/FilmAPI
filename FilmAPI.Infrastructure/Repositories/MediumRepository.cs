@@ -22,7 +22,12 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public override OperationStatus Delete(string key)
         {
-            throw new NotImplementedException();
+            var res = GetByKey(key);
+            if (res.status != OperationStatus.OK)
+            {
+                return res.status;
+            }
+            return Delete(res.value);
         }
 
         public (OperationStatus status, Medium value) GetByFilmIdAndMediumType(int filmId, string mediumType)

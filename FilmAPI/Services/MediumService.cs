@@ -8,16 +8,17 @@ using FilmAPI.Validation.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
     public class MediumService : BaseService<Medium>, IMediumService
     {
-        private readonly IFilmRepository _filmRepository;
         private readonly IMediumValidator _validator;
+        private readonly IFilmRepository _filmRepository;
         public MediumService(IMediumRepository repo,
-                             IFilmRepository frepo,
                              IMediumMapper mapper,
+                             IFilmRepository frepo,
                              IMediumValidator validator) : base(repo, mapper)
         {
             _filmRepository = frepo;
@@ -28,45 +29,35 @@ namespace FilmAPI.Services
             var b = (BaseMediumDto)dto;
             var results = _validator.Validate(b);
             IsValid = results.IsValid;
-            var mediumToAdd = _mapper.MapBack(b);
-            var res = _repository.Add(mediumToAdd);
-            var status = res.status;
-            IKeyedDto val = default;
             if (!IsValid)
             {
-                status = OperationStatus.BadRequest;
-                status.ReasonForFailure = "Invalid input";
+                var vstatus = OperationStatus.BadRequest;
+                vstatus.ReasonForFailure = "Invalid input";
+                return new OperationResult<IKeyedDto>(vstatus);
             }
-            else
-            {
-                val = RecoverKeyedEntity(res.value);
-            }
+            var mediumToAdd = _mapper.MapBack(b);
+            var (status, value) = _repository.Add(mediumToAdd);
+            var val = RecoverKeyedEntity(value);
             return new OperationResult<IKeyedDto>(status, val);
-        }
-
-        public override OperationStatus Delete(string key)
-        {
-            return _repository.Delete(key);
-        }
-
-        public override OperationResult<List<IKeyedDto>> GetAbsolutelyAll()
-        {
-            var val = new List<IKeyedDto>();
-            var res = _repository.List();
-            var status = res.status;
-            foreach (var m in res.value)
-            {
-                val.Add(RecoverKeyedEntity(m));
-            }
-            return new OperationResult<List<IKeyedDto>>(status, val);
         }
 
         public override OperationResult<IKeyedDto> GetByKey(string key)
         {
-            var res = ((IMediumRepository)_repository).GetByKey(key);
-            var status = res.status;
-            var val = RecoverKeyedEntity(res.value);
+            var (status, value) = ((IMediumRepository)_repository).GetByKey(key);
+            var val = RecoverKeyedEntity(value);
             return new OperationResult<IKeyedDto>(status, val);
+        }
+
+        public OperationResult<IKeyedDto> GetByTitleYearAndMediumType(string title, short year, string mediumType)
+        {
+            var (status, value) = ((IMediumRepository)_repository).GetByTitleYearAndMediumType(title, year, mediumType);
+            var val = RecoverKeyedEntity(value);
+            return new OperationResult<IKeyedDto>(status, val);
+        }
+
+        public async Task<OperationResult<IKeyedDto>> GetByTitleYearAndMediumTypeAsync(string title, short year, string mediumType)
+        {
+            return await Task.Run(() => GetByTitleYearAndMediumType(title, year, mediumType));
         }
 
         public override OperationStatus Update(IBaseDto dto)
@@ -74,25 +65,26 @@ namespace FilmAPI.Services
             var b = (BaseMediumDto)dto;
             var results = _validator.Validate(b);
             IsValid = results.IsValid;
-            var mediumToUpdate = _mapper.MapBack(b);
-            var status = OperationStatus.OK;
             if (!IsValid)
             {
-                status = OperationStatus.BadRequest;
-                status.ReasonForFailure = "Invalid input";
+                var vstatus = OperationStatus.BadRequest;
+                vstatus.ReasonForFailure = "Invalid input";
+                return vstatus;
             }
-            else
-            {
-                status = _repository.Update(mediumToUpdate);
-            }
-            return status;
+            var mediumToUpdate = _mapper.MapBack(b);
+            return _repository.Update(mediumToUpdate);
         }
 
         protected override IKeyedDto RecoverKeyedEntity(Medium m)
         {
-            var f = _filmRepository.GetById(m.FilmId).value;
-            var key = _keyService.ConstructMediumKey(f.Title, f.Year, m.MediumType);
-            return new KeyedMediumDto(f.Title, f.Year, m.MediumType, m.Location, m.HasGermanSubtitles, key);
+            var (status, value) = _filmRepository.GetById(m.FilmId);
+            var key = _keyService.ConstructMediumKey(value.Title, value.Year, m.MediumType);
+            IKeyedDto result = default;
+            if (status == OperationStatus.OK)
+            {
+                result = new KeyedMediumDto(value.Title, value.Year, m.MediumType, m.Location, m.HasGermanSubtitles, key);
+            }
+            return result;
         }
     }
 }

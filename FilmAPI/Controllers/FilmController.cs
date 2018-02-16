@@ -1,19 +1,16 @@
-﻿using FilmAPI.Common.DTOs;
-using FilmAPI.Common.Interfaces;
-using FilmAPI.Common.Utilities;
-using FilmAPI.Core.Entities;
-using FilmAPI.Filters;
+﻿using FilmAPI.Filters;
 using FilmAPI.Interfaces;
+using FilmAPI.Common.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using FilmAPI.Common.Utilities;
+using FilmAPI.Common.Interfaces;
 
 namespace FilmAPI.Controllers
 {
     [Route("/api/Film/")]
-    public class FilmController : BaseController<KeyedFilmDto>
+    public class FilmController
     {
         private readonly IFilmService _service;
         public FilmController(IFilmService service)
@@ -22,59 +19,45 @@ namespace FilmAPI.Controllers
         }
         [HttpPost("Add")]
         [ValidateFilmNotDuplicate]
-        public async Task<IActionResult> PostAsync([FromBody]BaseFilmDto model)
+        public async Task<OperationResult<IKeyedDto>> PostAsync([FromBody]BaseFilmDto model)
         {
-            var res = await _service.AddAsync(model);
-            var val = (KeyedFilmDto)res.Value;
-            return StandardReturn(res.Status, val);
+            return await _service.AddAsync(model);            
         }
 
         [HttpDelete("ClearAll")]
-        public async Task<IActionResult> DeleteAsync()
+        public async Task<OperationStatus> DeleteAsync()
         {
-            var s = await _service.ClearAllAsync();
-            return StandardReturn(s);
+            return await _service.ClearAllAsync();            
         }
         [HttpDelete("Delete/{key}")]
         [ValidateFilmExists]
-        public async Task<IActionResult> DeleteAsync(string key)
+        public async Task<OperationStatus> DeleteAsync(string key)
         {
-            var s = await _service.DeleteAsync(key);
-            return StandardReturn(s);
+             return await _service.DeleteAsync(key);            
 
         }
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAsync(int pageIndex = 0, int pageSize = 4)
+        public async Task<OperationResult<List<IKeyedDto>>> GetAsync(int pageIndex = 0, int pageSize = 4)
         {
-            var res = await _service.GetAllAsync(pageIndex, pageSize);
-            var films = new List<KeyedFilmDto>();
-            foreach (var f in res.Value)
-            {
-                films.Add((KeyedFilmDto)f);
-            }
-            return Ok(films);
+             return await _service.GetAllAsync(pageIndex, pageSize);            
         }
         [HttpGet("GetByKey/{key}")]
         [ValidateFilmExists]
-        public async Task<IActionResult> GetAsync(string key)
+        public async Task<OperationResult<IKeyedDto>> GetAsync(string key)
         {
-            var res = await _service.GetByKeyAsync(key);
-            var val = (KeyedFilmDto)res.Value;
-            return StandardReturn(res.Status, val);            
+            return await _service.GetByKeyAsync(key);                        
         }
 
         [HttpGet("Count")]
-        public async Task<IActionResult> GetAsync(int dummy)
+        public async Task<OperationResult<int>> GetAsync(int dummy)
         {
-            var res = await _service.CountAsync();
-            return StandardCountReturn(res.Status, res.Value); 
+            return await _service.CountAsync();            
         }
         [HttpPut("Edit")]
         [ValidateFilmToUpdateExists]
-        public async Task<IActionResult> Put([FromBody]BaseFilmDto model)
+        public async Task<OperationStatus> Put([FromBody]BaseFilmDto model)
         {
-            var s = await _service.UpdateAsync(model);
-            return StandardReturn(s);
+            return await _service.UpdateAsync(model);            
         }
     }
 }

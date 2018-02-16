@@ -59,6 +59,8 @@ namespace FilmAPI.Infrastructure.Repositories
             Save();
             return OperationStatus.OK;
         }
+        public abstract OperationStatus Delete(string key);
+        
 
         public async Task<OperationStatus> DeleteAsync(T t)
         {
@@ -132,9 +134,7 @@ namespace FilmAPI.Infrastructure.Repositories
             return await Task.Run(() => Update(t));
         }
 
-        public abstract OperationStatus Delete(string key);
        
-
         public async Task<OperationStatus> DeleteAsync(string key)
         {
             return await Task.Run(() => Delete(key));

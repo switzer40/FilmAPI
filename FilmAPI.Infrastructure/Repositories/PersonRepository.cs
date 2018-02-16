@@ -18,7 +18,12 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public override OperationStatus Delete(string key)
         {
-            var personToDelete = GetByKey(key).value;
+            var res = GetByKey(key);
+            if (res.status != OperationStatus.OK)
+            {
+                return res.status;
+            }
+            var personToDelete = res.value;
             return Delete(personToDelete);
         }
 

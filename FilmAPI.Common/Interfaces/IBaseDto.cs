@@ -6,7 +6,5 @@ namespace FilmAPI.Common.Interfaces
 {
     public interface IBaseDto
     {
-        void Copy(IBaseDto dto);
-        bool Equals(IBaseDto dto);
     }
 }

@@ -8,51 +8,38 @@ using FilmAPI.Validation.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace FilmAPI.Services
 {
     public class PersonService : BaseService<Person>, IPersonService
     {
-        private readonly IPersonValidator _validator;
+        private readonly IPersonValidator _validtor;
         public PersonService(IPersonRepository repo,
                              IPersonMapper mapper,
-                             IPersonValidator validator) : base(repo,mapper)
+                             IPersonValidator validator) : base(repo, mapper)
         {
-            _validator = validator;
+            _validtor = validator;
         }
         public override OperationResult<IKeyedDto> Add(IBaseDto dto)
-        {            
+        {
             var b = (BasePersonDto)dto;
-            var results = _validator.Validate(b);
+            var results = _validtor.Validate(b);
             IsValid = results.IsValid;
-            var personToAdd = _mapper.MapBack(b);
-            var res = _repository.Add(personToAdd);
-            var retVal = res.status;
-            var val = RecoverKeyedEntity(res.value);
-
             if (!IsValid)
             {
-                val = default;
-                retVal = OperationStatus.BadRequest;
-                retVal.ReasonForFailure = "Invalid input";
+                var vstatus = OperationStatus.BadRequest;
+                vstatus.ReasonForFailure = "Invalid input";
+                return new OperationResult<IKeyedDto>(vstatus);
             }
-            return new OperationResult<IKeyedDto>(retVal, val);
-        }
-
-        public override OperationStatus Delete(string key)
-        {
-            return _repository.Delete(key);
-        }
-
-        public override OperationResult<List<IKeyedDto>> GetAbsolutelyAll()
-        {
-            var val = new List<IKeyedDto>();
-            var res = _repository.List();
-            foreach (var p in res.value)
+            var personToAdd = _mapper.MapBack(b);
+            var (status, value) = _repository.Add(personToAdd);
+            if (status != OperationStatus.OK)
             {
-                val.Add(RecoverKeyedEntity(p));
+                return new OperationResult<IKeyedDto>(status);
             }
-            return new OperationResult<List<IKeyedDto>>(res.status, val);
+            var val = RecoverKeyedEntity(value);
+            return new OperationResult<IKeyedDto>(status, val);
         }
 
         public override OperationResult<IKeyedDto> GetByKey(string key)
@@ -62,30 +49,32 @@ namespace FilmAPI.Services
             return new OperationResult<IKeyedDto>(status, val);
         }
 
-        public KeyedPersonDto GetByLastNameAndBirthdate(string lastName, string birthdate)
+        public OperationResult<IKeyedDto> GetByLastNameAndBirthdate(string lastName, string birthdate)
         {
             var (status, value) = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(lastName, birthdate);
-            return (KeyedPersonDto)RecoverKeyedEntity(value);
+            var val = RecoverKeyedEntity(value);
+            return new OperationResult<IKeyedDto>(status, val);
+        }
+
+        public async Task<OperationResult<IKeyedDto>> GetByLastNameAndBirthdateAsync(string lastName, string birthdate)
+        {
+            return await Task.Run(() => GetByLastNameAndBirthdate(lastName, birthdate));
         }
 
         public override OperationStatus Update(IBaseDto dto)
         {
             var b = (BasePersonDto)dto;
-            var results = _validator.Validate(b);
+            var results = _validtor.Validate(b);
             IsValid = results.IsValid;
-            var personToUpdate = _mapper.MapBack(b);
-            var status = OperationStatus.OK;
             if (!IsValid)
             {
-                status = OperationStatus.BadRequest;
-                status.ReasonForFailure = "Invalid input";
+                var vstatus = OperationStatus.BadRequest;
+                vstatus.ReasonForFailure = "Invalid input";
+                return vstatus;
             }
-            else
-            {
-                status = _repository.Update(personToUpdate);
-            }
-            return status;
-        } 
+            var personToUpdate = _mapper.MapBack(b);
+            return _repository.Update(personToUpdate);
+        }
 
         protected override IKeyedDto RecoverKeyedEntity(Person p)
         {
