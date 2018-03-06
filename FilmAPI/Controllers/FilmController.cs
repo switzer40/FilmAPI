@@ -36,6 +36,11 @@ namespace FilmAPI.Controllers
              return await _service.DeleteAsync(key);            
 
         }
+        [HttpGet("GetAbsolutelyAll")]
+        public async Task<OperationResult<List<IKeyedDto>>> GetAsync()
+        {
+            return await _service.GetAbsolutelyAllAsync();
+        }
         [HttpGet("GetAll")]
         public async Task<OperationResult<List<IKeyedDto>>> GetAsync(int pageIndex = 0, int pageSize = 4)
         {
