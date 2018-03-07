@@ -10,6 +10,7 @@ namespace FilmAPI.Interfaces
 {
     public interface IController 
     {
+        Task<ActionResult> GetAsync(); // GetAbsolutelyAll
         Task<IActionResult> GetAsync(int dummy); // Count
         Task<IActionResult> GetAsync(int pageIndex, int pageSize); // GetAll
         Task<IActionResult> GetAsync(string key); // GetByKey

@@ -74,7 +74,7 @@ namespace FilmAPI.Infrastructure.Repositories
             }
             if (f != null && p != null)
             {
-                fp = new FilmPerson(f.Id, p.Id, role);
+                (status, fp) = GetByFilmIdPersonIdAndRole(f.Id, p.Id, role);
             }
             return (status, fp);
         }

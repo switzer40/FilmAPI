@@ -144,6 +144,6 @@ namespace FilmAPI.Services
         public async Task<OperationStatus> UpdateAsync(IBaseDto b)
         {
             return await Task.Run(() => Update(b));
-        }
+        }            
     }
 }

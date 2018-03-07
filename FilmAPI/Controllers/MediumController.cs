@@ -1,6 +1,7 @@
 ﻿using FilmAPI.Common.DTOs;
 using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Utilities;
+using FilmAPI.Core.Entities;
 using FilmAPI.Filters;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace FilmAPI.Controllers
 {
     [Route("/api/Medium/")]
-    public class MediumController : BaseController<KeyedMediumDto>
+    public class MediumController : BaseController<Medium>
     {
         private readonly IMediumService _service;
         public MediumController(IMediumService service)

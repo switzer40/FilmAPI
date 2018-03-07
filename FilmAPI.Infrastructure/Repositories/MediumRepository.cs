@@ -56,12 +56,35 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public (OperationStatus status, Medium value) GetByKey(string key)
         {
-            throw new NotImplementedException();
+            Medium retVal = default;
+            OperationStatus retStatus = OperationStatus.OK;
+            var (title, year, mediumType) = _keyService.DeconstructMediumKey(key);
+            var (status1, value) = _filmRepository.GetByTitleAndYear(title, year);
+            if (status1 == OperationStatus.OK)
+            {
+                var spec = new MediumByFilmIdAndMediumType(value.Id, mediumType);
+                var (status2, list) = List(spec);
+                if (status2 == OperationStatus.OK)
+                {
+                    retVal = list.FirstOrDefault();
+                }
+                else
+                {
+                    retStatus = status2;
+                }
+
+            }
+            else
+            {
+                retStatus = status1;
+            }
+            return (retStatus, retVal);            
         }
 
         public (OperationStatus status, Medium value) GetByTitleYearAndMediumType(string title, short year, string mediumType)
         {
-            throw new NotImplementedException();
+            var key = _keyService.ConstructMediumKey(title, year, mediumType);
+            return GetByKey(key);
         }
     }
 }

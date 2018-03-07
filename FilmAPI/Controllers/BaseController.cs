@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FilmAPI.Controllers
 {
-    public class BaseController<T> : Controller
+    public abstract class BaseController<T> : Controller where T : BaseEntity
     {
         protected IActionResult StandardReturn(OperationStatus status, T value = default)
         {
@@ -31,7 +31,6 @@ namespace FilmAPI.Controllers
                 return HandleError(status);
             }
         }
-
         
         private IActionResult HandleError(OperationStatus status)
         {

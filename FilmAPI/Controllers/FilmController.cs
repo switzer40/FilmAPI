@@ -6,11 +6,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using FilmAPI.Common.Utilities;
 using FilmAPI.Common.Interfaces;
+using FilmAPI.Core.Entities;
 
 namespace FilmAPI.Controllers
 {
     [Route("/api/Film/")]
-    public class FilmController
+    public class FilmController : BaseController<Film>
     {
         private readonly IFilmService _service;
         public FilmController(IFilmService service)
@@ -62,7 +63,10 @@ namespace FilmAPI.Controllers
         [ValidateFilmToUpdateExists]
         public async Task<OperationStatus> Put([FromBody]BaseFilmDto model)
         {
-            return await _service.UpdateAsync(model);            
+
+            return await _service.UpdateAsync(model);
         }
+
+       
     }
 }

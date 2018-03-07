@@ -1,6 +1,7 @@
 ﻿using FilmAPI.Common.DTOs;
 using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Utilities;
+using FilmAPI.Core.Entities;
 using FilmAPI.Filters;
 using FilmAPI.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace FilmAPI.Controllers
 {
     [Route("/api/Person")]
-    public class PersonController : BaseController<KeyedPersonDto>
+    public class PersonController : BaseController<Person>
     {
         private readonly IPersonService _service;
         public PersonController(IPersonService service)

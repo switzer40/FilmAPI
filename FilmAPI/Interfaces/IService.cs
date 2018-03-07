@@ -29,6 +29,6 @@ namespace FilmAPI.Interfaces
         OperationStatus Update(IBaseDto b);
         Task<OperationStatus> UpdateAsync(IBaseDto b);        
         Task<OperationStatus> ClearAllAsync();
-        bool IsValid { get; set; }        
+        bool IsValid { get; set; }
     }
 }
