@@ -19,6 +19,9 @@ namespace FilmAPI.Core.Interfaces
         Task<OperationStatus> DeleteAsync(string key);
         (OperationStatus status, T value) GetById(int id);
         Task<(OperationStatus status, T value)> GetByIdAsync(int id);
+
+        (OperationStatus status, T value) GetLastEntry();
+        Task<(OperationStatus status, T value)> GetLastEntryAsync();
         (OperationStatus status, List<T> value) List();
         (OperationStatus status, List<T> value) List(Expression<Func<T, bool>> predicate);
         (OperationStatus status, List<T> value) List(ISpecification<T> specification);

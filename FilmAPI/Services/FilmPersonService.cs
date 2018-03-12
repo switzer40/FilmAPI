@@ -63,6 +63,13 @@ namespace FilmAPI.Services
             return await Task.Run(() => GetByTitleYearLastNameBirthdateAndRole(title, year, lastName, birthdate, role));
         }
 
+        public override OperationResult<IKeyedDto> GetLastEntry()
+        {
+            var (status, value) = _repository.GetLastEntry();
+            var val = RecoverKeyedEntity(value);
+            return new OperationResult<IKeyedDto>(status, val);
+        }
+
         public override OperationStatus Update(IBaseDto dto)
         {
             var b = (BaseFilmPersonDto)dto;

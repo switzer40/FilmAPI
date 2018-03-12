@@ -25,7 +25,9 @@ namespace FilmAPI.Interfaces
         Task<OperationStatus> DeleteAsync(string key);
         Task<OperationStatus> DeleteAsync(T t);
         OperationResult<IKeyedDto> GetByKey(string key);
-        Task<OperationResult<IKeyedDto>> GetByKeyAsync(string key);        
+        Task<OperationResult<IKeyedDto>> GetByKeyAsync(string key);
+        OperationResult<IKeyedDto> GetLastEntry();
+        Task<OperationResult<IKeyedDto>> GetLastEntryAsync();
         OperationStatus Update(IBaseDto b);
         Task<OperationStatus> UpdateAsync(IBaseDto b);        
         Task<OperationStatus> ClearAllAsync();

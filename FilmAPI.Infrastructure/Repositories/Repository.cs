@@ -139,5 +139,16 @@ namespace FilmAPI.Infrastructure.Repositories
         {
             return await Task.Run(() => Delete(key));
         }
+
+        public (OperationStatus status, T value) GetLastEntry()
+        {
+            var val = _set.LastOrDefault();
+            return (OperationStatus.OK, val);
+        }
+
+        public async Task<(OperationStatus status, T value)> GetLastEntryAsync()
+        {
+            return await Task.Run(() => GetLastEntry());
+        }
     }
 }

@@ -52,6 +52,11 @@ namespace FilmAPI.Controllers
         {
             return await _service.GetByKeyAsync(key);            
         }
+        [HttpGet("GetLastEntry")]
+        public async Task<OperationResult<IKeyedDto>> GetAsync(short dummy)
+        {
+            return await _service.GetLastEntryAsync();
+        }
         [HttpPost("Add")]
         [ValidateMediumNotDuplicate]
         public async Task<OperationResult<IKeyedDto>> PostAsync([FromBody]BaseMediumDto model)

@@ -144,6 +144,14 @@ namespace FilmAPI.Services
         public async Task<OperationStatus> UpdateAsync(IBaseDto b)
         {
             return await Task.Run(() => Update(b));
-        }            
+        }
+
+        public abstract OperationResult<IKeyedDto> GetLastEntry();
+        
+
+        public async Task<OperationResult<IKeyedDto>> GetLastEntryAsync()
+        {
+            return await Task.Run(() => GetLastEntry());
+        }
     }
 }

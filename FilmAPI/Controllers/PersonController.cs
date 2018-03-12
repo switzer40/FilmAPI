@@ -44,6 +44,11 @@ namespace FilmAPI.Controllers
         {
             return await _service.GetByKeyAsync(key);            
         }
+        [HttpGet("GetLastEntry")]
+        public async Task<OperationResult<IKeyedDto>> GetAsync(short dummy)
+        {
+            return await _service.GetLastEntryAsync();
+        }
         [HttpGet("Count")]
         public async Task<OperationResult<int>> GetAsync(int dummy)
         {
