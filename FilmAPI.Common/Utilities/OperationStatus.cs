@@ -34,5 +34,19 @@ namespace FilmAPI.Common.Utilities
                 ReasonForFailure = that.ReasonForFailure;
             }
         }
+        public override bool Equals(object other)
+        {
+            var status = other as OperationStatus;
+            return (status != null && Value == status.Value);
+        }
+        public static bool operator ==(OperationStatus status1, OperationStatus status2)
+        {
+            return EqualityComparer<OperationStatus>.Default.Equals(status1, status2);
+        }
+
+        public static bool operator !=(OperationStatus status1, OperationStatus status2)
+        {
+            return !(status1 == status2);
+        }
     }
 }

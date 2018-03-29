@@ -8,9 +8,7 @@ namespace FilmAPI.Common.Utilities
     public class OperationResult<T> 
     {
         public OperationResult()
-        {
-            Status = OperationStatus.OK;
-            Value = default;            
+        {                        
         }
         public OperationResult(OperationStatus status, T value = default)
         {

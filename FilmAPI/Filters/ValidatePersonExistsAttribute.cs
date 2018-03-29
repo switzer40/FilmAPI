@@ -1,6 +1,7 @@
 ﻿using FilmAPI.Common.Constants;
 using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Services;
+using FilmAPI.Common.Utilities;
 using FilmAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -27,26 +28,36 @@ namespace FilmAPI.Filters
             }
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
+                OperationStatus stat = OperationStatus.OK;
                 if (context.ActionArguments.ContainsKey("key"))
                 {
                     var key = (string)context.ActionArguments["key"];
-                    var data = _keyService.DeconstructPersonKey(key);
-                    if (data.lastName == FilmConstants.BADKEY)
+                    var (lastName, birthdate) = _keyService.DeconstructPersonKey(key);
+                    if (lastName == FilmConstants.BADKEY)
                     {
-                        context.Result = new BadRequestObjectResult(key);
+                        stat = OperationStatus.BadRequest;
+                        stat.ReasonForFailure = $"Malformedkey {key}";
+                        context.Result = new JsonResult(GetResult(stat));
                         return;
                     }
                     else
                     {
-                        var p = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(data.lastName, data.birthdate).value;
+                        var p = ((IPersonRepository)_repository).GetByLastNameAndBirthdate(lastName, birthdate).value;
                         if (p == null)
                         {
-                            context.Result = new NotFoundObjectResult(key);
+                            stat = OperationStatus.NotFound;
+                            stat.ReasonForFailure = $"A person {lastName} does not exist.";
+                            context.Result = new JsonResult(GetResult(stat));
                             return;
                         }
                     }                                        
                 }
                 await next();
+            }
+            private OperationResult<IKeyedDto> GetResult(OperationStatus stat)
+            {
+                IKeyedDto val = default;
+                return new OperationResult<IKeyedDto>(stat, val);
             }
         }
     }

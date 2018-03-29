@@ -26,10 +26,9 @@ namespace FilmAPI.Controllers
             return await _service.ClearAllAsync();            
         }
         [HttpDelete("Delete/{key}")]
-        public async Task<IActionResult> DeleteAsync(string key)
+        public async Task<OperationResult<IKeyedDto>> DeleteAsync(string key)
         {
-            var res = await _service.DeleteAsync(key);
-            return StandardReturn(res);
+            return await _service.DeleteAsync(key);            
         }
         [HttpGet("Count")]
         public async Task<OperationResult<int>> GetAsync(int dummy)

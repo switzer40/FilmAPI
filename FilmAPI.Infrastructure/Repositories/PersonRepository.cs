@@ -36,9 +36,9 @@ namespace FilmAPI.Infrastructure.Repositories
         public (OperationStatus status, Person value) GetByLastNameAndBirthdate(string lastName, string birthdate)
         {
             ISpecification<Person> spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
-            var data = List(spec);
-            var p = data.value.SingleOrDefault();
-            return (data.status, p);
+            var (status, value) = List(spec);
+            var p = value.SingleOrDefault();
+            return (status, p);
         }
     }
 }

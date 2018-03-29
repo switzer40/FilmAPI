@@ -27,7 +27,7 @@ namespace FilmAPI.Controllers
         }
         [HttpDelete("Delete/{key}")]
         [ValidateMediumExists]
-        public async Task<OperationStatus> DeleteAsync(string key)
+        public async Task<OperationResult<IKeyedDto>> DeleteAsync(string key)
         {
             return await _service.DeleteAsync(key);            
         }

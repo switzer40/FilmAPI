@@ -2,6 +2,7 @@
 using FilmAPI.Common.DTOs;
 using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Services;
+using FilmAPI.Common.Utilities;
 using FilmAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -30,34 +31,46 @@ namespace FilmAPI.Filters
             }
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
+                OperationStatus stat = OperationStatus.OK;
                 if (context.ActionArguments.ContainsKey("key"))
                 {
                     var key = (string)context.ActionArguments["key"];
-                    var data = _keyService.DeconstructMediumKey(key);
-                    if (data.title == FilmConstants.BADKEY)
+                    var (title, year, mediumType) = _keyService.DeconstructMediumKey(key);
+                    if (title == FilmConstants.BADKEY)
                     {
-                        context.Result = new BadRequestObjectResult(key);
+                        stat = OperationStatus.BadRequest;
+                        stat.ReasonForFailure = $"Malformed key {key}";
+                        context.Result = new JsonResult(GetResult(stat));
                         return;
                     }
                     else
                     {
-                        var m = ((IMediumRepository)_repository).GetByTitleYearAndMediumType(data.title,
-                                                                                             data.year,
-                                                                                             data.mediumType).value;
+                        var m = ((IMediumRepository)_repository).GetByTitleYearAndMediumType(title,
+                                                                                             year,
+                                                                                             mediumType).value;
                         if (m == null)
                         {
-                            context.Result = new NotFoundObjectResult(key);
+                            stat = OperationStatus.NotFound;
+                            stat.ReasonForFailure = $"A medium with key {key} does not exist";
+                            context.Result = new JsonResult(GetResult(stat));
                             return;
                         }
                     }
-                    var f = _filmRepository.GetByTitleAndYear(data.title, data.year).value;
+                    var f = _filmRepository.GetByTitleAndYear(title, year).value;
                     if (f == null)
                     {
-                        context.Result = new BadRequestObjectResult("Missing film");
+                        stat =OperationStatus.NotFound;
+                        stat.ReasonForFailure = $"A film {title} is missing";
+                        context.Result = new JsonResult(GetResult(stat));
                         return;
                     }
                 }
                 await next();
+            }
+            private OperationResult<IKeyedDto> GetResult(OperationStatus stat)
+            {
+                IKeyedDto val = default;
+                return new OperationResult<IKeyedDto>(stat, val);
             }
         }
     }

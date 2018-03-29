@@ -1,6 +1,7 @@
 ﻿using FilmAPI.Common.Constants;
 using FilmAPI.Common.Interfaces;
 using FilmAPI.Common.Services;
+using FilmAPI.Common.Utilities;
 using FilmAPI.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -33,42 +34,56 @@ namespace FilmAPI.Filters
             }
             public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
             {
+                OperationStatus stat = OperationStatus.OK;
                 if (context.ActionArguments.ContainsKey("key"))
                 {
                     var key = (string)context.ActionArguments["key"];
-                    var data = _keyService.DeconstructFilmPersonKey(key);
-                    if (data.title == FilmConstants.BADKEY)
+                    var (title, year, lastName, birthdate, role) = _keyService.DeconstructFilmPersonKey(key);
+                    if (title == FilmConstants.BADKEY)
                     {
-                        context.Result = new BadRequestObjectResult(key);
+                        stat = OperationStatus.BadRequest;
+                        stat.ReasonForFailure = $"Malformed key {key}";
+                        context.Result = new JsonResult(GetResult(stat));
                         return;
                     }
                     else
                     {
-                        var fp = ((IFilmPersonRepository)_repository).GetByTitleYearLastNameBirthdateAndRole(data.title,
-                                                                                                             data.year,
-                                                                                                             data.lastName,
-                                                                                                             data.birthdate,
-                                                                                                             data.role).value;
+                        var fp = ((IFilmPersonRepository)_repository).GetByTitleYearLastNameBirthdateAndRole(title,
+                                                                                                             year,
+                                                                                                             lastName,
+                                                                                                             birthdate,
+                                                                                                             role).value;
                         if (fp == null)
                         {
-                            context.Result = new NotFoundObjectResult(key);
+                            stat = OperationStatus.NotFound;
+                            stat.ReasonForFailure = $"A relation with key {key} does not exist";
+                            context.Result = new JsonResult(GetResult(stat));
                             return;
                         }
                     }
-                    var f = _filmRepository.GetByTitleAndYear(data.title, data.year).value;
+                    var f = _filmRepository.GetByTitleAndYear(title, year).value;
                     if (f == null)
                     {
-                        context.Result = new BadRequestObjectResult("Missing film");
+                        stat = OperationStatus.BadRequest;
+                        stat.ReasonForFailure = $"A film {title} is missing";
+                        context.Result = new JsonResult(GetResult(stat));
                         return;
                     }
-                    var p = _personRepository.GetByLastNameAndBirthdate(data.lastName, data.birthdate).value;
+                    var p = _personRepository.GetByLastNameAndBirthdate(lastName, birthdate).value;
                     if (p == null)
                     {
-                        context.Result = new BadRequestObjectResult("Missing person");
+                        stat = OperationStatus.BadRequest;
+                        stat.ReasonForFailure = $"A person {lastName} is missing";
+                        context.Result = new JsonResult(GetResult(stat));
                         return;
                     }
                 }
                 await next();
+            }
+            private OperationResult<IKeyedDto> GetResult(OperationStatus stat)
+            {
+                IKeyedDto val = default;
+                return new OperationResult<IKeyedDto>(stat, val);
             }
         }
     }

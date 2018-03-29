@@ -62,22 +62,24 @@ namespace FilmAPI.Services
             return await Task.Run(() => Count());
         }
 
-        public OperationStatus Delete(string key)
+        public OperationResult<IKeyedDto> Delete(string key)
         {
-            return _repository.Delete(key);
+            var s = _repository.Delete(key);
+            return new OperationResult<IKeyedDto>(s, null);
         }
 
-        public OperationStatus Delete(T t)
+        public OperationResult<IKeyedDto> Delete(T t)
         {
-            return _repository.Delete(t);
+            var s = _repository.Delete(t);
+            return new OperationResult<IKeyedDto>(s, null);
         }
 
-        public async Task<OperationStatus> DeleteAsync(string key)
+        public async Task<OperationResult<IKeyedDto>> DeleteAsync(string key)
         {
             return await Task.Run(() => Delete(key));
         }
 
-        public async Task<OperationStatus> DeleteAsync(T t)
+        public async Task<OperationResult<IKeyedDto>> DeleteAsync(T t)
         {
             return await Task.Run(() => Delete(t));
         }

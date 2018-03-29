@@ -20,10 +20,10 @@ namespace FilmAPI.Interfaces
         OperationResult<int> Count();
         Task<OperationResult<int>> CountAsync();
         Task<OperationResult<IKeyedDto>> AddAsync(IBaseDto b);
-        OperationStatus Delete(string key);
-        OperationStatus Delete(T t);
-        Task<OperationStatus> DeleteAsync(string key);
-        Task<OperationStatus> DeleteAsync(T t);
+        OperationResult<IKeyedDto> Delete(string key);
+        OperationResult<IKeyedDto> Delete(T t);
+        Task<OperationResult<IKeyedDto>> DeleteAsync(string key);
+        Task<OperationResult<IKeyedDto>> DeleteAsync(T t);
         OperationResult<IKeyedDto> GetByKey(string key);
         Task<OperationResult<IKeyedDto>> GetByKeyAsync(string key);
         OperationResult<IKeyedDto> GetLastEntry();
