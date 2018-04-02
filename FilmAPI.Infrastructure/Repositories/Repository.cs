@@ -32,7 +32,7 @@ namespace FilmAPI.Infrastructure.Repositories
             return (OperationStatus.OK, t);
         }
 
-        private void Save()
+        protected void Save()
         {
             _context.SaveChanges();
         }
@@ -121,13 +121,8 @@ namespace FilmAPI.Infrastructure.Repositories
             return await Task.Run(() => List(specification));
         }
 
-        public OperationStatus Update(T t)
-        {
-            var storedEntity = _set.Find(t.Id);
-            storedEntity.Copy(t);
-            Save();
-            return OperationStatus.OK;
-        }
+        public abstract OperationStatus Update(T t);
+        
 
         public async Task<OperationStatus> UpdateAsync(T t)
         {

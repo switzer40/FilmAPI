@@ -38,6 +38,19 @@ namespace FilmAPI.Infrastructure.Repositories
             var (status, value) = List(spec);
             var f = value.SingleOrDefault();
             return (status, f);
-        }        
+        }
+
+        public override OperationStatus Update(Film t)
+        {
+            Film storedFilm = default;
+            var (status, value) = GetByTitleAndYear(t.Title, t.Year);
+            if (status == OperationStatus.OK)
+            {
+                storedFilm = value;
+                storedFilm.Copy(t);
+                Save();
+            }
+            return status;
+        }
     }
 }

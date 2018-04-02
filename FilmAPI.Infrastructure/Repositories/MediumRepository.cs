@@ -86,5 +86,24 @@ namespace FilmAPI.Infrastructure.Repositories
             var key = _keyService.ConstructMediumKey(title, year, mediumType);
             return GetByKey(key);
         }
+
+        public override OperationStatus Update(Medium t)
+        {
+            Medium storedMedium = default;
+            var (status, value) = _filmRepository.GetById(t.FilmId);
+            if (status == OperationStatus.OK)
+            {
+                Film f = value;
+                var res = GetByTitleYearAndMediumType(f.Title, f.Year, t.MediumType);
+                status = res.status;
+                if (status == OperationStatus.OK)
+                {
+                    storedMedium = res.value;
+                    storedMedium.Copy(t);
+                    Save();
+                }
+            }
+            return status;
+        }
     }
 }

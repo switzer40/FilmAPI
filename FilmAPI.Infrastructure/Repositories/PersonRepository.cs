@@ -40,5 +40,18 @@ namespace FilmAPI.Infrastructure.Repositories
             var p = value.SingleOrDefault();
             return (status, p);
         }
+
+        public override OperationStatus Update(Person t)
+        {
+            Person storedPerson = default;
+            var (status, value) = GetByLastNameAndBirthdate(t.LastName, t.BirthdateString);
+            if (status == OperationStatus.OK)
+            {
+                storedPerson = value;
+                storedPerson.Copy(t);
+                Save();
+            }
+            return status;
+        }
     }
 }

@@ -78,5 +78,38 @@ namespace FilmAPI.Infrastructure.Repositories
             }
             return (status, fp);
         }
+
+        public override OperationStatus Update(FilmPerson t)
+        {
+            FilmPerson storedFilmPerson = default;
+            Film f = default;
+            Person p = default;
+            var (status, value) = _filmRepository.GetById(t.FilmId);
+            if (status == OperationStatus.OK)
+            {
+                f = value;
+                var (pstatus, pvalue) = _personRepository.GetById(t.PersonId);
+                if (pstatus == OperationStatus.OK)
+                {
+                    p = pvalue;
+                    var (fpStatus, fpValue) = GetByFilmIdPersonIdAndRole(f.Id, p.Id, t.Role);
+                    if (fpStatus == OperationStatus.OK)
+                    {
+                        storedFilmPerson = fpValue;
+                        storedFilmPerson.Copy(t);
+                        Save();
+                    }
+                    else
+                    {
+                        status = fpStatus;
+                    }
+                }
+                else
+                {
+                    status = pstatus;
+                }
+            }
+            return status;
+        }
     }
 }
