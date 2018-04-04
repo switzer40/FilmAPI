@@ -35,10 +35,19 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public (OperationStatus status, Person value) GetByLastNameAndBirthdate(string lastName, string birthdate)
         {
+            Person retVal = default;
+            var retStat = OperationStatus.OK;
             ISpecification<Person> spec = new PersonByLastNameAndBirthdate(lastName, birthdate);
             var (status, value) = List(spec);
-            var p = value.SingleOrDefault();
-            return (status, p);
+            if (status == OperationStatus.OK)
+            {
+                retVal = value.FirstOrDefault();
+            }
+            else
+            {
+                retStat = status;
+            }
+            return (retStat, retVal);
         }
 
         public override OperationStatus Update(Person t)

@@ -34,10 +34,20 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public (OperationStatus status, Film value) GetByTitleAndYear(string title, short year)
         {
+            Film retVal = default;
+            var retStat = OperationStatus.OK;
             ISpecification<Film> spec = new FilmByTitleAndYear(title, year);
             var (status, value) = List(spec);
+            if (status == OperationStatus.OK)
+            {
+                retVal = value.FirstOrDefault();
+            }
+            else
+            {
+                retStat = status;
+            }
             var f = value.SingleOrDefault();
-            return (status, f);
+            return (retStat, retVal);
         }
 
         public override OperationStatus Update(Film t)

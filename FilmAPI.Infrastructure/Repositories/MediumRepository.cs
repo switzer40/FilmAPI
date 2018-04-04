@@ -83,8 +83,19 @@ namespace FilmAPI.Infrastructure.Repositories
 
         public (OperationStatus status, Medium value) GetByTitleYearAndMediumType(string title, short year, string mediumType)
         {
+            Medium retVal = default;
+            OperationStatus retStat = OperationStatus.OK;
             var key = _keyService.ConstructMediumKey(title, year, mediumType);
-            return GetByKey(key);
+            var (status, value) = GetByKey(key);
+            if (status == OperationStatus.OK)
+            {
+                retVal = value;
+            }
+            else
+            {
+                retStat = status;
+            }
+            return (retStat, retVal);
         }
 
         public override OperationStatus Update(Medium t)

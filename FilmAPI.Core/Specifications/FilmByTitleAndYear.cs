@@ -16,6 +16,6 @@ namespace FilmAPI.Core.Specifications
         }
         private string _title;
         private short _year;
-        public Expression<Func<Film, bool>> Predicate => (f) => f.Title == _title && f.Year == _year;
+        public Expression<Func<Film, bool>> Predicate => (f) => (f.Title == _title) && (f.Year == _year);
     }
 }
