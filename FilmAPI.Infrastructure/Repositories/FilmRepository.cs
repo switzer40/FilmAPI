@@ -46,7 +46,6 @@ namespace FilmAPI.Infrastructure.Repositories
             {
                 retStat = status;
             }
-            var f = value.SingleOrDefault();
             return (retStat, retVal);
         }
 
