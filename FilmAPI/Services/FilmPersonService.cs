@@ -46,7 +46,8 @@ namespace FilmAPI.Services
 
         public override OperationResult<IKeyedDto> GetByKey(string key)
         {
-            var (status, value) = ((IFilmPersonRepository)_repository).GetByKey(key);
+            var decodedKey = System.Net.WebUtility.UrlDecode(key);
+            var (status, value) = ((IFilmPersonRepository)_repository).GetByKey(decodedKey);
             var val = RecoverKeyedEntity(value);
             return new OperationResult<IKeyedDto>(status, val);
         }

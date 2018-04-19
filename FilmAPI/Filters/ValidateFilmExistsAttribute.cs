@@ -29,11 +29,12 @@ namespace FilmAPI.Filters
                 {
                     OperationStatus stat = OperationStatus.OK;
                     var key = (string)context.ActionArguments["key"];
-                    var data = _keyService.DeconstructFilmKey(key);
+                    var decodedKey = System.Net.WebUtility.UrlDecode(key);
+                    var data = _keyService.DeconstructFilmKey(decodedKey);
                     if (data.title == FilmConstants.BADKEY)
                     {
                         stat = OperationStatus.BadRequest;
-                        stat.ReasonForFailure = $"Malformed key {key}";
+                        stat.ReasonForFailure = $"Malformed key {decodedKey}";
                         context.Result = new JsonResult(GetResult(stat));
                         return;
                     }

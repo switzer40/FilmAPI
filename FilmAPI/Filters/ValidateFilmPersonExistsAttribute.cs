@@ -38,11 +38,12 @@ namespace FilmAPI.Filters
                 if (context.ActionArguments.ContainsKey("key"))
                 {
                     var key = (string)context.ActionArguments["key"];
-                    var (title, year, lastName, birthdate, role) = _keyService.DeconstructFilmPersonKey(key);
+                    var decodedKey = System.Net.WebUtility.UrlDecode(key);
+                    var (title, year, lastName, birthdate, role) = _keyService.DeconstructFilmPersonKey(decodedKey);
                     if (title == FilmConstants.BADKEY)
                     {
                         stat = OperationStatus.BadRequest;
-                        stat.ReasonForFailure = $"Malformed key {key}";
+                        stat.ReasonForFailure = $"Malformed key {decodedKey}";
                         context.Result = new JsonResult(GetResult(stat));
                         return;
                     }

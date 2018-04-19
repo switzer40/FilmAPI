@@ -76,7 +76,9 @@ namespace FilmAPI.Services
 
         public async Task<OperationResult<IKeyedDto>> DeleteAsync(string key)
         {
-            return await Task.Run(() => Delete(key));
+
+            var decodedKey = System.Net.WebUtility.UrlDecode(key);
+            return await Task.Run(() => Delete(decodedKey));
         }
 
         public async Task<OperationResult<IKeyedDto>> DeleteAsync(T t)
@@ -137,7 +139,8 @@ namespace FilmAPI.Services
 
         public async Task<OperationResult<IKeyedDto>> GetByKeyAsync(string key)
         {
-            return await Task.Run(() => GetByKey(key));
+            var decodedKey = System.Net.WebUtility.UrlDecode(key);
+            return await Task.Run(() => GetByKey(decodedKey));
         }
 
         public abstract OperationStatus Update(IBaseDto b);
