@@ -61,7 +61,7 @@ namespace FilmAPI.Controllers
             return await _service.AddAsync(model);
             
         }
-        [HttpPost("Edit")]
+        [HttpPut("Edit")]
         [ValidatePersonToUpdateExists]
         public async Task<OperationStatus> PutAsync([FromBody]BasePersonDto model)
         {
