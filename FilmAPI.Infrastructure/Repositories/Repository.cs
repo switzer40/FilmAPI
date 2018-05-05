@@ -103,7 +103,17 @@ namespace FilmAPI.Infrastructure.Repositories
         public (OperationStatus status, List<T> value) List(ISpecification<T> specification)
         {
             var val = _set.Where(specification.Predicate).ToList();
-            return (OperationStatus.OK, val);
+            if (val.Count > 0)
+            {
+                return (OperationStatus.OK, val);
+            }
+            else
+            {
+                OperationStatus stat = OperationStatus.NotFound;
+                stat.ReasonForFailure = $"This film does not exist";
+                return (stat, null);
+            }
+            
         }
 
         public async Task<(OperationStatus status, List<T> value)> ListAsync()

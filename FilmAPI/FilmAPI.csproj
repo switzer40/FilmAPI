@@ -28,4 +28,9 @@
     <ProjectReference Include="..\FilmAPI.Infrastructure\FilmAPI.Infrastructure.csproj" />
     <ProjectReference Include="..\FilmAPI.Validation\FilmAPI.Validation.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
